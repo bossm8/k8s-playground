@@ -67,6 +67,123 @@ kubeEtcd:
 [source 2](https://github.com/prometheus-operator/kube-prometheus/issues/718)
 [source 3](https://github.com/siderolabs/talos/discussions/7214)
 
+### Ingress Firewall
+
+**NOTE**: It's advised to wait with this until the cluster is setup. It can then
+be applied with --mode=try to see if all works before enforcing it
+
+Since we opened the services on all interfaces, we now make sure to block
+request coming from external, allowing only API and HTTP/HTTPS traffic.
+
+Add the following to the `controlplane.yaml`:
+
+```yaml
+---
+apiVersion: v1alpha1
+kind: NetworkDefaultActionConfig
+ingress: block
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: talos-apid
+portSelector:
+  ports:
+    - 50000
+  protocol: tcp
+ingress:
+  - subnet: 0.0.0.0/0
+  - subnet: ::/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: kubectl-ingress
+portSelector:
+  ports:
+    - 6443
+  protocol: tcp
+ingress:
+  - subnet: 0.0.0.0/0
+  - subnet: ::/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: http-ingress-tcp
+portSelector:
+  ports:
+    - 80
+    - 443
+  protocol: tcp
+ingress:
+  - subnet: 0.0.0.0/0
+  - subnet: ::/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: http-ingress-udp
+portSelector:
+  ports:
+    - 80
+    - 443
+  protocol: udp
+ingress:
+  - subnet: 0.0.0.0/0
+  - subnet: ::/0
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: etcd-ingress
+portSelector:
+  ports:
+    - 2379-2380
+  protocol: tcp
+ingress:
+  - subnet: 192.168.178.74/32
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: cni-vxlan-udp
+portSelector:
+  ports:
+    - 4789
+  protocol: udp
+ingress:
+  - subnet: 10.244.0.0/16  # Pod network
+  - subnet: 10.96.0.0/12   # Kubernetes services
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: cni-vxlan-tcp
+portSelector:
+  ports:
+    - 4789
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/16  # Pod network
+  - subnet: 10.96.0.0/12   # Kubernetes services
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: talos-trustd
+portSelector:
+  ports:
+    - 50000
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/16     # Pod network
+  - subnet: 10.96.0.0/12      # Kubernetes services
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: kubelet-ingress
+portSelector:
+  ports:
+    - 10250
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/16     # Pod network
+  - subnet: 10.96.0.0/12      # Kubernetes services
+```
+
 ## DNS Settings
 
 To use differend DNS servers, adjust the `machine.network.nameservers`. For example:
