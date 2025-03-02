@@ -16,7 +16,7 @@ spec:
   url: https://github.com/rancher/local-path-provisioner
   ref:
     tag: v0.0.31
-  ingnore: |-
+  ignore: |-
     /*
     !/deploy/chart
 ---
