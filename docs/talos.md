@@ -51,7 +51,11 @@ Add the extra argument to the proxy pod:
 Similar configuration changes are neede for the `controller-manager` and the
 `scheduler`. But there the `extraArgs` are `[bind-address: 0.0.0.0]`.
 
+And etcd: `extraArgs: [listen-metrics-urls: 0.0.0.0]`
+
 (this might change also require `talosctl upgrade-k8s`)
 
 [source 1](https://github.com/siderolabs/talos/discussions/7799)
 [source 2](https://github.com/prometheus-operator/kube-prometheus/issues/718)
+[source 3](https://github.com/siderolabs/talos/discussions/7214)
+
