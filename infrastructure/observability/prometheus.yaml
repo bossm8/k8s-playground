@@ -18,35 +18,24 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: prometheus
+  name: kube-prometheus-stack
   namespace: infra-observability
 spec:
   interval: 10m0s
   chart:
     spec:
-      chart: prometheus
-      version: 27.5.x
+      chart: kube-prometheus-stack
+      version: 69.6.x
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
         namespace: infra-observability
       interval: 10m0s
   values:
-    commonMetalabels:
+    commonlabels:
       k8s.mcathome.ch/component: observability
       k8s.mcathome.ch/application: prometheus
-    podSecurityPolicy:
-      enabled: true
-    server:
-      retention: 14d
-    prometheus-pushgateway:
-      enabled: false
-    prometheus-node-exporter:
-      podLabels:
-        jobLabel: node-exporter
-      prometheus:
-        monitor:
-          enabled: true
-          jobLabel: node-exporter
-
-    
+    global:
+      rbac:
+        create: true
+        pspEnabled: true
