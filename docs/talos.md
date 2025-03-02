@@ -91,8 +91,7 @@ portSelector:
     - 50000
   protocol: tcp
 ingress:
-  - subnet: 0.0.0.0/0
-  - subnet: ::/0
+  - subnet: 192.168.178.0/24
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -102,8 +101,7 @@ portSelector:
     - 6443
   protocol: tcp
 ingress:
-  - subnet: 0.0.0.0/0
-  - subnet: ::/0
+  - subnet: 192.168.178.0/24
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -114,8 +112,7 @@ portSelector:
     - 443
   protocol: tcp
 ingress:
-  - subnet: 0.0.0.0/0
-  - subnet: ::/0
+  - subnet: 192.168.178.0/24
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -126,8 +123,7 @@ portSelector:
     - 443
   protocol: udp
 ingress:
-  - subnet: 0.0.0.0/0
-  - subnet: ::/0
+  - subnet: 192.168.178.0/24
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -166,7 +162,7 @@ kind: NetworkRuleConfig
 name: talos-trustd
 portSelector:
   ports:
-    - 50000
+    - 50001
   protocol: tcp
 ingress:
   - subnet: 10.244.0.0/16     # Pod network
