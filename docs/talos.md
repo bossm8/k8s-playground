@@ -38,3 +38,20 @@ See the [HelmRelease](/infrastructure/storage/local-path-provisioner.yaml) for
 reference.
 
 [source](https://www.talos.dev/v1.8/kubernetes-guides/configuration/local-storage/)
+
+## Kube Metrics with kube-prometheus-stack
+
+**NOTE**: These changes will open the ports on the node, so be careful.
+
+In order to query metrics from kubernetes components, we need to change the
+listening ports of the pods deployed by talos:
+Add the extra argument to the proxy pod:
+`cluster.proxy.extraArgs: [metrics-bind-address: 0.0.0.0:10249]`
+
+Similar configuration changes are neede for the `controller-manager` and the
+`scheduler`. But there the `extraArgs` are `[bind-address: 0.0.0.0]`.
+
+(this might change also require `talosctl upgrade-k8s`)
+
+[source 1](https://github.com/siderolabs/talos/discussions/7799)
+[source 2](https://github.com/prometheus-operator/kube-prometheus/issues/718)
