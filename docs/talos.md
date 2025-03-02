@@ -66,3 +66,16 @@ kubeEtcd:
 [source 1](https://github.com/siderolabs/talos/discussions/7799)
 [source 2](https://github.com/prometheus-operator/kube-prometheus/issues/718)
 [source 3](https://github.com/siderolabs/talos/discussions/7214)
+
+## DNS Settings
+
+To use differend DNS servers, adjust the `machine.network.nameservers`. For example:
+
+```yaml
+machine:
+  network:
+    nameservers:
+      - 192.168.178.1 # Use local network gateway first to enable Pi-Hole protection
+      - 9.9.9.9 # Quad 9
+      - 8.8.8.8
+```
