@@ -22,7 +22,7 @@ spec:
   interval: 10m0s
   chart:
     spec:
-      chart: prometheus-community/prometheus
+      chart: prometheus
       version: 27.5.x
       sourceRef:
         kind: HelmRepository
