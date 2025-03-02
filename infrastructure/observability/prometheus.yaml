@@ -39,6 +39,18 @@ spec:
       rbac:
         create: true
         pspEnabled: true
+    prometheus:
+      prometheusSpec:
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              accessModes:
+                - ReadWriteOnce
+            resources:
+              requests:
+                storage: 15Gi
+        retention: 14d
+        retentionSize: 14.5G
     grafana:
       enabled: true
     nodeExporter:
