@@ -52,6 +52,14 @@ Similar configuration changes are neede for the `controller-manager` and the
 `scheduler`. But there the `extraArgs` are `[bind-address: 0.0.0.0]`.
 
 And etcd: `extraArgs: [listen-metrics-urls: http://0.0.0.0:2381]`
+Still, this also needs an additional change in the HelmRelease as etcd is not
+running as pod in talos. Add the following to the `values` section:
+
+```yaml
+kubeEtcd:
+  endpoints:
+    - <node-local-network-ip>
+```
 
 (this might change also require `talosctl upgrade-k8s`)
 
