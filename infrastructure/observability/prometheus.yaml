@@ -23,7 +23,7 @@ spec:
   chart:
     spec:
       chart: prometheus-community/prometheus
-      version: 69.6.x
+      version: 27.5.x
       sourceRef:
         kind: HelmRepository
         name: prometheus-community
