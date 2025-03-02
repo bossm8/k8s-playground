@@ -66,4 +66,4 @@ spec:
           enabled: false
     kubeEtcd:
       endpoints:
-        - 192.168.178.74
+        - ${singleNodeClusterIP}

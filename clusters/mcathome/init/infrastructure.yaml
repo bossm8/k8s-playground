@@ -6,7 +6,13 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
+  dependsOn:
+    - name: cluster-variables
   path: ./infrastructure/storage
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
   prune: true
   sourceRef:
     kind: GitRepository
@@ -23,6 +29,10 @@ spec:
   dependsOn:
     - name: infra-storage
   path: ./infrastructure/observability
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
   prune: true
   sourceRef:
     kind: GitRepository
@@ -39,6 +49,10 @@ spec:
     - name: infra-observability
   interval: 10m0s
   path: ./infrastructure/controllers
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
   prune: true
   sourceRef:
     kind: GitRepository
@@ -55,6 +69,10 @@ spec:
     - name: infra-controllers
   interval: 10m0s
   path: ./infrastructure/configs
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
   prune: true
   sourceRef:
     kind: GitRepository
