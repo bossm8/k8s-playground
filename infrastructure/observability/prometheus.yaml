@@ -50,7 +50,7 @@ spec:
               requests:
                 storage: 15Gi
         retention: 14d
-        retentionSize: 14.5G
+        retentionSize: 14.5GiB
     grafana:
       enabled: true
     nodeExporter:
