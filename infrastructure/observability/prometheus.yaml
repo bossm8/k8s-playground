@@ -53,6 +53,16 @@ spec:
                   storage: 15Gi
         retention: 14d
         retentionSize: 14.5GiB
+    alertmanager:
+      alertmanagerSpec:
+        storage: 
+          volumeClaimTemplate:
+            spec:
+              accessModes: 
+                - ReadWriteOnce
+              resources:
+                  requests:
+                    storage: 3Gi
     grafana:
       enabled: true
     nodeExporter:
