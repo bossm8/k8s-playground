@@ -3,6 +3,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: infra-observability
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
@@ -39,4 +41,12 @@ spec:
       retention: 14d
     prometheus-pushgateway:
       enabled: false
+    prometheus-node-exporter:
+      podLabels:
+        jobLabel: node-exporter
+      prometheus:
+        monitor:
+          enabled: true
+          jobLabel: node-exporter
+
     
