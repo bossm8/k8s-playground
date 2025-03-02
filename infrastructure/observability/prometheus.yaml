@@ -39,3 +39,14 @@ spec:
       rbac:
         create: true
         pspEnabled: true
+    grafana:
+      enabled: true
+    nodeExporter:
+      enabled: true
+      operatingSystems:
+        linux:
+          enabled: true
+        aix:
+          enabled: false
+        darwin:
+          enabled: false
