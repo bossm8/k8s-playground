@@ -46,9 +46,9 @@ spec:
             spec:
               accessModes:
                 - ReadWriteOnce
-            resources:
-              requests:
-                storage: 15Gi
+              resources:
+                requests:
+                  storage: 15Gi
         retention: 14d
         retentionSize: 14.5GiB
     grafana:
