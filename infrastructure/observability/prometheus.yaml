@@ -64,3 +64,6 @@ spec:
           enabled: false
         darwin:
           enabled: false
+    kubeEtcd:
+      endpoints:
+        - 127.0.0.1
