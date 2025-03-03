@@ -3,9 +3,15 @@
 Find adjustments needed to the talos configuration in order to setup a
 single-node k8s cluster with talos.
 
-Note: after each adjustment, run
-`taloctl apply config -f <path-to-config>/controlplane.yaml`,
-this document assumes the talos cluster was already bootstrapped.
+**Notes**:
+
+- When adjusting manually, after each adjustment, run
+  `taloctl apply config -f <path-to-config>/controlplane.yaml`,
+  this document assumes the talos cluster was already bootstrapped.
+- The commands here assume, that endpoints and nodes have been configured in
+  the talos config (default `~/talos/config`).
+  (`contexts.<cluster>.endpoints[<single-node-cluster-ip>]`
+  and `contexts.<cluster>.nodes[<single-node-cluster-ip>]`)
 
 ## Single Node Cluster
 
