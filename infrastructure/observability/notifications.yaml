@@ -5,7 +5,7 @@ metadata:
   name: discord-webhook
   namespace: flux-system
 type: Opaque
-data:
+stringData:
   address: ${discordFluxAlertAddress}
 ---
 apiVersion: notification.toolkit.fluxcd.io/v1beta3
