@@ -5,9 +5,3 @@ kind: Kustomization
 resources:
   - prometheus.yaml
   - notifications.yaml
-
-secretGenerator:
-  - name: discord-webhook
-    namespace: flux-system
-    literals:
-      - address=${discordFluxAlertAddress}
