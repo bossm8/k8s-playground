@@ -62,6 +62,12 @@ mentioned in the documentation here.
        --url ssh://git@github.com/bossm8/k8s-playground-vars.git
       ```
 
-   - SOPS secret:
+   - SOPS secret with age:
+      (Documentation about how to create age keys and encrypt secrets can be
+      found [here]() and [here]())
 
-      (TBD)
+      ```bash
+      cat age.agekey | kubectl create secret generic sops-age \
+         --namespace flux-system \
+         --from-file age.agekey=/dev/stdin
+      ```
