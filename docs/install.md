@@ -13,8 +13,10 @@ mentioned in the documentation here.
 
 ## Step-by-Step
 
-1. Burn the [talos ISO image](https://www.talos.dev/v1.9/talos-guides/install/bare-metal-platforms/iso/) onto a USB stick
-2. Follow the [talos installation guide](https://www.talos.dev/v1.9/introduction/getting-started/) ([talos.md](./talos.md) contains some adjustments to the `controlplane.yaml`)
+1. Burn the [talos ISO image](https://www.talos.dev/v1.9/talos-guides/install/bare-metal-platforms/iso/)
+   onto a USB stick
+2. Follow the [talos installation guide](https://www.talos.dev/v1.9/introduction/getting-started/)
+   ([talos.md](./talos.md) contains some adjustments to the `controlplane.yaml`)
 3. Bootstrap flux into the cluster (with a deploy key to this repo)
 
    ```bash

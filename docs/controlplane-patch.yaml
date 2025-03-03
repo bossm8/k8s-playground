@@ -1,0 +1,134 @@
+machine:
+  kubelet:
+    extraMounts:
+      - destination: /var/mnt
+        type: bind
+        source: /var/mnt
+        options:
+          - bind
+          - rshared
+          - rw
+  network:
+    nameservers:
+      - 192.168.178.1
+      - 9.9.9.9
+      - 8.8.8.8
+      - 1.1.1.1
+cluster:
+  controllerManager:
+    extraArgs:
+      bind-address: 0.0.0.0
+  proxy:
+    extraArgs:
+      metrics-bind-address: 0.0.0.0:10249
+  scheduler:
+    extraArgs:
+      bind-address: 0.0.0.0
+  etcd:
+    extraArgs:
+      listen-metrics-urls: http://0.0.0.0:2381
+  allowSchedulingOnControlPlanes: true
+---
+apiVersion: v1alpha1
+kind: NetworkDefaultActionConfig
+ingress: block
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: talos-apid
+portSelector:
+  ports:
+    - 50000
+  protocol: tcp
+ingress:
+  - subnet: 192.168.178.0/24
+    except: 192.168.178.200/25
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: kubectl-ingress
+portSelector:
+  ports:
+    - 6443
+  protocol: tcp
+ingress:
+  - subnet: 192.168.178.0/24
+    except: 192.168.178.200/25
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: http-ingress-tcp
+portSelector:
+  ports:
+    - 80
+    - 443
+  protocol: tcp
+ingress:
+  - subnet: 192.168.178.0/24
+    except: 192.168.178.200/25
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: http-ingress-udp
+portSelector:
+  ports:
+    - 80
+    - 443
+  protocol: udp
+ingress:
+  - subnet: 192.168.178.0/24
+    except: 192.168.178.200/25
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: etcd-ingress
+portSelector:
+  ports:
+    - 2379-2380
+  protocol: tcp
+ingress:
+  - subnet: 192.168.178.74/32
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: cni-vxlan-udp
+portSelector:
+  ports:
+    - 4789
+  protocol: udp
+ingress:
+  - subnet: 10.244.0.0/16  # Pod network
+  - subnet: 10.96.0.0/12   # Kubernetes services
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: cni-vxlan-tcp
+portSelector:
+  ports:
+    - 4789
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/16  # Pod network
+  - subnet: 10.96.0.0/12   # Kubernetes services
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: talos-trustd
+portSelector:
+  ports:
+    - 50001
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/16     # Pod network
+  - subnet: 10.96.0.0/12      # Kubernetes services
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: kubelet-ingress
+portSelector:
+  ports:
+    - 10250
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/16     # Pod network
+  - subnet: 10.96.0.0/12      # Kubernetes services

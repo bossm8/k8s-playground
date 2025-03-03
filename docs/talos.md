@@ -192,3 +192,22 @@ machine:
       - 9.9.9.9 # Quad 9
       - 8.8.8.8
 ```
+
+## Automatic Patching
+
+Instead of adding the changes mentioned above manually to the file
+talosctl can be leveraged to 
+[apply patches](https://www.talos.dev/v1.5/talos-guides/configuration/patching/).
+The [patch](./controlplane-patch.yaml) can be used like this:
+
+```bash
+talosctl machineconfig patch \
+  --patch @controlplane-patch.yaml \
+  ~/controlplane.yaml
+```
+
+Or directly on the node when the default was installed:
+
+```bash
+talosctl patch mc --patch @controlplane-patch.yaml
+```
