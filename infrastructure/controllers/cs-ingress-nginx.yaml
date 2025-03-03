@@ -38,7 +38,7 @@ spec:
             - name: APPSEC_PROCESS_TIMEOUT
               value: "1000"
             - name: ALWAYS_SEND_TO_APPSEC
-              value: false
+              value: "false"
 
           command: ['sh', '-c', "sh /docker_start.sh; mkdir -p /lua_plugins/crowdsec/; cp -R /crowdsec/* /lua_plugins/crowdsec/"]
           volumeMounts:
