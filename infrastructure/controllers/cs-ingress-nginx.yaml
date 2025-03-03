@@ -19,7 +19,7 @@ spec:
             - name: API_URL
               value: ${csApiUrl}
             - name: API_KEY
-              value: ${csApiKey}
+              value: ${csApiKeyNginx}
             - name: BOUNCER_CONFIG
               value: "/crowdsec/crowdsec-bouncer.conf"
             - name: BAN_TEMPLATE_PATH
