@@ -10,10 +10,10 @@ machine:
           - rw
   network:
     nameservers:
-      - 192.168.178.1
-      - 9.9.9.9
-      - 8.8.8.8
-      - 1.1.1.1
+      - 192.168.178.1  # Use gateway to enable Pi-Hole protection
+      - 9.9.9.9        # Quad 9
+      - 8.8.8.8        # Google
+      - 1.1.1.1        # Cloudflare
 cluster:
   controllerManager:
     extraArgs:
@@ -41,8 +41,8 @@ portSelector:
     - 50000
   protocol: tcp
 ingress:
-  - subnet: 192.168.178.0/24
-    except: 192.168.178.200/25
+  - subnet: 192.168.178.0/24    # Local network
+    except: 192.168.178.200/25  # Local VPN range
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -52,8 +52,7 @@ portSelector:
     - 6443
   protocol: tcp
 ingress:
-  - subnet: 192.168.178.0/24
-    except: 192.168.178.200/25
+  - subnet: 192.168.178.0/24    # Local network
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -64,8 +63,7 @@ portSelector:
     - 443
   protocol: tcp
 ingress:
-  - subnet: 192.168.178.0/24
-    except: 192.168.178.200/25
+  - subnet: 192.168.178.0/24    # Local network
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -76,8 +74,7 @@ portSelector:
     - 443
   protocol: udp
 ingress:
-  - subnet: 192.168.178.0/24
-    except: 192.168.178.200/25
+  - subnet: 192.168.178.0/24    # Local network
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -87,7 +84,7 @@ portSelector:
     - 2379-2380
   protocol: tcp
 ingress:
-  - subnet: 192.168.178.74/32
+  - subnet: 192.168.178.74/32   # Talos node IP
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -97,8 +94,8 @@ portSelector:
     - 4789
   protocol: udp
 ingress:
-  - subnet: 10.244.0.0/16  # Pod network
-  - subnet: 10.96.0.0/12   # Kubernetes services
+  - subnet: 10.244.0.0/16       # Pod network
+  - subnet: 10.96.0.0/12        # Kubernetes services
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -108,8 +105,8 @@ portSelector:
     - 4789
   protocol: tcp
 ingress:
-  - subnet: 10.244.0.0/16  # Pod network
-  - subnet: 10.96.0.0/12   # Kubernetes services
+  - subnet: 10.244.0.0/16       # Pod network
+  - subnet: 10.96.0.0/12        # Kubernetes services
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -119,8 +116,8 @@ portSelector:
     - 50001
   protocol: tcp
 ingress:
-  - subnet: 10.244.0.0/16     # Pod network
-  - subnet: 10.96.0.0/12      # Kubernetes services
+  - subnet: 10.244.0.0/16       # Pod network
+  - subnet: 10.96.0.0/12        # Kubernetes services
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -130,5 +127,5 @@ portSelector:
     - 10250
   protocol: tcp
 ingress:
-  - subnet: 10.244.0.0/16     # Pod network
-  - subnet: 10.96.0.0/12      # Kubernetes services
+  - subnet: 10.244.0.0/16       # Pod network
+  - subnet: 10.96.0.0/12        # Kubernetes services

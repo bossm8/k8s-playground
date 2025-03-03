@@ -149,8 +149,8 @@ portSelector:
     - 4789
   protocol: udp
 ingress:
-  - subnet: 10.244.0.0/16  # Pod network
-  - subnet: 10.96.0.0/12   # Kubernetes services
+  - subnet: 10.244.0.0/16
+  - subnet: 10.96.0.0/12
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -160,8 +160,8 @@ portSelector:
     - 4789
   protocol: tcp
 ingress:
-  - subnet: 10.244.0.0/16  # Pod network
-  - subnet: 10.96.0.0/12   # Kubernetes services
+  - subnet: 10.244.0.0/16
+  - subnet: 10.96.0.0/12
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -171,8 +171,8 @@ portSelector:
     - 50001
   protocol: tcp
 ingress:
-  - subnet: 10.244.0.0/16     # Pod network
-  - subnet: 10.96.0.0/12      # Kubernetes services
+  - subnet: 10.244.0.0/16
+  - subnet: 10.96.0.0/12
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
@@ -182,8 +182,8 @@ portSelector:
     - 10250
   protocol: tcp
 ingress:
-  - subnet: 10.244.0.0/16     # Pod network
-  - subnet: 10.96.0.0/12      # Kubernetes services
+  - subnet: 10.244.0.0/16
+  - subnet: 10.96.0.0/12
 ```
 
 ## DNS Settings
@@ -194,15 +194,15 @@ To use differend DNS servers, adjust the `machine.network.nameservers`. For exam
 machine:
   network:
     nameservers:
-      - 192.168.178.1 # Use local network gateway first to enable Pi-Hole protection
-      - 9.9.9.9 # Quad 9
+      - 192.168.178.1
+      - 9.9.9.9
       - 8.8.8.8
 ```
 
 ## Automatic Patching
 
 Instead of adding the changes mentioned above manually to the file
-talosctl can be leveraged to 
+talosctl can be leveraged to
 [apply patches](https://www.talos.dev/v1.5/talos-guides/configuration/patching/).
 The [patch](./controlplane-patch.yaml) can be used like this:
 
