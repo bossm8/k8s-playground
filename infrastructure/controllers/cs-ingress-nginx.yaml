@@ -32,11 +32,11 @@ spec:
             - name: APPSEC_FAILURE_ACTION
               value: passthrough
             - name: APPSEC_CONNECT_TIMEOUT
-              value: 100
+              value: "100"
             - name: APPSEC_SEND_TIMEOUT
-              value: 100
+              value: "100"
             - name: APPSEC_PROCESS_TIMEOUT
-              value: 1000
+              value: "1000"
             - name: ALWAYS_SEND_TO_APPSEC
               value: false
 
