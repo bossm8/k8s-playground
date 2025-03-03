@@ -4,7 +4,10 @@ kind: Kustomization
 
 resources:
   - prometheus.yaml
+  - notifications.yaml
 
-commonLabels:
-  k8s.mctahome.ch/component: observability
-  k8s.mcathome.ch/application: prometheus
+secretGenerator:
+  - name: discord-webhook
+    namespace: flux-system
+    literals:
+      - address=${discordFluxAlertAddress}

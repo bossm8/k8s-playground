@@ -34,9 +34,6 @@ spec:
         namespace: infra-observability
       interval: 10m0s
   values:
-    commonlabels:
-      k8s.mcathome.ch/component: observability
-      k8s.mcathome.ch/application: prometheus
     global:
       rbac:
         create: true
