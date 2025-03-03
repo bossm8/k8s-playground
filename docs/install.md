@@ -17,7 +17,29 @@ mentioned in the documentation here.
    onto a USB stick
 2. Follow the [talos installation guide](https://www.talos.dev/v1.9/introduction/getting-started/)
    ([talos.md](./talos.md) contains some adjustments to the `controlplane.yaml`)
+
+   In general:
+
+   - Genereate talos secrets: `talosctl gen secrets -o secrets.yaml`
+   - Generate configuration: `talosctl gen config --with-secrets secrets.yaml <cluster-name> <single-node-local-ip>`
+   - Move the `talosconfig` to `~/.talos/config` to be picked up as default
+   - Apply the intial configuration: `talosctl apply config --insecure --nodes <single-node-local-ip> --file controlplane.yaml`
+   - Edit the `talosconfig` and add `endpoints` and `nodes` with the single node local IP:
+     `contexts.<cluster>.(endpoints|nodes)[<single-node-cluster-ip>]`
+   - Bootstrap the cluster: `talosctl bootstrap`
+   - Apply the patch documented in [talos.md](./talos.md):
+     `talosctl patch mc --patch @controlplane-patch.yaml --mode try` Mode try is
+     important since the firewall rules may block talosctl or kubectl from
+     connecting when configured incorrectly.  When everything works as expected,
+     the config can be applied.  (Possibly also a `talosctl upgrade-k8s` may be
+     needed so that pods get restarted with the added arguments)
+   - Generate the kubeconfig `talosctl gen kubeconfig`
+   - Store the patch and the `secrets.yaml` securely (patch can be added to a repo unencrypted if it contains no secrets)
+
 3. Bootstrap flux into the cluster (with a deploy key to this repo)
+
+   - Create a GitHub repo and add a deploy key genereted with e.g. `ssh-keygen`
+   - Use the deploy key to bootstrap flux:
 
    ```bash
    flux bootstrap git \
@@ -27,10 +49,10 @@ mentioned in the documentation here.
     --path clusters/mcathome
    ```
 
-4. The initialisation will fail, since the deploy key to the private repo
-   containing the variables is not yet configured, and the SOPS key used to
-   decrypt some of the variables is not yet present. Create the necessary secret
-   manually:
+4. The initialisation of _this_ repo will fail, since the deploy key to the
+   private repo containing the variables is not yet configured, and the SOPS key
+   used to decrypt some of the variables is not yet present. Create the necessary
+   secret manually:
   
    - Deploy key:
 
