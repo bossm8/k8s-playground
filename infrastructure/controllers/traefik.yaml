@@ -35,7 +35,7 @@ spec:
       interval: 10m0s
   values:
     ingressClass:
-      create: true
+      enabled: true
       isDefaultClass: false
     experimental:
       plugins:
