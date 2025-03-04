@@ -51,6 +51,8 @@ spec:
           enabled: true
         serviceMonitor:
           enabled: true
+          additionalLabels:
+            release: kube-prometheus-stack
     globalArguments:
       - "--global.checknewversion=false"
       - "--global.sendanonymoususage=false"
@@ -83,22 +85,3 @@ spec:
           - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
           - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
           - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-    extraObjects:
-      - apiVersion: traefik.io/v1alpha1
-        kind: Middleware
-        metadata:
-          name: crowdsec
-        spec:
-          plugin:
-            crowdsec-bouncer:
-              enabled: true
-              logLevel: INFO
-
-              crowdsecLapiHost: ${csApiUrl}
-              crowdsecLapiScheme: http
-              crowdsecLapiKey: ${csApiKeyTraefik}
-
-              crowdsecAppsecEnabled: true
-              crowdsecAppsecHost: ${csAppSecUrl}
-              crowdsecAppsecFailureBlock: false
-              crowdsecAppsecUnreachableBlock: false

@@ -38,3 +38,5 @@ spec:
       enabled: true
       servicemonitor:
         enabled: true
+        labels:
+          release: kube-prometheus-stack
