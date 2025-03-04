@@ -76,6 +76,12 @@ spec:
           enabled: false
         darwin:
           enabled: false
+    kubelet:
+      serviceMonitor:
+        relabelings:
+        - sourceLabels: [__address__]
+          targetLabel: cluster
+          replacement: ${clusterName}
     kubeEtcd:
       endpoints:
         - ${singleNodeClusterIP}
