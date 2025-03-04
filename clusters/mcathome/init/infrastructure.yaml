@@ -48,7 +48,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: infra-observability
+    - name: infra-observability-metrics
   interval: 10m0s
   path: ./infrastructure/controllers
   postBuild:
