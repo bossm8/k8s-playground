@@ -30,7 +30,7 @@ spec:
         kind: HelmRepository
         name: jetstack
         namespace: cert-manager
-      inverval: 10m0s
+      interval: 10m0s
   values:
     crds:
       enabled: true
