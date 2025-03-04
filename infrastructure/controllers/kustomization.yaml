@@ -4,8 +4,9 @@ kind: Kustomization
 
 resources:
   - ingress-nginx.yaml
+  - ingress-traefik.yaml
   - cert-manager.yaml
-  - traefik.yaml
 
 patches:
   - path: cs-ingress-nginx.yaml
+  - path: cs-ingress-traefik.yaml
