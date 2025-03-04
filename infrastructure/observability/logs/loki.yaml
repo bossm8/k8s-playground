@@ -130,4 +130,3 @@ data:
         uid: loki
         url: http://loki.infra-observability:3100/
         access: proxy
-        isDefault: true
