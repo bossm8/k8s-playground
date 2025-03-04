@@ -22,13 +22,13 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infra-observability
+  name: infra-observability-metrics
   namespace: flux-system
 spec:
   interval: 10m0s
   dependsOn:
     - name: infra-storage
-  path: ./infrastructure/observability
+  path: ./infrastructure/observability/metrics
   postBuild:
     substituteFrom:
       - kind: ConfigMap
@@ -73,6 +73,28 @@ spec:
     - name: infra-controllers
   interval: 10m0s
   path: ./infrastructure/configs
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m0s
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-observability-logs
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  dependsOn:
+    - name: infra-configs
+  path: ./infrastructure/observability/logs
   postBuild:
     substituteFrom:
       - kind: ConfigMap
