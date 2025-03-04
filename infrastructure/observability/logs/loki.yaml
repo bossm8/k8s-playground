@@ -27,8 +27,7 @@ spec:
         namespace: infra-observability
       interval: 10m0s
   values:
-    global:
-      clusterLabelOverride: ${clusterName}
+    clusterLabelOverride: ${clusterName}
     loki:
       auth_enabled: false
       commonConfig:
