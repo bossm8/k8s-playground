@@ -47,7 +47,7 @@ spec:
           - source_labels: [__address__]
             regex: '(.*)'
             target_label: cluster
-            replacement: ${clusterName}
+            replacement: '${clusterName}'
         storageSpec:
           volumeClaimTemplate:
             spec:
