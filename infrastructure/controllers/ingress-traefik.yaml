@@ -58,6 +58,8 @@ spec:
       dashboard:
         enabled: true
     ports:
+      traefik:
+        port: 8000
       web:
         port: 8080
         nodePort: 30080
