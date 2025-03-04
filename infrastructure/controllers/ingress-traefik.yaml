@@ -59,16 +59,18 @@ spec:
         enabled: true
     ports:
       web:
-        port: 8081
-        hostPort: 8081
+        port: 8080
+        nodePort: 30080
         redirections:
           entryPoint:
             to: websecure
             scheme: https
             permanent: true
       websecure:
-        port: 9443
-        hostPort: 9443
+        port: 8443
+        nodePort: 30443
+    service:
+      type: NodePort
     tlsOptions:
       default:
         minVersion: VersionTLS12

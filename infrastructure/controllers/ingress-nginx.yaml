@@ -36,15 +36,14 @@ spec:
       interval: 10m0s
   values:
     controller:
-      hostPort:
-        enabled: true
-        ports:
-          http: 8080
-          https: 8443
       config:
         use-proxy-protocol: "true"
       service:
-        enabled: false
+        enabled: true
+        type: NodePort
+        nodePorts:
+          http: 31080
+          https: 31443
       metrics:
         enabled: true
       serviceMonitor:
