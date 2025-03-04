@@ -40,7 +40,7 @@ spec:
         pspEnabled: true
     prometheusOperator:
       extraArgs:
-        - --labels cluster=${clusterName}
+        - --labels=cluster=${clusterName}
     prometheus:
       prometheusSpec:
         externalLabels:
