@@ -17,9 +17,9 @@ spec:
           env:
             # TODO: Use safer approach to expose secrets (e.g. vault)
             - name: API_URL
-              value: ${csApiUrl}
+              value: "${csApiUrl}"
             - name: API_KEY
-              value: ${csApiKeyNginx}
+              value: "${csApiKeyNginx}"
             - name: BOUNCER_CONFIG
               value: "/crowdsec/crowdsec-bouncer.conf"
             - name: BAN_TEMPLATE_PATH
@@ -28,7 +28,7 @@ spec:
               value: /etc/nginx/lua/plugins/crowdsec/templates/captcha.html
 
             - name: APPSEC_URL
-              value: ${csAppSecUrl}
+              value: "${csAppSecUrl}"
             - name: APPSEC_FAILURE_ACTION
               value: passthrough
             - name: APPSEC_CONNECT_TIMEOUT
