@@ -43,11 +43,8 @@ spec:
         - --labels="cluster=${clusterName}"
     prometheus:
       prometheusSpec:
-        relabelConfigs:
-          - source_labels: [__address__]
-            regex: '(.*)'
-            target_label: cluster
-            replacement: '${clusterName}'
+        externalLabels:
+          cluster: ${clusterName}
         storageSpec:
           volumeClaimTemplate:
             spec:
