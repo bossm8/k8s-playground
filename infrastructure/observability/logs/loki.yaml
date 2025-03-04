@@ -27,6 +27,8 @@ spec:
         namespace: infra-observability
       interval: 10m0s
   values:
+    global:
+      clusterLabelOverride: ${clusterName}
     loki:
       auth_enabled: false
       commonConfig:
@@ -80,7 +82,7 @@ spec:
       serviceMonitor:
         enabled: true
         labels:
-          release: kube-prometheus-stack
+          release: ${prometheusReleaseLabel}
 
     ingress:
       enabled: true

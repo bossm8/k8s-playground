@@ -18,7 +18,7 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: kube-prometheus-stack
+  name: ${prometheusReleaseLabel}
   namespace: infra-observability
 spec:
   interval: 10m0s
@@ -26,7 +26,7 @@ spec:
     mode: enabled
   chart:
     spec:
-      chart: kube-prometheus-stack
+      chart: ${prometheusReleaseLabel}
       version: 69.6.x
       sourceRef:
         kind: HelmRepository
@@ -38,6 +38,9 @@ spec:
       rbac:
         create: true
         pspEnabled: true
+    prometheusOperator:
+      extraArgs:
+        - --labels="cluster=${clusterName}"
     prometheus:
       prometheusSpec:
         storageSpec:

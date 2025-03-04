@@ -11,6 +11,9 @@ spec:
     branch: main
   secretRef:
     name: k8s-playground-vars
+  ignore: |-
+    /*
+    !/variables
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization

@@ -31,4 +31,4 @@ spec:
     podMonitor:
       enabled: true
       additionalLabels:
-        release: kube-prometheus-stack
+        release: ${prometheusReleaseLabel}

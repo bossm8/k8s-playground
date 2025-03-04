@@ -52,7 +52,7 @@ spec:
         serviceMonitor:
           enabled: true
           additionalLabels:
-            release: kube-prometheus-stack
+            release: ${prometheusReleaseLabel}
     globalArguments:
       - "--global.checknewversion=false"
       - "--global.sendanonymoususage=false"
