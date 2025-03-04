@@ -55,7 +55,7 @@ spec:
       storage:
         type: filesystem
       compactor:
-        working_directory: /etc/lokidata/boltdb-shipper-compactor
+        working_directory: /var/loki/boltdb-shipper-compactor
         retention_enabled: true
         retention_delete_delay: 1h
         delete_request_store: filesystem
