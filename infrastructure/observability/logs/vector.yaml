@@ -15,7 +15,7 @@ metadata:
   namespace: infra-observability
 spec:
   interval: 10m0s
-  dritftDetection:
+  driftDetection:
     mode: enabled
   chart:
     spec:
