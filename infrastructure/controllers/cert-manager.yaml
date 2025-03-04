@@ -1,1 +1,40 @@
 ---
+apiVersin: v1
+kind: Namespace
+metadata:
+  name: cert-manager
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: jetstack
+  namespace: cert-manager
+spec:
+  interval: 1h30m
+  url: https://charts.jetstack.io
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+spec:
+  interval: 10m0s
+  driftDetection:
+    mode: enabled
+  chart:
+    spec:
+      chart: cert-manager
+      version: 1.17.x
+      sourceRef:
+        kind: HelmRepository
+        name: jetstack
+        namespace: cert-manager
+      inverval: 10m0s
+  values:
+    crds:
+      enabled: true
+    prometheus:
+      enabled: true
+      serviceMontitor:
+        enabled: true

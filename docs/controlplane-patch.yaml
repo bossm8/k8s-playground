@@ -75,8 +75,10 @@ kind: NetworkRuleConfig
 name: http-ingress-udp
 portSelector:
   ports:
-    - 8080
-    - 8443
+    - 30080
+    - 30433
+    - 31080
+    - 31443
   protocol: udp
 ingress:
   - subnet: 192.168.178.0/24    # Local network

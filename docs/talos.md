@@ -119,8 +119,10 @@ kind: NetworkRuleConfig
 name: http-ingress-tcp
 portSelector:
   ports:
-    - 80
-    - 443
+    - 30080
+    - 30433
+    - 31080
+    - 31443
   protocol: tcp
 ingress:
   - subnet: 192.168.178.0/24
@@ -130,8 +132,10 @@ kind: NetworkRuleConfig
 name: http-ingress-udp
 portSelector:
   ports:
-    - 80
-    - 443
+    - 30080
+    - 30433
+    - 31080
+    - 31443
   protocol: udp
 ingress:
   - subnet: 192.168.178.0/24
