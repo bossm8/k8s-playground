@@ -62,6 +62,8 @@ spec:
         compaction_interval: 30m
       ui:
         enabled: true
+        gateway:
+          enabled: false
 
     deploymentMode: SingleBinary
 
@@ -83,6 +85,8 @@ spec:
       hosts:
         - ${lokiHostName}
 
+    gateway:
+      enabled: false
     backend:
       replicas: 0
     read:
