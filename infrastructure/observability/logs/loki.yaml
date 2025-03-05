@@ -63,9 +63,7 @@ spec:
         delete_request_store: filesystem
         compaction_interval: 30m
       ui:
-        enabled: true
-        gateway:
-          enabled: false
+        enabled: false
 
     deploymentMode: SingleBinary
 
@@ -86,6 +84,9 @@ spec:
     ingress:
       enabled: true
       ingressClassName: traefik
+      annotations:
+        - traefik.ingress.kubernetes.io/router.entrypoints: websecure
+        - traefik.ingress.kubernetes.io/router.middlewares: loki-auth@kubernetescrd
       hosts:
         - ${lokiHostName}
 
@@ -132,3 +133,24 @@ data:
         uid: loki
         url: http://loki.infra-observability:3100/
         access: proxy
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: loki-auth
+  namespace: infra-observability
+spec:
+  basicAuth:
+    secret: loki-auth
+    removeHeader: true
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: loki-auth
+  namespace: infra-observability
+data:
+  # htpasswd -nb <username> <password> | openssl base64
+  users: |2
+    azhzLWxva2lAbWNhdGhvbWUuY2g6JGFwcjEkN3g5Y3JuaGYkb0s0WTFwSzdwRFBR
+    WnpqMlIuRGJlMAoK
