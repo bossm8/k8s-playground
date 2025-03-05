@@ -67,7 +67,7 @@ spec:
                     storage: 3Gi
     grafana:
       enabled: true
-      amdminUser: ${grafanaAdminUser}
+      adminUser: ${grafanaAdminUser}
       adminPassword: ${grafanaAdminPassword}
       ingress:
         enabled: true
