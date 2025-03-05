@@ -67,6 +67,20 @@ spec:
                     storage: 3Gi
     grafana:
       enabled: true
+      amdminUser: ${grafanaAdminUser}
+      adminPassword: ${grafanaAdminPassword}
+      ingress:
+        enabled: true
+        annotations:
+          cert-manager.io/cluster-issuer: letsencrypt-staging
+        ingressClassName: nginx
+        hosts:
+          - ${grafanaHostName}
+        tls:
+          - secretName: grafana-ingress-tls
+            hosts:
+              - ${grafanaHostName}
+
     nodeExporter:
       enabled: true
       operatingSystems:
