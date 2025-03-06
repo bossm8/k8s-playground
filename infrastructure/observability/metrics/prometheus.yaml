@@ -87,7 +87,7 @@ spec:
         dashboards:
           folderAnnotation: grafana_folder
           annotations:
-            grafana_folder: Kube Prometheus Stack
+            grafana_folder: Kubernetes
           provider:
             foldersFromFilesStructure: true
       dashboardProviders:
