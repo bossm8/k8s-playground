@@ -125,6 +125,10 @@ spec:
             targetLabel: cluster
             replacement: ${clusterName}
         
+    kubeEtcd:
+      endpoints:
+        - ${singleNodeClusterIP}
+
     kube-state-metrics:
       prometheus:
         monitor:
@@ -133,6 +137,10 @@ spec:
               targetLabel: cluster
               replacement: ${clusterName}
 
-    kubeEtcd:
-      endpoints:
-        - ${singleNodeClusterIP}
+    prometheus-node-exporter:
+      prometheus:
+        monitor:
+          relabelings:
+            - sourceLabels: [__address__]
+              targetLabel: cluster
+              replacement: ${clusterName}
