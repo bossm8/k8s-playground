@@ -88,6 +88,8 @@ spec:
           folderAnnotation: grafana_folder
           annotations:
             grafana_folder: Kube Prometheus Stack
+          provider:
+            foldersFromFilesStructure: true
       dashboardProviders:
         dashboardProviders.yaml:
           apiVersion: 1
