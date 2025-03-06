@@ -83,6 +83,16 @@ spec:
           - secretName: grafana-ingress-tls
             hosts:
               - ${grafanaHostName}
+      dashboards:
+        default:
+          ingress-nginx:
+            url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/heads/main/deploy/grafana/dashboards/nginx.json
+          ingress-nginx-request-handling-performance:
+            url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/heads/main/deploy/grafana/dashboards/request-handling-performance.json
+          traefik:
+            url: https://raw.githubusercontent.com/traefik/traefik/refs/heads/master/contrib/grafana/traefik.json
+          traefik-k8s:
+            url: https://raw.githubusercontent.com/traefik/traefik/refs/heads/master/contrib/grafana/traefik-kubernetes.json
 
     nodeExporter:
       enabled: true
