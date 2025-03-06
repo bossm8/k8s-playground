@@ -85,10 +85,12 @@ spec:
               - ${grafanaHostName}
       dashboards:
         default:
+          # https://github.com/kubernetes/ingress-nginx/tree/07a1133585b5200609b5523673aa443a20ac7a1f/deploy/grafana/dashboards
           ingress-nginx:
             url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/heads/main/deploy/grafana/dashboards/nginx.json
           ingress-nginx-request-handling-performance:
             url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/heads/main/deploy/grafana/dashboards/request-handling-performance.json
+          # https://github.com/traefik/traefik/tree/740b4cfd2502df4fa56a2727c5faeb821d3599a3/contrib/grafana
           traefik:
             url: https://raw.githubusercontent.com/traefik/traefik/refs/heads/master/contrib/grafana/traefik.json
           traefik-k8s:
