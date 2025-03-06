@@ -50,8 +50,5 @@ spec:
           enabled: true
           additionalLabels:
             release: ${prometheusReleaseLabel}
-      serviceMonitor:
-        enabled: true
-        additionalLabels:
-          release: ${prometheusReleaseLabel}
+
     
