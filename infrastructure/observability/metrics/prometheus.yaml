@@ -83,18 +83,23 @@ spec:
           - secretName: grafana-ingress-tls
             hosts:
               - ${grafanaHostName}
+      sidecar:
+        dashboards:
+          folderAnnotation: grafana_folder
+          annotations:
+            grafana_folder: Kube Prometheus Stack
       dashboardProviders:
         dashboardProviders.yaml:
           apiVersion: 1
           providers:
-            - name: default
+            - name: ingress
               orgId: 1
-              folder: ''
+              folder: Ingress
               type: file
               options:
-                path: /var/lib/grafana/dashboards/default
+                path: /var/lib/grafana/dashboards/ingress
       dashboards:
-        default:
+        ingress:
           # https://github.com/kubernetes/ingress-nginx/tree/07a1133585b5200609b5523673aa443a20ac7a1f/deploy/grafana/dashboards
           ingress-nginx:
             url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/heads/main/deploy/grafana/dashboards/nginx.json

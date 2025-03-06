@@ -76,6 +76,8 @@ spec:
     monitoring:
       dashboards:
         enabled: true
+        annotations:
+          grafana_folder: Loki
       serviceMonitor:
         enabled: true
         labels:
