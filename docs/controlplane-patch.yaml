@@ -136,3 +136,17 @@ portSelector:
 ingress:
   - subnet: 10.244.0.0/16       # Pod network
   - subnet: 10.96.0.0/12        # Kubernetes services
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: prometheus-exporters
+portSelector:
+  ports:
+    - 2381                      # etcd
+    - 9100                      # node-exporter
+    - 10249                     # kube-proxy
+    - 10257                     # kube-controller-manager
+    - 10259                     # kube-scheduler 
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/16       # Pod network

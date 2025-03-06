@@ -38,9 +38,11 @@ spec:
       rbac:
         create: true
         pspEnabled: true
+
     prometheusOperator:
       extraArgs:
         - --labels=cluster=${clusterName}
+
     prometheus:
       prometheusSpec:
         externalLabels:
@@ -55,6 +57,7 @@ spec:
                   storage: 15Gi
         retention: 14d
         retentionSize: 14.5GiB
+
     alertmanager:
       alertmanagerSpec:
         storage: 
@@ -90,12 +93,38 @@ spec:
           enabled: false
         darwin:
           enabled: false
+
     kubelet:
       serviceMonitor:
         relabelings:
-        - sourceLabels: [__address__]
-          targetLabel: cluster
-          replacement: ${clusterName}
+          - action: replace
+            sourceLabels: [__metrics_path__]
+            targetLabel: metrics_path
+          - action: replace
+            targetLabel: cluster
+            replacement: ${clusterName}
+        cAdvisorRelabelings:   
+          - action: replace
+            targetLabel: cluster
+            replacement: ${clusterName}
+          - action: replace
+            sourceLabels: [__metrics_path__]
+            targetLabel: metrics_path
+        probesRelabelings:
+          - action: replace
+            sourceLabels: [__metrics_path__]
+            targetLabel: metrics_path
+          - action: replace
+            targetLabel: cluster
+            replacement: ${clusterName}
+        resourceRelabelings:
+          - action: replace
+            sourceLabels: [__metrics_path__]
+            targetLabel: metrics_path
+          - action: replace
+            targetLabel: cluster
+            replacement: ${clusterName}
+        
     kube-state-metrics:
       prometheus:
         monitor:
@@ -103,6 +132,7 @@ spec:
             - sourceLabels: [__address__]
               targetLabel: cluster
               replacement: ${clusterName}
+
     kubeEtcd:
       endpoints:
         - ${singleNodeClusterIP}
