@@ -92,7 +92,7 @@ spec:
       annotations:
         traefik.ingress.kubernetes.io/router.entrypoints: websecure
         # TODO: adjust
-        traefik.ingress.kubernetes.io/router.middlewares: infra-observability-loki-auth@kubernetescrd,ifra-observability-loki-acl@kubernetescrd
+        traefik.ingress.kubernetes.io/router.middlewares: infra-observability-loki-acl@kubernetescrd
       hosts:
         - host: ${otlpHostName}
           paths:
