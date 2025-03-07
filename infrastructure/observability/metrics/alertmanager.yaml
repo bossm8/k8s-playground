@@ -3,6 +3,7 @@ apiVersion: monitoring.coreos.com/v1alpha1
 kind: AlertmanagerConfig
 metadata:
   name: discord
+  namespace: infra-observability
   labels:
     alertmanager: ${clusterName}
 spec:
