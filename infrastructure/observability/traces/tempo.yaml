@@ -31,8 +31,8 @@ spec:
 
     serviceMonitor:
       enabled: true
-      additionalLabels:
-        release: ${prometheusReleaseLabel}
+      # additionalLabels:
+      #   release: ${prometheusReleaseLabel}
 
     persistence:
       enabled: true
