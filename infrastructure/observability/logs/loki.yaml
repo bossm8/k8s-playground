@@ -88,7 +88,7 @@ spec:
       ingressClassName: traefik
       annotations:
         traefik.ingress.kubernetes.io/router.entrypoints: websecure
-        traefik.ingress.kubernetes.io/router.middlewares: infra-observability-loki-auth@kubernetescrd
+        traefik.ingress.kubernetes.io/router.middlewares: infra-observability-loki-auth@kubernetescrd,infra-observability-loki-acl@kubernetescrd
       hosts:
         - ${lokiHostName}
 
@@ -149,6 +149,16 @@ spec:
   basicAuth:
     secret: loki-auth
     removeHeader: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: loki-acl
+  namespace: infra-observability
+spec:
+  ipAllowList:
+    sourceRange:
+      - 192.168.178.0/24
 ---
 apiVersion: v1
 kind: Secret
