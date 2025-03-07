@@ -27,7 +27,11 @@ spec:
         namespace: infra-observability
       interval: 10m0s
   values:
+
     mode: deployment
+    image:
+      repository: otel/opentelemetry-collector-contrib
+
     presets:
       logsCollection:
         enabled: false
@@ -37,6 +41,7 @@ spec:
         enabled: true
       kubernetesEvents:
         enabled: true
+
     config:
       receivers:
         otlp:
