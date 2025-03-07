@@ -105,4 +105,4 @@ spec:
         release: ${prometheusReleaseLabel}
 
     prometheusRule:
-      enabled: true
+      enabled: false
