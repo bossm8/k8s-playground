@@ -33,6 +33,10 @@ spec:
       enabled: true
       additionalLabels:
         release: ${prometheusReleaseLabel}
+      relabelings:
+        - action: replace
+          targetLabel: cluster
+          replacement: ${clusterName}
     
     customConfig:
       data_dir: /vector-data-dir
@@ -82,7 +86,7 @@ spec:
         prom_exporter:
           type: prometheus_exporter
           inputs: 
-            - host_metrics
+            - internal_metrics
           address: 0.0.0.0:9090
 
         loki:
