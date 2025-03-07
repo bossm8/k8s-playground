@@ -78,9 +78,15 @@ spec:
             to: websecure
             scheme: https
             permanent: true
+        proxyProtocol:
+          trustedIPs:
+            - ${traefikProxyIP}
       websecure:
         port: 8443
         nodePort: 30443
+        proxyProtocol:
+          trustedIPs:
+            - ${traefikProxyIP}
     service:
       type: NodePort
     logs:
