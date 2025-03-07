@@ -63,6 +63,8 @@ spec:
         alertmanagerConfigSelector:
           matchLabels:
             alertmanager: ${clusterName}
+        alertmanagerConfigMatcherStrategy:
+          type: None
         storage: 
           volumeClaimTemplate:
             spec:
