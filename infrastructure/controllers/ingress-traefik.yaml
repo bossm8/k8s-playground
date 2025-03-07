@@ -83,6 +83,9 @@ spec:
         nodePort: 30443
     service:
       type: NodePort
+    logs:
+      access:
+        enabled: true
     tlsOptions:
       default:
         minVersion: VersionTLS12
