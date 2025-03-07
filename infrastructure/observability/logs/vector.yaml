@@ -28,6 +28,7 @@ spec:
       interval: 10m0s
   values:
     role: Agent
+
     podMonitor:
       enabled: true
       additionalLabels:
@@ -93,10 +94,10 @@ spec:
             codec: json
           labels:
             cluster: ${clusterName}
-            node: '{{ node }}'
-            namespace: '{{ namespace }}'
-            pod: '{{ pod }}'
-            container: '{{ container }}'
+            node: '{{ "{{ node }}" }}'
+            namespace: '{{ "{{ namespace }}" }}'
+            pod: '{{ "{{ pod }}" }}'
+            container: '{{ "{{ container }}" }}'
 
           remove_label_fields: true
 
