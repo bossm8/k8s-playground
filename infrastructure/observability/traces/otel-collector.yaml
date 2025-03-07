@@ -53,7 +53,7 @@ spec:
       exporters:
         debug: {}
         otlp/tempo:
-          endpoint: http://tempo-distributor:3100
+          endpoint: http://tempo.infra-observability:3100
       service:
         telemetry:
           metrics:
