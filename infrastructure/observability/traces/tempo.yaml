@@ -1,0 +1,78 @@
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: tempo
+  namespace: infra-observability
+spec:
+  interval: 10m0s
+  driftDetection:
+    mode: enabled
+  chart:
+    spec:
+      chart: tempo
+      version: 1.18.x
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: infra-observability
+      interval: 10m0s
+  values:
+
+    tempo:
+      reportingEnabled: false
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:4318
+
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: ${prometheusReleaseLabel}
+
+    persistence:
+      enabled: true
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tempo-datasource
+  namespace: infra-observability
+  labels:
+    grafana_datasource: "1"
+data:
+  tempo.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: Tempo
+        type: tempo
+        uid: tempo
+        access: proxy
+        url: http://tempo:3100
+        basicAuth: false
+        isDefault: false
+        jsonData:
+          httpMethod: GET
+          tracesToLogs:
+            datasourceUid: loki
+            spanStartTimeShift: "-5m"
+            spanEndTimeShift: "5m"
+            filterBySpanID: true
+            filterByTraceID: true
+            tags: ["job", "instance", "pod"]
+          tracesToMetrics:
+            datasourceUid: prometheus
+            tags: ["job", "instance", "pod"]
+            queries:
+              - name: "Request Rate"
+                query: "rate({{__tags.job}}[5m])"
+          nodeGraph:
+            enabled: true
+          lokiSearch:
+            datasourceUid: loki
+          serviceMap:
+            datasourceUid: prometheus

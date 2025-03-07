@@ -1,0 +1,103 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: open-telemetry
+  namespace: infra-observability
+spec:
+  interval: 1h30m
+  url: https://open-telemetry.github.io/opentelemetry-helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: otel-collector
+  namespace: infra-observability
+spec:
+  interval: 10m0s
+  driftDetection:
+    mode: enabled
+  chart:
+    spec:
+      chart: opentelemetry-collector
+      version: 0.117.x
+      sourceRef:
+        kind: HelmRepository
+        name: open-telemetry
+        namespace: infra-observability
+      interval: 10m0s
+  values:
+    mode: deployment
+    presets:
+      logsCollection:
+        enabled: false
+      hostMetrics:
+        enabled: false
+      kubernetesAttributes:
+        enabled: true
+      kubernetesEvents:
+        enabled: true
+    config:
+      receivers:
+        otlp:
+          protocols:
+            grpc:
+              endpoint: 0.0.0.0:4317
+            http:
+              endpoint: 0.0.0.0:4318
+      exporters:
+        debug: {}
+        otlp/tempo:
+          endpoint: http://tempo-distributor:3100
+      service:
+        telemetry:
+          metrics:
+            address: 0.0.0.0:8888
+        extensions:
+          - health_check
+        pipelines:
+          traces:
+            exporters:
+              - debug
+              - otlp/tempo
+            processors:
+              - memory_limiter
+              - batch
+            receivers:
+              - otlp
+    ports:
+      otlp:
+        enabled: true
+      otlp-http: 
+        enabled: true
+      metrics: 
+        enabled: true
+      jaeger-compact: 
+        enabled: false
+      jaeger-grpc: 
+        enabled: false
+      jaeger-thrift: 
+        enabled: false
+      zipkin:
+        enabled: false
+
+    ingress:
+      enabled: true
+      ingressClassName: traefik
+      annotations:
+        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+        traefik.ingress.kubernetes.io/router.middlewares: infra-observability-loki-auth@kubernetescrd
+      hosts:
+        - host: ${otlpHostName}
+          paths:
+            - path: /
+              pathType: Prefix
+              port: 4318
+    
+    serviceMonitor:
+      enabled: true
+      extraLabels:
+        release: ${prometheusReleaseLabel}
+
+    prometheusRule:
+      enabled: true

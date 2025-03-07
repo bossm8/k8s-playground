@@ -22,3 +22,9 @@ kubectl api-resources --verbs=list -o name \
 ```
 
 [source](https://github.com/prometheus-community/helm-charts/issues/1762)
+
+## Documentations
+
+- [Prometheus Operator](https://prometheus-operator.dev/docs/getting-started/introduction/)
+- [ArtifatcHub](https://artifacthub.io)
+- [OpenTelemetry](https://opentelemetry.io)
