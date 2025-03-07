@@ -53,7 +53,9 @@ spec:
       exporters:
         debug: {}
         otlp/tempo:
-          endpoint: http://tempo.infra-observability:3100
+          endpoint: tempo.infra-observability:4317
+          tls:
+            insecure: true
       service:
         telemetry:
           metrics:
