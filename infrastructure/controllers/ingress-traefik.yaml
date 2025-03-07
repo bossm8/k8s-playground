@@ -53,6 +53,14 @@ spec:
           enabled: true
           additionalLabels:
             release: ${prometheusReleaseLabel}
+    tracing:
+      addInternals: true
+      otlp:
+        enabled: true
+        grpc:
+          enabled: true
+          entpoint: otel-collector-opentelemetry-collector.infra-observability:4317
+          insecure: true
     globalArguments:
       - "--global.checknewversion=false"
       - "--global.sendanonymoususage=false"

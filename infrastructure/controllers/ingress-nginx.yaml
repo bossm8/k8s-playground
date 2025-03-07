@@ -38,6 +38,8 @@ spec:
     controller:
       config:
         use-proxy-protocol: "true"
+        enable-opentelemetry: "true"
+        otlp-collector-host: otel-collector-opentelemetry-collector.infra-observability
       service:
         enabled: true
         type: NodePort
