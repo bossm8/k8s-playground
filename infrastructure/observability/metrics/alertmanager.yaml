@@ -1,0 +1,21 @@
+---
+aapiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: discord
+  labels:
+    alertmanager: ${clusterName}
+spec:
+  route:
+    groupBy:
+      - alertname
+      - cluster
+      - job
+    groupWait: 5m
+    groupInterval: 10m
+    repeatInterval: 24h
+    receiver: discord
+  receivers:
+    - name: discord
+      webhookConfigs:
+        - url: ${discordFluxAlertAddress}
