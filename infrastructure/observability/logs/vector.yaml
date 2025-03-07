@@ -32,3 +32,71 @@ spec:
       enabled: true
       additionalLabels:
         release: ${prometheusReleaseLabel}
+    
+    customConfig:
+      data_dir: /vector-data-dir
+
+      api:
+        enabled: true
+        address: 127.0.0.1:8686
+        playground: false
+
+      sources:
+
+        kubernetes_logs_raw:
+          type: kubernetes_logs
+          namespace_annotation_fields:
+            namespace_labels: ""
+          node_annotation_fields:
+            node_labels: ""
+          pod_annotation_fields:
+            container_id: ""
+            container_image: ""
+            container_image_id: ""
+            pod_annotations: ""
+            pod_ip: ""
+            pod_ips: ""
+            pod_uid: ""
+
+        internal_metrics:
+          type: internal_metrics
+
+      transforms:
+
+        kubernetes_logs:
+          type: remap
+          inputs:
+            - kubernetes_logs_raw
+          source: |
+            .node = del(.kubernetes.node_name)
+            .namespace = del(.kubernetes.pod_namespace)
+            .pod = del(.kubernetes.pod_name)
+            .container = del(.kubernetes.container_name)
+
+            del(.file)
+            del(.kubernetes)
+
+      sinks:
+
+        prom_exporter:
+          type: prometheus_exporter
+          inputs: 
+            - host_metrics
+          address: 0.0.0.0:9090
+
+        loki:
+          type: loki
+          endpoint: http://loki:3100
+          inputs:
+            - kubernetes_logs
+          encoding:
+            codec: json
+          labels:
+            cluster: ${clusterName}
+            node: '{{ node }}'
+            namespace: '{{ namespace }}'
+            pod: '{{ pod }}'
+            container: '{{ container }}'
+
+          remove_label_fields: true
+
