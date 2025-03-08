@@ -37,7 +37,9 @@ spec:
   values:
     controller:
       config:
-        use-proxy-protocol: "true"
+        use-forwarded-headers: "true"
+        enable-real-ip: "true"
+        proxy-real-ip-cidr: "${proxyIP}"
         enable-opentelemetry: "true"
         otlp-collector-host: otel-collector-opentelemetry-collector.infra-observability
       service:
