@@ -64,7 +64,7 @@ spec:
         enabled: true
         grpc:
           enabled: true
-          entpoint: otel-collector-opentelemetry-collector.infra-observability:4317
+          endpoint: otel-collector-opentelemetry-collector.infra-observability:4317
           insecure: true
 
     logs:
