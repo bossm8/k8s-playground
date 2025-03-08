@@ -60,9 +60,9 @@ spec:
 
     tracing:
       addInternals: true
+      serviceName: traefik8s
       otlp:
         enabled: true
-        serviceName: traefik8s
         grpc:
           enabled: true
           endpoint: otel-collector-opentelemetry-collector.infra-observability:4317
