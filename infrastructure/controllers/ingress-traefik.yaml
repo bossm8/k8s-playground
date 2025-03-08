@@ -39,9 +39,6 @@ spec:
       enabled: true
       isDefaultClass: false
 
-    env:
-      - name: OTEL_PROPAGATORS
-
     experimental:
       plugins:
         crowdsec-bouncer:

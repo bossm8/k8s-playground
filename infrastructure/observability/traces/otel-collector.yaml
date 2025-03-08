@@ -38,9 +38,9 @@ spec:
       hostMetrics:
         enabled: false
       kubernetesAttributes:
-        enabled: true
+        enabled: false
       kubernetesEvents:
-        enabled: true
+        enabled: false
 
     config:
       receivers:
