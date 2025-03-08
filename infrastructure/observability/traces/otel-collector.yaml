@@ -51,7 +51,8 @@ spec:
             http:
               endpoint: 0.0.0.0:4318
       exporters:
-        debug: {}
+        debug:
+          verbosity: detailed
         otlp/tempo:
           endpoint: tempo.infra-observability:4317
           tls:
