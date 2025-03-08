@@ -82,8 +82,8 @@ spec:
         entryPoints:
           - websecure
         middlewares:
-          # - ingress-traefik-int-acl@kubernetescrd
-          - ingress-traefik-traefik-dashboard-redirect@kubernetescrd
+          - name: traefik-dashboard-redirect
+            namespace: ingress-traefik
 
     ports:
       traefik:
