@@ -128,5 +128,5 @@ metadata:
   namespace: ingress-traefik
 spec:
   redirectRegex:
-    regex: ^(https?://[^/]*)/?(dashboard)?$
+    regex: ^(https?://[^/]*)(/dashboard)?(/)?$
     replacement: $${1}/dashboard/
