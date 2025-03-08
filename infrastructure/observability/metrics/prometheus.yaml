@@ -84,10 +84,7 @@ spec:
         ingressClassName: nginx
         hosts:
           - ${grafanaHostName}
-        tls:
-          - secretName: grafana-ingress-tls
-            hosts:
-              - ${grafanaHostName}
+        tls: []
       sidecar:
         dashboards:
           folderAnnotation: grafana_folder

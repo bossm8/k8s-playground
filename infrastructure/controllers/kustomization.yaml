@@ -6,6 +6,7 @@ resources:
   - ingress-nginx.yaml
   - ingress-traefik.yaml
   - cert-manager.yaml
+  - middlewares.yaml
 
 patches:
   - path: cs-ingress-nginx.yaml

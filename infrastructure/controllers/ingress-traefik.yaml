@@ -34,16 +34,20 @@ spec:
         namespace: ingress-traefik
       interval: 10m0s
   values:
+
     ingressClass:
       enabled: true
       isDefaultClass: false
+
     experimental:
       plugins:
         crowdsec-bouncer:
           moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
           version: v1.4.1
+
     gateway:
       enabled: false
+
     metrics:
       addInternals: true
       prometheus:
@@ -53,6 +57,7 @@ spec:
           enabled: true
           additionalLabels:
             release: ${prometheusReleaseLabel}
+
     tracing:
       addInternals: true
       otlp:
@@ -61,12 +66,25 @@ spec:
           enabled: true
           entpoint: otel-collector-opentelemetry-collector.infra-observability:4317
           insecure: true
+
+    logs:
+      access:
+        enabled: true
+
     globalArguments:
       - "--global.checknewversion=false"
       - "--global.sendanonymoususage=false"
+
     ingressRoute:
       dashboard:
         enabled: true
+        matchRule: Host(`${traefikHostName}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+        entryPoints:
+          - websecure
+        middlewares:
+          # - ingress-traefik-int-acl@kubernetescrd
+          - ingress-traefik-traefik-dashboard-redirect@kubernetescrd
+
     ports:
       traefik:
         port: 8000
@@ -80,18 +98,17 @@ spec:
             permanent: true
         proxyProtocol:
           trustedIPs:
-            - ${traefikProxyIP}
+            - ${proxyIP}
       websecure:
         port: 8443
         nodePort: 30443
         proxyProtocol:
           trustedIPs:
-            - ${traefikProxyIP}
+            - ${proxyIP}
+
     service:
       type: NodePort
-    logs:
-      access:
-        enabled: true
+
     tlsOptions:
       default:
         minVersion: VersionTLS12
@@ -102,3 +119,13 @@ spec:
           - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
           - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
           - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-dashboard-redirect
+  namespace: ingress-traefik
+spec:
+  redirectRegex:
+    regex: ^https?://([^/]*)(/)?(dashboard)?$
+    replacement: $${1}/dashboard/
