@@ -42,7 +42,7 @@ spec:
       enabled: true
       className: traefik
       hosts:
-        - host: ${vectorFluentHostName}
+        - host: ${vectorSplunkHostName}
           paths:
             - path: /
               pathType: ImplementationSpecific
