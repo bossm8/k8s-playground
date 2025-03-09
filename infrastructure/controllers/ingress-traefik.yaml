@@ -123,8 +123,11 @@ spec:
             - ${proxyIP}
             - 10.244.0.0/16
 
+    # https://v1-31.docs.kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-type-nodeport
     service:
       type: NodePort
+      spec:
+        externalTrafficPolicy: Local
 
     tlsOptions:
       default:
