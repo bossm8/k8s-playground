@@ -84,16 +84,6 @@ spec:
         labels:
           release: ${prometheusReleaseLabel}
 
-    ingress:
-      enabled: true
-      ingressClassName: traefik
-      annotations:
-        traefik.ingress.kubernetes.io/router.entrypoints: websecure
-        traefik.ingress.kubernetes.io/router.middlewares: infra-observability-loki-auth@kubernetescrd,ingress-traefik-int-acl@kubernetescrd
-      hosts:
-        - ${lokiHostName}
-      tls: []
-
     gateway:
       enabled: false
     backend:
@@ -155,24 +145,3 @@ data:
               url: '{span:id="$${__value.raw}"}'
               datasourceUid: tempo
               urlDisplayLabel: View Span
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: loki-auth
-  namespace: infra-observability
-spec:
-  basicAuth:
-    secret: loki-auth
-    removeHeader: true
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: loki-auth
-  namespace: infra-observability
-data:
-  # htpasswd -nb <username> <password> | openssl base64
-  users: |2
-    azhzLWxva2lAbWNhdGhvbWUuY2g6JGFwcjEkN3g5Y3JuaGYkb0s0WTFwSzdwRFBR
-    WnpqMlIuRGJlMAoK
