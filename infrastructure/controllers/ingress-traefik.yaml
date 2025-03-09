@@ -104,6 +104,12 @@ spec:
         proxyProtocol:
           trustedIPs:
             - ${proxyIP}
+            - 10.244.0.0/16
+        forwardedHeaders:
+          trustedIPs:
+            - ${proxyIP}
+            - 10.244.0.0/16
+      trustedIPs: []
       websecure:
         port: 8443
         nodePort: 30443
@@ -111,11 +117,14 @@ spec:
         proxyProtocol:
           trustedIPs:
             - ${proxyIP}
+            - 10.244.0.0/16
+        forwardedHeaders:
+          trustedIPs:
+            - ${proxyIP}
+            - 10.244.0.0/16
 
     service:
       type: NodePort
-      spec:
-        externalTrafficPolicy: local
 
     tlsOptions:
       default:
