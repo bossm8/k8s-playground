@@ -90,8 +90,9 @@ spec:
       traefik:
         port: 8000
       web:
-        port: 30080
+        port: 8080
         nodePort: 30080
+        exposedPort: 30443
         redirections:
           entryPoint:
             to: websecure
@@ -101,8 +102,9 @@ spec:
           trustedIPs:
             - ${proxyIP}
       websecure:
-        port: 30443
+        port: 8443
         nodePort: 30443
+        exposedPort: 30443
         proxyProtocol:
           trustedIPs:
             - ${proxyIP}
