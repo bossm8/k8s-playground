@@ -67,7 +67,7 @@ data:
             filterByTraceID: false
             filterBySpanID: false
             customQuery: true
-            query: '{cluster="$${__tags.cluster}"} |= "$${__trace.traceId}"'
+            query: '{cluster="$${__tags.cluster}"} | json | payload_trace_id="$${__trace.traceId}"'
           nodeGraph:
             enabled: true
           lokiSearch:
