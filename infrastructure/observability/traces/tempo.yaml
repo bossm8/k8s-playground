@@ -64,10 +64,10 @@ data:
             spanStartTimeShift: '-10m'
             spanEndTimeShift: '10m'
             tags: ['cluster']
-            filterByTraceID: true
+            filterByTraceID: false
             filterBySpanID: false
             customQuery: true
-            query: 'cluster="$${__tags.cluster}"'
+            query: '{cluster="$${__tags.cluster}"} | json | trace_id="$${__trace.traceId}"'
           nodeGraph:
             enabled: true
           lokiSearch:
