@@ -141,6 +141,13 @@ data:
         uid: loki
         url: http://loki.infra-observability:3100/
         access: proxy
+        jsonData:
+          derivedFields:
+          - name: TraceID
+            matcherRegex: TraceId":"(\w+)
+            url: "$${__value.raw}"
+            datasourceUid: tempo
+            urlDisplayLabel: 'View Trace'
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
