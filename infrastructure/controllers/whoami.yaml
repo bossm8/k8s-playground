@@ -54,6 +54,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: whoami-traefik-ingress
+  namespace: ingress-traefik
   labels:
     app.kubernetes.io/component: debug
     app.kubernetes.io/instance: traefik-whoami
