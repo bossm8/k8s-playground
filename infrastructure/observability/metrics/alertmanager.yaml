@@ -33,4 +33,4 @@ spec:
       discordConfigs:
         - apiURL:
             name: discord-webhook-url
-            key: webhook
+            key: address
