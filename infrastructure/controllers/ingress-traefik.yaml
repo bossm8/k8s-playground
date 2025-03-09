@@ -69,8 +69,11 @@ spec:
           insecure: true
 
     logs:
+      general:
+        format: json
       access:
         enabled: true
+        format: json
 
     globalArguments:
       - "--global.checknewversion=false"
