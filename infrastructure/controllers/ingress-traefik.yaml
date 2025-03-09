@@ -92,7 +92,7 @@ spec:
       web:
         port: 8080
         nodePort: 30080
-        exposedPort: 30443
+        exposedPort: 30080
         redirections:
           entryPoint:
             to: websecure
