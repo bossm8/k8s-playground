@@ -77,9 +77,6 @@ spec:
         external_logs_raw:
           type: fluent
           address: 0.0.0.0:9000
-          permit_origin:
-            - ${proxyIP}/24
-            - 10.244.0.0/16
 
         internal_metrics:
           type: internal_metrics
