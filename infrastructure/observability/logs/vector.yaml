@@ -47,7 +47,7 @@ spec:
             - path: /
               pathType: ImplementationSpecific
               port:
-                number: 9000
+                number: 8088
     
     customConfig:
       data_dir: /vector-data-dir
@@ -75,8 +75,8 @@ spec:
             pod_uid: ""
 
         external_logs_raw:
-          type: fluent
-          address: 0.0.0.0:9000
+          type: splunk_hec
+          address: 0.0.0.0:8088
 
         internal_metrics:
           type: internal_metrics
@@ -88,13 +88,14 @@ spec:
           inputs:
             - external_logs_raw
           source: |
-            .node = del(.tag)
+            res, err = parse_regex(string!(.tag), r'(?P<node>([^/]*))/(?P<container>.*)')
+            if err == null {
+              .node = res.node
+              .container = res.container
+              .pod = .container
+            }
             .namespace = "external"
-            .pod = .container_name
-            .container = del(.container_name)
-            del(.container_id)
-
-            .message = del(.log)
+            .message = del(.line)
 
         kubernetes_logs:
           type: remap

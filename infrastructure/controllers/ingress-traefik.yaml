@@ -92,6 +92,11 @@ spec:
       web:
         port: 8080
         nodePort: 30080
+        redirections:
+          entryPoint:
+            to: 30443
+            scheme: https
+            permanent: true
         proxyProtocol:
           trustedIPs:
             - ${proxyIP}
