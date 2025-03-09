@@ -102,13 +102,33 @@ spec:
           inputs:
             - kubernetes_logs_raw
           source: |
-            .node = del(.kubernetes.node_name)
+            .node = del(.kubernetes.pod_node_name)
             .namespace = del(.kubernetes.pod_namespace)
             .pod = del(.kubernetes.pod_name)
             .container = del(.kubernetes.container_name)
 
             del(.file)
             del(.kubernetes)
+
+        processed_logs:
+          type: remap
+          inputs:
+            - kubernetes_logs
+            - external_logs
+          source: |
+            res, err = parse_json(string(.message)) ??
+                       parse_klog(string(.message))
+            if err == null {
+              .payload = res
+              del(.message)
+
+              # transform all json keys to snake_case
+              forEach(.payload) |key, val| -> {
+                snakecase(.key)
+              }
+            } else {
+              .payload = del(.message)
+            }
 
       sinks:
 
@@ -122,7 +142,7 @@ spec:
           type: loki
           endpoint: http://loki:3100
           inputs:
-            - kubernetes_logs
+            - processed_logs
           encoding:
             codec: json
           labels:
