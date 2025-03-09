@@ -126,7 +126,7 @@ spec:
             } else {
               res = .message
             }
-            if err == null ||  {
+            if err == null {
               del(.message)
               payload = {}
               # transform all json keys to snake_case
