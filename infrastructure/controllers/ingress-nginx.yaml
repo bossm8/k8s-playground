@@ -44,8 +44,7 @@ spec:
         otlp-collector-host: otel-collector-opentelemetry-collector.infra-observability
 
         log-format-escape-json: "true"
-        log-format-upstream: |-
-          {
+        log-format-upstream: '{
             "@timestamp": "$time_iso8601",
             "remote_ip": "$remote_addr",
             "remote_user": "$remote_user",
@@ -64,8 +63,8 @@ spec:
             "traceparent": "$opentelemetry_context_traceparent",
             "trace_id": "$opentelemetry_trace_id",
             "span_id": "$opentelemetry_span_id",
-            "req_id": "$req_id",
-          }
+            "req_id": "$req_id"
+          }'
 
       service:
         enabled: true

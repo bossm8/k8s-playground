@@ -37,6 +37,17 @@ spec:
         - action: replace
           targetLabel: cluster
           replacement: ${clusterName}
+
+    ingress:
+      enabled: true
+      className: traefik
+      hosts:
+        - host: ${vectorFluentHostName}
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+              port:
+                number: 9000
     
     customConfig:
       data_dir: /vector-data-dir
@@ -63,10 +74,30 @@ spec:
             pod_ips: ""
             pod_uid: ""
 
+        external_logs_raw:
+          type: fluent
+          address: 0.0.0.0:9000
+          permit_origin:
+            - ${proxyIP}/24
+            - 10.244.0.0/16
+
         internal_metrics:
           type: internal_metrics
 
       transforms:
+
+        external_logs:
+          type: remap
+          inputs:
+            - external_logs_raw
+          source: |
+            .node = del(.tag)
+            .namespace = "external"
+            .pod = .container_name
+            .container = del(.container_name)
+            del(.container_id)
+
+            .message = del(.log)
 
         kubernetes_logs:
           type: remap
