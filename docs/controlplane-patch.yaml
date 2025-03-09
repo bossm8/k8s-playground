@@ -59,36 +59,11 @@ ingress:
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
-name: http-ingress-tcp
-portSelector:
-  ports:
-    - 30080
-    - 30433
-    - 31080
-    - 31443
-  protocol: tcp
-ingress:
-  - subnet: 192.168.178.0/24    # Local network
----
-apiVersion: v1alpha1
-kind: NetworkRuleConfig
-name: http-ingress-udp
-portSelector:
-  ports:
-    - 30080
-    - 30433
-    - 31080
-    - 31443
-  protocol: udp
-ingress:
-  - subnet: 192.168.178.0/24    # Local network
----
-apiVersion: v1alpha1
-kind: NetworkRuleConfig
 name: etcd-ingress
 portSelector:
   ports:
-    - 2379-2380
+    - 2379
+    - 2380
   protocol: tcp
 ingress:
   - subnet: 192.168.178.74/32   # Talos node IP
