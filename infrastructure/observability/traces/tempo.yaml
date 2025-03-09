@@ -44,6 +44,8 @@ metadata:
   namespace: infra-observability
   labels:
     grafana_datasource: "1"
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
 data:
   tempo.yaml: |
     apiVersion: 1
@@ -57,13 +59,15 @@ data:
         isDefault: false
         jsonData:
           httpMethod: GET
-          tracesToLogs:
-            datasourceUid: loki
-            spanStartTimeShift: "-5m"
-            spanEndTimeShift: "5m"
-            filterBySpanID: false
+          tracesToLogsV2:
+            datasourceUid: 'loki'
+            spanStartTimeShift: '-10m'
+            spanEndTimeShift: '10m'
+            tags: ['cluster']
             filterByTraceID: true
-            tags: [cluster]
+            filterBySpanID: false
+            customQuery: true
+            query: 'cluster="$${__tags.cluster}"'
           nodeGraph:
             enabled: true
           lokiSearch:
