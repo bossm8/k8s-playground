@@ -45,25 +45,25 @@ spec:
 
         log-format-escape-json: "true"
         log-format-upstream: '{
-          "@timestamp": "$time_iso8601",
-          "remote_ip": "$remote_addr",
-          "remote_user": "$remote_user",
-          "request": "$request",
-          "status": "$status",
-          "response_size": "$body_bytes_sent",
-          "referer": "$http_referer",
-          "user_agent": "$http_user_agent",
-          "request_size_total": "$request_length",
-          "request_time": "$request_time",
-          "proxy_upstream_name": "$proxy_upstream_name",
-          "upstream_addr": "$upstream_addr",
-          "upstream_status": "$upstream_status",
-          "upstream_response_size_total": "$upstream_response_length",
-          "upstream_response_time": "$upstream_response_time",
-          "traceparent": "$opentelemetry_context_traceparent",
-          "trace_id": "$opentelemetry_trace_id",
-          "span_id": "$opentelemetry_span_id",
-          "req_id": "$req_id"
+            "@timestamp": "$time_iso8601",
+            "remote_ip": "$remote_addr",
+            "remote_user": "$remote_user",
+            "request": "$request",
+            "status": "$status",
+            "response_size": "$body_bytes_sent",
+            "referer": "$http_referer",
+            "user_agent": "$http_user_agent",
+            "request_size_total": "$request_length",
+            "request_time": "$request_time",
+            "proxy_upstream_name": "$proxy_upstream_name",
+            "upstream_addr": "$upstream_addr",
+            "upstream_status": "$upstream_status",
+            "upstream_response_size_total": "$upstream_response_length",
+            "upstream_response_time": "$upstream_response_time",
+            "traceparent": "$opentelemetry_context_traceparent",
+            "trace_id": "$opentelemetry_trace_id",
+            "span_id": "$opentelemetry_span_id",
+            "req_id": "$req_id"
           }'
 
       service:
