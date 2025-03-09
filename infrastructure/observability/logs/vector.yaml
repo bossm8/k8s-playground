@@ -93,9 +93,11 @@ spec:
               .node = res.node
               .container = res.container
               .pod = .container
+              del(.tag)
             }
             .namespace = "external"
             .message = del(.line)
+            del(.host)
 
         kubernetes_logs:
           type: remap
@@ -116,9 +118,15 @@ spec:
             - kubernetes_logs
             - external_logs
           source: |
-            res, err = parse_json(string!(.message)) ??
-                       parse_klog(string!(.message))
-            if err == null {
+            res = null
+            err = null
+            if !is_object(.message) {
+              res, err = parse_json(string!(.message)) ??
+                         parse_klog(string!(.message))
+            } else {
+              res = .message
+            }
+            if err == null ||  {
               del(.message)
               payload = {}
               # transform all json keys to snake_case
