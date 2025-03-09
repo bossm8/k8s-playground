@@ -144,13 +144,13 @@ data:
         jsonData:
           derivedFields:
             - name: TraceID
-              matcherRegex: trace_id":"(\w+)
-              url: $${__value.raw}
+              matcherRegex: '"trace_id":"(\w+)"'
+              url: '$${__value.raw}'
               datasourceUid: tempo
               urlDisplayLabel: View Trace
             - name: SpanID
-              matcherRegex: span_id":"(\w+)
-              url: $${__value.raw}
+              matcherRegex: '"span_id":"(\w+)"'
+              url: '{span:id="$${__value.raw}"}'
               datasourceUid: tempo
               urlDisplayLabel: View Span
 ---
