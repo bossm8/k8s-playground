@@ -116,8 +116,8 @@ spec:
             - kubernetes_logs
             - external_logs
           source: |
-            res, err = parse_json(string(.message)) ??
-                       parse_klog(string(.message))
+            res, err = parse_json(string!(.message)) ??
+                       parse_klog(string!(.message))
             if err == null {
               del(.message)
               payload = {}
