@@ -132,6 +132,8 @@ metadata:
   namespace: infra-observability
   labels:
     grafana_datasource: "1"
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
 data:
   loki.yaml: |
     apiVersion: 1
