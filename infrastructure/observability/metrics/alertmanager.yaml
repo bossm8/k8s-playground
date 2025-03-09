@@ -22,5 +22,5 @@ spec:
     receiver: discord
   receivers:
     - name: discord
-      webhookConfigs:
-        - url: ${discordFluxAlertAddress}
+      discordConfigs:
+        - webhook_url: ${discordFluxAlertAddress}
