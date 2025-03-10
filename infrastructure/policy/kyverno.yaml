@@ -19,6 +19,9 @@ metadata:
   name: kyverno
   namespace: kyverno
 spec:
+  interval: 10m0s
+  driftDetection:
+    mode: enabled
   chart:
     spec:
       chart: kyverno
