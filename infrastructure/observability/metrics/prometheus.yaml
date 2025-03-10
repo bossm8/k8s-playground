@@ -102,7 +102,7 @@ spec:
               type: file
               options:
                 path: /var/lib/grafana/dashboards/ingress
-            - name: loki
+            - name: loki-sb
               orgId: 1
               folder: Loki Single Binary
               type: file
@@ -120,7 +120,7 @@ spec:
             url: https://raw.githubusercontent.com/traefik/traefik/refs/heads/master/contrib/grafana/traefik.json
           traefik-k8s:
             url: https://raw.githubusercontent.com/traefik/traefik/refs/heads/master/contrib/grafana/traefik-kubernetes.json
-        loki:
+        loki-sb:
           loki-chunks:
             url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-chunks.json
           loki-deletion:
