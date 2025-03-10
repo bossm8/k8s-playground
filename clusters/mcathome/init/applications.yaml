@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   dependsOn:
-    - name: infra-configs
+    - name: infra-policy
   interval: 10m0s
   path: ./applications
   postBuild:

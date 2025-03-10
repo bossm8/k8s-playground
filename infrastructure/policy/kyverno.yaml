@@ -1,0 +1,75 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kyverno
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: kyverno
+  namespace: kyverno
+spec:
+  interval: 1h30m
+  url: https://kyverno.github.io/kyverno/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kyverno
+  namespace: kyverno
+spec:
+  chart:
+    spec:
+      chart: kyverno
+      version: 3.3.x
+      sourceRef:
+        kind: HelmRepository
+        name: kyverno
+        namespace: kyverno
+      interval: 10m0s
+  values:
+    grafana:
+      enabled: true
+      annotations:
+        grafana_folder: Kyverno
+    
+    admissionController:
+      serviceMonitor:
+        enabled: true
+        additionalLabels:
+          release: ${prometheusReleaseLabel}
+      tracing:
+        enabled: true
+        address: otel-collector-opentelemetry-collector.infra-observability
+        port: 4317
+
+    backgroundController:
+      serviceMonitor:
+        enabled: true
+        additionalLabels:
+          release: ${prometheusReleaseLabel}
+      tracing:
+        enabled: true
+        address: otel-collector-opentelemetry-collector.infra-observability
+        port: 4317
+      
+    cleanupController:
+      serviceMonitor:
+        enabled: true
+        additionalLabels:
+          release: ${prometheusReleaseLabel}
+      tracing:
+        enabled: true
+        address: otel-collector-opentelemetry-collector.infra-observability
+        port: 4317
+
+    reportsController:
+      serviceMonitor:
+        enabled: true
+        additionalLabels:
+          release: ${prometheusReleaseLabel}
+      tracing:
+        enabled: true
+        address: otel-collector-opentelemetry-collector.infra-observability
+        port: 4317
