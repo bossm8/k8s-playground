@@ -56,7 +56,7 @@ spec:
           extraResources:
             - apiGroups: ["rbac.authorization.k8s.io"]
               resources: ["rolebindings"]
-              verbs: ["get", "create", "update"]
+              verbs: ["get"]
 
     backgroundController:
       serviceMonitor:
@@ -67,6 +67,12 @@ spec:
         enabled: true
         address: otel-collector-opentelemetry-collector.infra-observability
         port: 4317
+      rbac:
+        clusterRole:
+          extraResources:
+            - apiGroups: ["rbac.authorization.k8s.io"]
+              resources: ["rolebindings"]
+              verbs: ["get"]
       
     cleanupController:
       serviceMonitor:
