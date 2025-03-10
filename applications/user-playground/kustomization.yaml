@@ -1,0 +1,9 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - playground-roles.yaml
+  - playground-policies.yaml
+  - namespace-creators.yaml
+

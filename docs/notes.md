@@ -28,3 +28,5 @@ kubectl api-resources --verbs=list -o name \
 - [Prometheus Operator](https://prometheus-operator.dev/docs/getting-started/introduction/)
 - [ArtifatcHub](https://artifacthub.io)
 - [OpenTelemetry](https://opentelemetry.io)
+- [Kubernetes RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+- [Kubernetes x509](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#x509-client-certificates)

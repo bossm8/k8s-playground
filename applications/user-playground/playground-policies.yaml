@@ -1,0 +1,58 @@
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: enforce-namespace-prefix
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+    - name: require-namespace-prefix
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+      exclude:
+        any:
+          - clusterRoles:
+              - cluster-admin
+      validate:
+        message: Namespace names must start with '{{ request.userInfo.username }}-'
+        pattern:
+          metadata:
+            name: "{{ request.userInfo.username }}-*"
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: assign-namespace-owner
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+    - name: assign-namespace-owner
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+      exclude:
+        any:
+          - clusterRoles:
+              - cluster-admin
+      generate:
+        synchronize: true
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: RoleBinding
+        name: namespace-owner
+        namespace: "{{ request.object.metadata.name }}"
+        data:
+          spec:
+            subjects:
+              - kind: User
+                name: "{{ request.userInfo.username }}"
+            roleRef:
+              apiGroup: rbac.authorization.k8s.io
+              kind: ClusterRole
+              name: namespace-owner

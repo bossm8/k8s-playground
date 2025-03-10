@@ -86,6 +86,16 @@ be applied with --mode=try to see if all works before enforcing it
 Since we opened the services on all interfaces, we now make sure to block
 request coming from external, allowing only API and HTTP/HTTPS traffic.
 
+**NOTE**: Talos is not able to block kubernetes created ports, such as
+[NodePort services](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport).
+This is because those are already processed in the pre-routing table.
+[source](https://ronaknathani.com/blog/2020/07/kubernetes-nodeport-and-iptables-rules/);
+[source](https://learnk8s.io/kubernetes-services-and-load-balancing#kube-proxy-and-iptables-rules);
+[source](https://stackoverflow.com/questions/62923633/use-iptables-to-block-all-kubernetes-nodeport-communication-from-outside-of-clus);
+[source](https://routemyip.com/posts/k8s/networking/nodeport-iptable-under-the-hood/)
+
+To block NodePorts a CNI which provides this functionality needs to be used, e.g. cilium.
+
 Add the following to the `controlplane.yaml`:
 
 ```yaml
@@ -116,36 +126,11 @@ ingress:
 ---
 apiVersion: v1alpha1
 kind: NetworkRuleConfig
-name: http-ingress-tcp
-portSelector:
-  ports:
-    - 30080
-    - 30433
-    - 31080
-    - 31443
-  protocol: tcp
-ingress:
-  - subnet: 192.168.178.0/24
----
-apiVersion: v1alpha1
-kind: NetworkRuleConfig
-name: http-ingress-udp
-portSelector:
-  ports:
-    - 30080
-    - 30433
-    - 31080
-    - 31443
-  protocol: udp
-ingress:
-  - subnet: 192.168.178.0/24
----
-apiVersion: v1alpha1
-kind: NetworkRuleConfig
 name: etcd-ingress
 portSelector:
   ports:
-    - 2379-2380
+    - 2379
+    - 2380
   protocol: tcp
 ingress:
   - subnet: 192.168.178.74/32
