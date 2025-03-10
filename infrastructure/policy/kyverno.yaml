@@ -32,6 +32,11 @@ spec:
         namespace: kyverno
       interval: 10m0s
   values:
+
+    features:
+      logging:
+        format: json
+
     grafana:
       enabled: true
       annotations:
