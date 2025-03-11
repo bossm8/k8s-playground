@@ -17,7 +17,7 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: enforce-namespace-prefix
-  naannotations:
+  annotations:
     policies.kyverno.io/title: Enforce Username Prefix in Namespace
     policies.kyverno.io/category: Multi-Tenancy Playground
     policies.kyverno.io/subject: Namespace
