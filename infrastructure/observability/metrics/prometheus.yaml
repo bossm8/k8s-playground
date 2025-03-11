@@ -137,6 +137,7 @@ spec:
               options:
                 path: /var/lib/grafana/dashboards/otelcol
       dashboards:
+        # https://github.com/grafana/helm-charts/blob/dd5ddc09b40f7b3db2cce2d1a48bb5cbbe84cbe8/charts/grafana/values.yaml#L813
         ingress:
           # https://github.com/kubernetes/ingress-nginx/tree/07a1133585b5200609b5523673aa443a20ac7a1f/deploy/grafana/dashboards
           ingress-nginx:
