@@ -5,7 +5,7 @@ metadata:
   namespace: infra-observability
 type: Opaque
 stringData:
-  address: ${discordFluxAlertAddress}
+  address: ${discordAlertmanagerAddress}
 ---
 apiVersion: monitoring.coreos.com/v1alpha1
 kind: AlertmanagerConfig
