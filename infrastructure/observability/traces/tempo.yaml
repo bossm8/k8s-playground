@@ -8,6 +8,28 @@ spec:
   interval: 10m0s
   driftDetection:
     mode: enabled
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              version: monitoring.coreos.com/v1
+              kind: ServiceMonitor
+              name: tempo
+            patch: |
+              - op: add
+                path: /spec/endpoints/0/relabelings
+                value:
+                  - action: replace
+                    replacement: ${clusterName}
+                    sourceLabels: ["__address__"]
+                    targetLabel: cluster
+              - op: add
+                path: /spec/endpoints/1/relabelings
+                value:
+                  - action: replace
+                    replacement: ${clusterName}
+                    sourceLabels: ["__address__"]
+                    targetLabel: cluster
   chart:
     spec:
       chart: tempo
