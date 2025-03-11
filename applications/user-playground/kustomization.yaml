@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - playground-roles.yaml
   - playground-policies.yaml
-  - namespace-creators.yaml
 

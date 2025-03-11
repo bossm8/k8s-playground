@@ -1,25 +1,36 @@
 #!/bin/bash
 
+# This script generates a new user with default namespace creation
+# permissions in the cluster
+
 USER=$1
 TALOS_MC=$2
 
+function usage() {
+  echo "Usage: /bin/bash create-user.sh <username> <talos-controlplane-config>"
+}
+
 if test -z ""$USER""; then
-  echo "Username argument is required"
+  echo "Error: Username argument is required"
+  usage
   exit 1
 fi
 
 if test -z "$TALOS_MC"; then
-  echo "Talos controlplane machineconfig path is required (must include secrets)"
+  echo "Error: Talos controlplane machineconfig path is required"
+  usage
   exit 1
 fi
 
 if ! which yq; then
-  echo "yq is required to use this script"
+  echo "Error: yq is required to use this script"
   exit 1
 fi
 
-CA_CRT="$(cat $TALOS_MC | yq -r '.cluster.ca.crt' | base64 -d)"
-CA_KEY="$(cat $TALOS_MC | yq -r '.cluster.ca.key' | base64 -d)"
+if ! which kubectl; then
+  echo "Error: kubectl is required to use this script"
+  exit 1
+fi
 
 openssl ecparam -name secp256r1 -genkey -noout -out $1.key
 openssl ec -in "$USER".key -pubout > "$USER".pub
@@ -46,6 +57,24 @@ sleep 5
 kubectl get csr "$USER" -o jsonpath='{ .status.certificate }'| base64 -d > "$USER".crt
 kubectl delete csr "$USER"
 
+cat <<EOF | kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: namespace-creator:"$USER"
+  labels:
+    app.kubernetes.io/component: user-playground
+    app.kubernetes.io/managed-by: create-user.sh
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: User
+    name: "$USER"
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: namespace-creator
+EOF
+
 export KUBECONFIG=./"$USER"-kubeconfig
 
 CLUSTERNAME="$(cat $TALOS_MC | yq -r '.cluster.clusterName')"
@@ -63,4 +92,7 @@ kubectl config set-context default \
   --user="$USER"
 kubectl config use-context default
 
+# Cleanup generated resources
 rm -rf "$USER".*
+
+echo "Info: Kubeconfig written to $KUBECONFIG"
