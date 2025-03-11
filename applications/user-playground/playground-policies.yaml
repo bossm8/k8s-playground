@@ -47,6 +47,100 @@ spec:
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
+  name: add-tenant-label
+  annotations:
+    policies.kyverno.io/title: Add Namespace Tenant Label
+    policies.kyverno.io/category: Multi-Tenancy Playground
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/description: >-
+      This policy adds the tenant label to a created namespace by a non admin
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+    - name: create-network-policy
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+      exclude:
+        any:
+          - clusterRoles:
+            - cluster-admin
+      mutate:
+        patchStrategicMerge:
+          metadata:
+            labels:
+              kyverno.io/tenant: "{{ request.userInfo.username }}"
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: setup-tenant-network-policies
+  annotations:
+    policies.kyverno.io/title: Add Networkpolicies to Tenant Namespace
+    policies.kyverno.io/category: Multi-Tenancy Playground
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/description: >-
+      This policy adds default newtorkpolicies to the tenant namespace
+spec:
+  validationFailureAction: Enforce
+  background: false
+  rules:
+    - name: create-network-policy
+      match:
+        any:
+          - resources:
+              kinds:
+                - Namespace
+      exclude:
+        any:
+          - clusterRoles:
+            - cluster-admin
+      generate:
+        synchronize: true
+        apiVersion: networking.k8s.io/v1
+        kind: NetworkPolicy
+        name: default
+        namespace: "{{ request.object.metadata.name }}"
+        data:
+          metadata:
+            labels:
+              kyverno.io/tenant: "{{ request.userInfo.username }}"
+          podSelector: {}
+          policyTypes:
+            - Ingress
+            - Egress
+          ingress:
+            - from:
+                - namespaceSelector:
+                    matchLabels:
+                      kyverno.io/tenant: "{{ request.userInfo.username }}"
+                - namespaceSelector:
+                    matchExpressions:
+                      - key: kubernetes.io/metadata.name
+                        operator: In
+                        values: 
+                          - infra-observability
+                          - ingress-traefik
+                          - ingress-nginx
+                          - flux-system
+          egress:
+            - to:
+              - namespaceSelector:
+                  matchLabels:
+                    kyverno.io/tenant: "{{ request.userInfo.username }}"
+            - ipBlock:
+                cidr: 0.0.0.0/0
+                except:
+                  - 10.0.0.0/8
+                  - 192.168.0.0/16
+                  - 172.16.0.0/12
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
   name: assign-namespace-owner
   annotations:
     policies.kyverno.io/title: Add Namespace Owner RoleBinding
@@ -77,8 +171,8 @@ spec:
         namespace: "{{ request.object.metadata.name }}"
         data:
           metadata:
-            annotations:
-              kyverno.io/user: "{{ request.userInfo.username }}"
+            labels:
+              kyverno.io/tenant: "{{ request.userInfo.username }}"
           roleRef:
             apiGroup: rbac.authorization.k8s.io
             kind: ClusterRole
