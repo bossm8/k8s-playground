@@ -8,11 +8,13 @@ spec:
   interval: 10m0s
   driftDetection:
     mode: enabled
+  # https://fluxcd.io/flux/components/helm/helmreleases/#post-renderers
   postRenderers:
     - kustomize:
         patches:
           - target:
-              version: monitoring.coreos.com/v1
+              group: monitoring.coreos.com
+              version: v1
               kind: ServiceMonitor
               name: tempo
             patch: |
