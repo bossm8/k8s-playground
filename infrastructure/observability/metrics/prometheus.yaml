@@ -130,6 +130,12 @@ spec:
               type: file
               options:
                 path: /var/lib/grafana/dashboards/cert-manager
+            - name: otelcol
+              orgId: 1
+              folder: OpenTelemetry
+              type: file
+              options:
+                path: /var/lib/grafana/dashboards/otelcol
       dashboards:
         ingress:
           # https://github.com/kubernetes/ingress-nginx/tree/07a1133585b5200609b5523673aa443a20ac7a1f/deploy/grafana/dashboards
@@ -177,7 +183,10 @@ spec:
           # https://gitlab.com/uneeq-oss/cert-manager-mixin/-/tree/9a8a0816dbac8a6074a4cc1677535798b4e7c9c4/dashboards
           cert-manager:
             url: https://gitlab.com/uneeq-oss/cert-manager-mixin/-/raw/master/dashboards/cert-manager.json?ref_type=heads
-
+        otelcol:
+          data-flow:
+            gnetId: 18309
+            # revision: 2
 
     nodeExporter:
       enabled: true
