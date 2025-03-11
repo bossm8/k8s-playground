@@ -118,6 +118,18 @@ spec:
               type: file
               options:
                 path: /var/lib/grafana/dashboards/loki-sb
+            - name: tempo
+              orgId: 1
+              folder: Tempo
+              type: file
+              options:
+                path: /var/lib/grafana/dashboards/tempo
+            - name: cert-manager
+              orgId: 1
+              folder: Cert-Manager
+              type: file
+              options:
+                path: /var/lib/grafana/dashboards/cert-manager
       dashboards:
         ingress:
           # https://github.com/kubernetes/ingress-nginx/tree/07a1133585b5200609b5523673aa443a20ac7a1f/deploy/grafana/dashboards
@@ -147,6 +159,24 @@ spec:
             url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-logs.json
           loki-recording-rules:
             url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-mixin-recording-rules.json
+        tempo:
+          # https://github.com/grafana/tempo/tree/a8e43302876f49359ccdf3a93b7321db0c028280/operations/tempo-mixin-compiled/dashboards
+          tempo-operational:
+            url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-operational.json
+          tempo-reads:
+            url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-reads.json
+          tempo-resources:
+            url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-resources.json
+          tempo-rollout-progress:
+            url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-rollout-progress.json
+          tempo-tenants:
+            url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-tenants.json
+          tempo-writes:
+            url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-writes.json
+        cert-manager:
+          # https://gitlab.com/uneeq-oss/cert-manager-mixin/-/tree/9a8a0816dbac8a6074a4cc1677535798b4e7c9c4/dashboards
+          cert-manager:
+            url: https://gitlab.com/uneeq-oss/cert-manager-mixin/-/raw/master/dashboards/cert-manager.json?ref_type=heads
 
 
     nodeExporter:
