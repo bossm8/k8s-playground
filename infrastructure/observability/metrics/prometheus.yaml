@@ -189,6 +189,7 @@ spec:
             gnetId: 18309
             datasource: Prometheus
             # revision: 2
+            # https://github.com/grafana/grafana/issues/10786
 
     nodeExporter:
       enabled: true
