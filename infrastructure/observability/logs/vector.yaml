@@ -31,8 +31,6 @@ spec:
 
     podMonitor:
       enabled: true
-      additionalLabels:
-        release: ${prometheusReleaseLabel}
       relabelings:
         - action: replace
           targetLabel: cluster

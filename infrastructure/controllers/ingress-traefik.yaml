@@ -55,8 +55,6 @@ spec:
           enabled: true
         serviceMonitor:
           enabled: true
-          additionalLabels:
-            release: ${prometheusReleaseLabel}
 
     tracing:
       addInternals: false

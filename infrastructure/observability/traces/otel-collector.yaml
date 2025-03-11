@@ -106,8 +106,6 @@ spec:
     
     serviceMonitor:
       enabled: true
-      extraLabels:
-        release: ${prometheusReleaseLabel}
 
     prometheusRule:
       enabled: false

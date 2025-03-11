@@ -45,8 +45,6 @@ spec:
     admissionController:
       serviceMonitor:
         enabled: true
-        additionalLabels:
-          release: ${prometheusReleaseLabel}
       tracing:
         enabled: true
         address: otel-collector-opentelemetry-collector.infra-observability
@@ -61,8 +59,6 @@ spec:
     backgroundController:
       serviceMonitor:
         enabled: true
-        additionalLabels:
-          release: ${prometheusReleaseLabel}
       tracing:
         enabled: true
         address: otel-collector-opentelemetry-collector.infra-observability
@@ -77,8 +73,6 @@ spec:
     cleanupController:
       serviceMonitor:
         enabled: true
-        additionalLabels:
-          release: ${prometheusReleaseLabel}
       tracing:
         enabled: true
         address: otel-collector-opentelemetry-collector.infra-observability
@@ -87,8 +81,6 @@ spec:
     reportsController:
       serviceMonitor:
         enabled: true
-        additionalLabels:
-          release: ${prometheusReleaseLabel}
       tracing:
         enabled: true
         address: otel-collector-opentelemetry-collector.infra-observability

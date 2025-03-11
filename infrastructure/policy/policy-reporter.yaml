@@ -45,9 +45,6 @@ spec:
 
     monitoring:
       enabled: true
-      serviceMonitor:
-        labels:
-          release: ${prometheusReleaseLabel}
       grafana:
         dashboards:
           multicluster:

@@ -79,8 +79,6 @@ spec:
         enabled: false
       serviceMonitor:
         enabled: true
-        labels:
-          release: ${prometheusReleaseLabel}
 
     gateway:
       enabled: false
