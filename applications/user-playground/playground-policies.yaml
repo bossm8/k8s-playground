@@ -94,9 +94,6 @@ spec:
           - resources:
               kinds:
                 - Namespace
-              selector:
-                matchLabels:
-                  kyverno.io/tenant: '*'
       exclude:
         any:
           - clusterRoles:
@@ -111,7 +108,7 @@ spec:
           spec:
             metadata:
               labels:
-                kyverno.io/tenant: '{{ request.object.metadata.labels.["kyverno.io/tenant"] }}'
+                kyverno.io/tenant: '{{ request.userInfo.usernname }}'
             podSelector: {}
             policyTypes:
               - Ingress
@@ -120,7 +117,7 @@ spec:
               - from:
                   - namespaceSelector:
                       matchLabels:
-                        kyverno.io/tenant: '{{ request.object.metadata.labels.["kyverno.io/tenant"] }}'
+                        kyverno.io/tenant: '{{ request.userInfo.usernname }}'
                   - namespaceSelector:
                       matchExpressions:
                         - key: kubernetes.io/metadata.name
@@ -133,7 +130,7 @@ spec:
               - to:
                 - namespaceSelector:
                     matchLabels:
-                      kyverno.io/tenant: '{{ request.object.metadata.labels.["kyverno.io/tenant"] }}'
+                      kyverno.io/tenant: '{{ request.userInfo.usernname }}'
                 - ipBlock:
                     cidr: 0.0.0.0/0
                     except:
