@@ -74,7 +74,6 @@ spec:
             labels:
               kyverno.io/tenant: "{{ request.userInfo.username }}"
 ---
-# TODO make backround when tenant label is set
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
@@ -87,7 +86,7 @@ metadata:
       This policy adds default newtorkpolicies to the tenant namespace
 spec:
   validationFailureAction: Enforce
-  background: false
+  background: true
   rules:
     - name: create-network-policy
       match:
@@ -95,6 +94,9 @@ spec:
           - resources:
               kinds:
                 - Namespace
+            selector:
+              matchLabels:
+                kyverno.io/tenant: "*"
       exclude:
         any:
           - clusterRoles:
@@ -109,7 +111,7 @@ spec:
           spec:
             metadata:
               labels:
-                kyverno.io/tenant: "{{ request.userInfo.username }}"
+                kyverno.io/tenant: "{{ request.object.metadata.labels.['kyverno.io/tenant'] }}"
             podSelector: {}
             policyTypes:
               - Ingress
@@ -118,7 +120,7 @@ spec:
               - from:
                   - namespaceSelector:
                       matchLabels:
-                        kyverno.io/tenant: "{{ request.userInfo.username }}"
+                        kyverno.io/tenant: "{{ request.object.metadata.labels.['kyverno.io/tenant'] }}"
                   - namespaceSelector:
                       matchExpressions:
                         - key: kubernetes.io/metadata.name
@@ -131,7 +133,7 @@ spec:
               - to:
                 - namespaceSelector:
                     matchLabels:
-                      kyverno.io/tenant: "{{ request.userInfo.username }}"
+                      kyverno.io/tenant: "{{ request.object.metadata.labels.['kyverno.io/tenant'] }}"
                 - ipBlock:
                     cidr: 0.0.0.0/0
                     except:
