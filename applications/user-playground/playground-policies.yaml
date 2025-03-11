@@ -1,8 +1,29 @@
 ---
+# https://kyverno.io/docs/writing-policies/generate/#generating-bindings
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: kyverno:generate-namespace-owner
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: namespace-owner
+subjects:
+- kind: ServiceAccount
+  name: kyverno-background-controller
+  namespace: kyverno
+---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: enforce-namespace-prefix
+  naannotations:
+    policies.kyverno.io/title: Enforce Username Prefix in Namespace
+    policies.kyverno.io/category: Multi-Tenancy Playground
+    policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/description: >-
+      This policy ensures that non admin users can only create namespaces
+      prefixed with their username.
 spec:
   validationFailureAction: Enforce
   background: false
@@ -18,7 +39,7 @@ spec:
           - clusterRoles:
               - cluster-admin
       validate:
-        message: Namespace names must start with '{{ request.userInfo.username }}-'
+        message: Namespace names must start with "{{ request.userInfo.username }}-"
         pattern:
           metadata:
             name: "{{ request.userInfo.username }}-*"
@@ -27,6 +48,13 @@ apiVersion: kyverno.io/v1
 kind: ClusterPolicy
 metadata:
   name: assign-namespace-owner
+  annotations:
+    policies.kyverno.io/title: Add Namespace Owner RoleBinding
+    policies.kyverno.io/category: Multi-Tenancy Playground
+    policies.kyverno.io/subject: RoleBinding
+    policies.kyverno.io/description: >-
+      This policy assigns namespace admin permissions to the user which created
+      the namespace by binding the ClusterRole namespace-owner.
 spec:
   validationFailureAction: Enforce
   background: false
@@ -42,17 +70,20 @@ spec:
           - clusterRoles:
               - cluster-admin
       generate:
-        synchronize: true
+        synchronize: false
         apiVersion: rbac.authorization.k8s.io/v1
         kind: RoleBinding
         name: namespace-owner
         namespace: "{{ request.object.metadata.name }}"
         data:
-          spec:
-            subjects:
-              - kind: User
-                name: "{{ request.userInfo.username }}"
-            roleRef:
+          metadata:
+            annotations:
+              kyverno.io/user: "{{ request.userInfo.username }}"
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: namespace-owner
+          subjects:
+            - kind: User
+              name: "{{ request.userInfo.username }}"
               apiGroup: rbac.authorization.k8s.io
-              kind: ClusterRole
-              name: namespace-owner
