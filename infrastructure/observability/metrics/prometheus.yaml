@@ -186,6 +186,7 @@ spec:
         otelcol:
           data-flow:
             gnetId: 18309
+            datasource: Prometheus
             # revision: 2
 
     nodeExporter:
