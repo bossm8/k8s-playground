@@ -86,7 +86,7 @@ metadata:
       This policy adds default newtorkpolicies to the tenant namespace
 spec:
   validationFailureAction: Enforce
-  background: true
+  background: false
   rules:
     - name: create-network-policy
       match:
@@ -97,6 +97,10 @@ spec:
               selector:
                 matchLabels:
                   kyverno.io/tenant: '*'
+      exclude:
+        any:
+          - clusterRoles:
+            - cluster-admin
       generate:
         synchronize: true
         apiVersion: networking.k8s.io/v1
