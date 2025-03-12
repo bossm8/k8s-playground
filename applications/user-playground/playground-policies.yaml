@@ -20,6 +20,7 @@ metadata:
   annotations:
     policies.kyverno.io/title: Enforce Username Prefix in Namespace
     policies.kyverno.io/category: Multi-Tenancy Playground
+    policies.kyverno.io/severity: warn
     policies.kyverno.io/subject: Namespace
     policies.kyverno.io/description: >-
       This policy ensures that non admin users can only create namespaces
@@ -52,6 +53,7 @@ metadata:
     policies.kyverno.io/title: Add Namespace Tenant Label
     policies.kyverno.io/category: Multi-Tenancy Playground
     policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/severity: info
     policies.kyverno.io/description: >-
       This policy adds the tenant label to a created namespace by a non admin
 spec:
@@ -82,6 +84,7 @@ metadata:
     policies.kyverno.io/title: Add Networkpolicies to Tenant Namespace
     policies.kyverno.io/category: Multi-Tenancy Playground
     policies.kyverno.io/subject: Namespace
+    policies.kyverno.io/severity: info
     policies.kyverno.io/description: >-
       This policy adds default newtorkpolicies to the tenant namespace
 spec:
@@ -147,6 +150,7 @@ metadata:
     policies.kyverno.io/title: Add Namespace Owner RoleBinding
     policies.kyverno.io/category: Multi-Tenancy Playground
     policies.kyverno.io/subject: RoleBinding
+    policies.kyverno.io/severity: info
     policies.kyverno.io/description: >-
       This policy assigns namespace admin permissions to the user which created
       the namespace by binding the ClusterRole namespace-owner.
