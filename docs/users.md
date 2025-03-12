@@ -23,5 +23,5 @@ of the same tenant and with the internet. The user will also get permissions
 to manage core api resources as well as listing the networking resources with
 the [namespace-owner role](../applications/user-playground/playground-roles.yaml).
 
-This functionality is provided by the kyverno policy 
+This functionality is provided by the kyverno policy
 "[Multi-Tenancy Playground](../applications/user-playground/playground-policies.yaml)"

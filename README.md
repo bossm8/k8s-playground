@@ -8,7 +8,7 @@ Manifests in this repository are deployed with [FluxCD]().
 
 ### Core
 
-- Cilium CNI
+- Cilium CNI (TBD)
 - Local Path Provisioner
 
 ### GitOps
@@ -36,4 +36,4 @@ Manifests in this repository are deployed with [FluxCD]().
 
 ## Additional Functionalities
 
-- Tenant playground namespaces
+- Tenant Playground Namespaces
