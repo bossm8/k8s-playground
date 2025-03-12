@@ -124,7 +124,7 @@ spec:
           source: |
             res = null
             err = null
-            if includes(["tempo", "grafana"], string!(.container)) {
+            if includes(["tempo", "grafana", "loki"], string!(.container)) {
               res, err = parse_logfmt(string!(.message))
             } else if !is_object(.message) {
               res, err = parse_json(string!(.message)) ??
