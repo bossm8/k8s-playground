@@ -36,6 +36,12 @@ spec:
           targetLabel: cluster
           replacement: ${clusterName}
 
+    env:
+      - name: VECTOR_COLOR
+        value: never
+      - name: VECTOR_LOG_FORMAT
+        value: json
+
     ingress:
       enabled: true
       className: traefik
