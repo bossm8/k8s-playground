@@ -198,16 +198,16 @@ machine:
 Instead of adding the changes mentioned above manually to the file
 talosctl can be leveraged to
 [apply patches](https://www.talos.dev/v1.5/talos-guides/configuration/patching/).
-The [patch](./controlplane-patch.yaml) can be used like this:
+The [patch](../config/controlplane-patch.yaml) can be used like this:
 
 ```bash
 talosctl machineconfig patch \
-  --patch @controlplane-patch.yaml \
+  --patch @config/controlplane-patch.yaml \
   ~/controlplane.yaml
 ```
 
 Or directly on the node when the default was installed:
 
 ```bash
-talosctl patch mc --patch @controlplane-patch.yaml
+talosctl patch mc --patch @config/controlplane-patch.yaml
 ```

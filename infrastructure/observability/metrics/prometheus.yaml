@@ -37,6 +37,8 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: flux-crs-metrics
+    - kind: ConfigMap
+      name: grafana-sc-dashboards
 
   values:
     global:
@@ -107,106 +109,6 @@ spec:
             grafana_folder: Kubernetes
           provider:
             foldersFromFilesStructure: true
-      dashboardProviders:
-        dashboardProviders.yaml:
-          apiVersion: 1
-          providers:
-            - name: ingress
-              orgId: 1
-              folder: Ingress
-              type: file
-              options:
-                path: /var/lib/grafana/dashboards/ingress
-            - name: loki-sb
-              orgId: 1
-              folder: Loki Single Binary
-              type: file
-              options:
-                path: /var/lib/grafana/dashboards/loki-sb
-            - name: tempo
-              orgId: 1
-              folder: Tempo
-              type: file
-              options:
-                path: /var/lib/grafana/dashboards/tempo
-            - name: cert-manager
-              orgId: 1
-              folder: Cert-Manager
-              type: file
-              options:
-                path: /var/lib/grafana/dashboards/cert-manager
-            - name: otelcol
-              orgId: 1
-              folder: OpenTelemetry
-              type: file
-              options:
-                path: /var/lib/grafana/dashboards/otelcol
-            - name: flux
-              orgId: 1
-              folder: FluxCD
-              type: file
-              options:
-                path: /var/lib/grafana/dashboards/flux
-      dashboards:
-        # https://github.com/grafana/helm-charts/blob/dd5ddc09b40f7b3db2cce2d1a48bb5cbbe84cbe8/charts/grafana/values.yaml#L813
-        ingress:
-          # https://github.com/kubernetes/ingress-nginx/tree/07a1133585b5200609b5523673aa443a20ac7a1f/deploy/grafana/dashboards
-          ingress-nginx:
-            url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/heads/main/deploy/grafana/dashboards/nginx.json
-          ingress-nginx-request-handling-performance:
-            url: https://raw.githubusercontent.com/kubernetes/ingress-nginx/refs/heads/main/deploy/grafana/dashboards/request-handling-performance.json
-          # https://github.com/traefik/traefik/tree/740b4cfd2502df4fa56a2727c5faeb821d3599a3/contrib/grafana
-          traefik:
-            url: https://raw.githubusercontent.com/traefik/traefik/refs/heads/master/contrib/grafana/traefik.json
-          traefik-k8s:
-            url: https://raw.githubusercontent.com/traefik/traefik/refs/heads/master/contrib/grafana/traefik-kubernetes.json
-        loki-sb:
-          loki-chunks:
-            url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-chunks.json
-          loki-deletion:
-            url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-deletion.json
-          loki-writes:
-            url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-writes.json
-          loki-reads:
-            url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-reads.json
-          loki-operational:
-            url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-operational.json
-          loki-retention:
-            url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-retention.json
-          loki-logs:
-            url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-logs.json
-          loki-recording-rules:
-            url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-mixin-recording-rules.json
-        tempo:
-          # https://github.com/grafana/tempo/tree/a8e43302876f49359ccdf3a93b7321db0c028280/operations/tempo-mixin-compiled/dashboards
-          tempo-operational:
-            url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-operational.json
-          tempo-reads:
-            url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-reads.json
-          tempo-resources:
-            url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-resources.json
-          tempo-rollout-progress:
-            url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-rollout-progress.json
-          tempo-tenants:
-            url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-tenants.json
-          tempo-writes:
-            url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-writes.json
-        cert-manager:
-          # https://gitlab.com/uneeq-oss/cert-manager-mixin/-/tree/9a8a0816dbac8a6074a4cc1677535798b4e7c9c4/dashboards
-          cert-manager:
-            url: https://gitlab.com/uneeq-oss/cert-manager-mixin/-/raw/master/dashboards/cert-manager.json?ref_type=heads
-        otelcol:
-          data-flow:
-            gnetId: 18309
-            datasource: Prometheus
-            # revision: 2
-            # https://github.com/grafana/grafana/issues/10786
-        flux:
-          # https://github.com/fluxcd/flux2-monitoring-example/tree/16e3ff288381f119db35a48cf3e99d9615b6517b/monitoring/configs/dashboards
-          cluster:
-            url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/refs/heads/main/monitoring/configs/dashboards/cluster.json
-          contol-plane:
-            url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/refs/heads/main/monitoring/configs/dashboards/control-plane.json
 
     nodeExporter:
       enabled: true

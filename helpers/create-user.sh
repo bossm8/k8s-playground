@@ -10,16 +10,14 @@ function usage() {
   echo "Usage: /bin/bash create-user.sh <username> <talos-controlplane-config>"
 }
 
-if test -z ""$USER""; then
-  echo "Error: Username argument is required"
-  usage
-  exit 1
+if test -z "$USER" || ! [[ "$USER" =~ ^[a-z]+$ ]]; then
+  echo "Error: Valid username argument is required (allowed chars: a-z)"
+  usage && exit 1
 fi
 
-if test -z "$TALOS_MC"; then
+if test -z "$TALOS_MC" || ! test -f "$TALOS_MC"; then
   echo "Error: Talos controlplane machineconfig path is required"
-  usage
-  exit 1
+  usage && exit 1
 fi
 
 if ! which yq; then
@@ -56,6 +54,8 @@ kubectl certificate approve "$USER"
 sleep 5
 kubectl get csr "$USER" -o jsonpath='{ .status.certificate }'| base64 -d > "$USER".crt
 kubectl delete csr "$USER"
+
+echo "Assigning RBAC to allow creation of namespaces to $USER"
 
 cat <<EOF | kubectl apply -f -
 apiVersion: rbac.authorization.k8s.io/v1

@@ -16,6 +16,13 @@ configMapGenerator:
       labels:
         app.kubernetes.io/part-of: flux
         app.kubernetes.io/component: monitoring
+  - name: grafana-sc-dashbaords
+    files:
+      - values.yaml=grafana-sc-dashboards.yaml
+    options:
+      labels:
+        app.kubernetes.io/part-of: grafana
+        app.kubernetes.io/component: monitoring
 
 configurations:
   - kustomizeconfig.yaml
