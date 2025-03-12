@@ -11,7 +11,7 @@ resources:
 configMapGenerator:
   - name: flux-crs-metrics
     files:
-      - flux-crs-metrics.yaml
+      - values.yaml=flux-crs-metrics.yaml
     options:
       labels:
         app.kubernetes.io/part-of: flux
