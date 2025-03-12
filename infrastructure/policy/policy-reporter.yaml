@@ -33,7 +33,7 @@ spec:
 
     logging:
       encoding: json
-      logLevel: 4
+      logLevel: -1
 
     target:
       discord:
