@@ -29,6 +29,11 @@ spec:
   values:
     clusterLabelOverride: ${clusterName}
 
+    global:
+      extraEnv:
+        - name: LOG_FORMAT
+          value: json
+
     loki:
       auth_enabled: false
       commonConfig:
