@@ -53,9 +53,9 @@ spec:
             http:
               endpoint: 0.0.0.0:4318
 
-    extraEnv:
-      - name: LOG_FORMAT
-        value: json
+      extraEnv:
+        - name: LOG_FORMAT
+          value: json
 
     serviceMonitor:
       enabled: true
