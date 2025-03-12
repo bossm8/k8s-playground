@@ -36,6 +36,8 @@ spec:
           targetLabel: cluster
           replacement: ${clusterName}
 
+    podLabels: {}
+
     env:
       - name: VECTOR_COLOR
         value: never
