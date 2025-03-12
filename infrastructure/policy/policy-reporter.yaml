@@ -49,3 +49,5 @@ spec:
         dashboards:
           multicluster:
             enabled: false # need to add cluster label
+        folder:
+          name: Kyverno/Policy Reporter
