@@ -118,7 +118,9 @@ spec:
           source: |
             res = null
             err = null
-            if !is_object(.message) {
+            if includes(["tempo", "grafana"], string!(.container)) {
+              res, err = parse_logfmt(string!(.message))
+            } else if !is_object(.message) {
               res, err = parse_json(string!(.message)) ??
                          parse_klog(string!(.message))
             } else {
