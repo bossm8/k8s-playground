@@ -33,6 +33,11 @@ spec:
         name: prometheus-community
         namespace: infra-observability
       interval: 10m0s
+
+  valuesFrom:
+    - kind: ConfigMap
+      name: flux-crs-metrics
+
   values:
     global:
       rbac:
@@ -255,40 +260,6 @@ spec:
             - sourceLabels: [__address__]
               targetLabel: cluster
               replacement: ${clusterName}
-      customResourceState:
-        enabled: true
-        config:
-          spec:
-            resources:
-              - groupVersionKind:
-                  group: helm.toolkit.fluxcd.io
-                  version: v2
-                  kind: HelmRelease
-                metricNamePrefix: gotk
-                metrics:
-                  - name: resource_info
-                    help: The current state of a GitOps Toolkit resource.
-                    each:
-                      type: Info
-                      info:
-                        labelsFromPath:
-                          name: [metadata, name]
-                    labelsFromPath:
-                      exported_namespace: [metadata, namespace]
-                      suspended: [spec, suspend]
-                      ready: [status, conditions, "[type=Ready]", status]
-                  - name: helmrelease_version_info
-                    help: The version information of helm release resource.
-                    each:
-                      type: Info
-                      info:
-                        labelsFromPath:
-                          chart_version: [status, history, "0", chartVersion]
-                          app_version: [ status, history, "0", appVersion ]
-                    labelsFromPath:
-                      name: [metadata, name]
-                      exported_namespace: [metadata, namespace]
-                      chart_name: [spec, chart, spec, chart]
 
     prometheus-node-exporter:
       prometheus:

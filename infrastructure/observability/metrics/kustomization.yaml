@@ -6,3 +6,15 @@ resources:
   - prometheus.yaml
   - notifications.yaml
   - alertmanager.yaml
+
+configMapGenerator:
+  - name: flux-crs-metrics
+    files:
+      - flux-crs-metrics.yaml
+    options:
+      labels:
+        app.kubernetes.io/part-of: flux
+        app.kubernetes.io/component: monitoring
+
+configurations:
+  - kustomizeconfig.yaml
