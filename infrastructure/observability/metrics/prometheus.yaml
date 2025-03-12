@@ -136,6 +136,12 @@ spec:
               type: file
               options:
                 path: /var/lib/grafana/dashboards/otelcol
+            - name: flux
+              orgId: 1
+              folder: FluxCD
+              type: file
+              options:
+                path: /var/lib/grafana/dashboards/flux
       dashboards:
         # https://github.com/grafana/helm-charts/blob/dd5ddc09b40f7b3db2cce2d1a48bb5cbbe84cbe8/charts/grafana/values.yaml#L813
         ingress:
@@ -190,6 +196,12 @@ spec:
             datasource: Prometheus
             # revision: 2
             # https://github.com/grafana/grafana/issues/10786
+        flux:
+          # https://github.com/fluxcd/flux2-monitoring-example/tree/16e3ff288381f119db35a48cf3e99d9615b6517b/monitoring/configs/dashboards
+          cluster:
+            url: https://github.com/fluxcd/flux2-monitoring-example/blob/main/monitoring/configs/dashboards/cluster.json
+          contol-plane:
+            url: https://github.com/fluxcd/flux2-monitoring-example/blob/main/monitoring/configs/dashboards/control-plane.json
 
     nodeExporter:
       enabled: true
@@ -251,3 +263,30 @@ spec:
             - sourceLabels: [__address__]
               targetLabel: cluster
               replacement: ${clusterName}
+
+    extraManifests:
+      - apiVersion: monitoring.coreos.com/v1
+        kind: PodMonitor
+        metadata:
+          name: flux-system
+          namespace: flux-system
+          labels:
+            app.kubernetes.io/part-of: flux
+            app.kubernetes.io/component: monitoring
+        spec:
+          namespaceSelector:
+            matchNames:
+              - flux-system
+          selector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - helm-controller
+                  - source-controller
+                  - kustomize-controller
+                  - notification-controller
+                  - image-automation-controller
+                  - image-reflector-controller
+          podMetricsEndpoints:
+            - port: http-prom
