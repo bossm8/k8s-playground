@@ -41,7 +41,7 @@ for arg in "$@"; do
         --set hubble.metrics.enableOpenMetrics=true
         --set hubble.metrics.serviceMonitor.enabled=true
         --set hubble.metrics.dashboards.enabled=true
-        --set hubble.metrics.dashboards.annotations.grafana_folder=Cilium/Hubble
+        --set hubble.metrics.dashboards.annotations.grafana_folder=Cilium
         --set hubble.relay.prometheus.enabled=true
         --set hubble.relay.prometheus.serviceMonitor.enabled=true
         --set envoy.prometheus.enabled=true
@@ -49,7 +49,7 @@ for arg in "$@"; do
         --set operator.prometheus.enabled=true
         --set operator.prometheus.serviceMonitor.enabled=true
         --set operator.dashboards.enabled=true
-        --set operator.dashboards.annotations.grafana_folder=Cilium/Operator
+        --set operator.dashboards.annotations.grafana_folder=Cilium
       '
       shift
       ;;
