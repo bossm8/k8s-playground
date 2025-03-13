@@ -3,7 +3,7 @@
 helm repo add cilium https://helm.cilium.io/
 helm repo update
 
-helm install \
+helm upgrade --install \
     cilium \
     cilium/cilium \
       --version 1.17.1 \
@@ -18,5 +18,7 @@ helm install \
       --set k8sServicePort=7445 \
       --set hostFirewall.enabled=true \
       --set hubble.ui.enabled=true \
-      --set hubble.relay.enabled=true
+      --set hubble.relay.enabled=true \
+      --set operator.replicas=1 \
+      --set hubble.tls.auto.method=cronJob
 
