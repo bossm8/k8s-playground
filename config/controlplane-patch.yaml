@@ -127,3 +127,13 @@ portSelector:
   protocol: tcp
 ingress:
   - subnet: 10.244.0.0/16       # Pod network
+---
+apiVersion: v1alpha1
+kind: NetworkRuleConfig
+name: cilium-hubble-peer
+portSelector:
+  ports:
+    - 4244 
+  protocol: tcp
+ingress:
+  - subnet: 10.244.0.0/16       # Pod network
