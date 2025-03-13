@@ -68,6 +68,9 @@ Then the Cilium CNI can be installed
 [using e.g. Helm](https://www.talos.dev/v1.9/kubernetes-guides/network/deploying-cilium/#installation-using-helm)
 (there is a [helper script](../helpers/install-cilium.sh) which does this).
 
+Note: After prometheus is bootstrapped in the cluster, the script can be rerun
+with `--with-prometheus` to deploy serviceMonitors and Grafana dashboards
+
 [source](https://www.talos.dev/v1.9/kubernetes-guides/network/deploying-cilium/)
 
 ## Kube Metrics with kube-prometheus-stack
@@ -115,90 +118,7 @@ This is because those are already processed in the pre-routing table.
 [source](https://routemyip.com/posts/k8s/networking/nodeport-iptable-under-the-hood/)
 
 To block NodePorts a CNI which provides this functionality needs to be used, e.g. cilium.
-
-Add the following to the `controlplane.yaml`:
-
-```yaml
----
-apiVersion: v1alpha1
-kind: NetworkDefaultActionConfig
-ingress: block
----
-apiVersion: v1alpha1
-kind: NetworkRuleConfig
-name: talos-apid
-portSelector:
-  ports:
-    - 50000
-  protocol: tcp
-ingress:
-  - subnet: 192.168.178.0/24
----
-apiVersion: v1alpha1
-kind: NetworkRuleConfig
-name: kubectl-ingress
-portSelector:
-  ports:
-    - 6443
-  protocol: tcp
-ingress:
-  - subnet: 192.168.178.0/24
----
-apiVersion: v1alpha1
-kind: NetworkRuleConfig
-name: etcd-ingress
-portSelector:
-  ports:
-    - 2379
-    - 2380
-  protocol: tcp
-ingress:
-  - subnet: 192.168.178.74/32
----
-apiVersion: v1alpha1
-kind: NetworkRuleConfig
-name: cni-vxlan-udp
-portSelector:
-  ports:
-    - 4789
-  protocol: udp
-ingress:
-  - subnet: 10.244.0.0/16
-  - subnet: 10.96.0.0/12
----
-apiVersion: v1alpha1
-kind: NetworkRuleConfig
-name: cni-vxlan-tcp
-portSelector:
-  ports:
-    - 4789
-  protocol: tcp
-ingress:
-  - subnet: 10.244.0.0/16
-  - subnet: 10.96.0.0/12
----
-apiVersion: v1alpha1
-kind: NetworkRuleConfig
-name: talos-trustd
-portSelector:
-  ports:
-    - 50001
-  protocol: tcp
-ingress:
-  - subnet: 10.244.0.0/16
-  - subnet: 10.96.0.0/12
----
-apiVersion: v1alpha1
-kind: NetworkRuleConfig
-name: kubelet-ingress
-portSelector:
-  ports:
-    - 10250
-  protocol: tcp
-ingress:
-  - subnet: 10.244.0.0/16
-  - subnet: 10.96.0.0/12
-```
+See the full list of rules in the [patch](../config/controlplane-patch.yaml).
 
 ## DNS Settings
 
