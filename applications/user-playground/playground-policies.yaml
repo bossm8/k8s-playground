@@ -20,7 +20,7 @@ metadata:
   annotations:
     policies.kyverno.io/title: Enforce Username Prefix in Namespace
     policies.kyverno.io/category: Multi-Tenancy Playground
-    policies.kyverno.io/severity: warn
+    policies.kyverno.io/severity: info
     policies.kyverno.io/subject: Namespace
     policies.kyverno.io/description: >-
       This policy ensures that non admin users can only create namespaces
