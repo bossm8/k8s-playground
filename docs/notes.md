@@ -30,3 +30,10 @@ kubectl api-resources --verbs=list -o name \
 - [OpenTelemetry](https://opentelemetry.io)
 - [Kubernetes RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 - [Kubernetes x509](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#x509-client-certificates)
+
+## Cleanup Pods after talosctl reboot
+
+```bash
+kubectl delete pod --field-selector=status.phase==Suceeded -A
+kubectl delete pod --field-selector=status.phase==Failed -A
+```

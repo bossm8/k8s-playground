@@ -15,12 +15,14 @@ machine:
       - 8.8.8.8        # Google
       - 1.1.1.1        # Cloudflare
 cluster:
+  network:
+    cni:
+      name: none
+  proxy:
+    disabled: true     # Use Cilium
   controllerManager:
     extraArgs:
       bind-address: 0.0.0.0
-  proxy:
-    extraArgs:
-      metrics-bind-address: 0.0.0.0:10249
   scheduler:
     extraArgs:
       bind-address: 0.0.0.0
@@ -73,7 +75,7 @@ kind: NetworkRuleConfig
 name: cni-vxlan-udp
 portSelector:
   ports:
-    - 4789
+    - 8472
   protocol: udp
 ingress:
   - subnet: 10.244.0.0/16       # Pod network
@@ -84,7 +86,7 @@ kind: NetworkRuleConfig
 name: cni-vxlan-tcp
 portSelector:
   ports:
-    - 4789
+    - 8472
   protocol: tcp
 ingress:
   - subnet: 10.244.0.0/16       # Pod network

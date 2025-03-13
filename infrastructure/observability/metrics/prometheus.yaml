@@ -46,6 +46,11 @@ spec:
         create: true
         pspEnabled: true
 
+    defaultRules:
+      rules:
+        kubeProxy: false
+        windows: false
+
     prometheusOperator:
       extraArgs:
         - --labels=cluster=${clusterName}
@@ -154,6 +159,9 @@ spec:
     kubeEtcd:
       endpoints:
         - ${singleNodeClusterIP}
+
+    kubeProxy:
+      enabled: false
 
     kube-state-metrics:
       prometheus:

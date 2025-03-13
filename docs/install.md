@@ -28,7 +28,7 @@ mentioned in the documentation here.
      `contexts.<cluster>.(endpoints|nodes)[<single-node-cluster-ip>]`
    - Bootstrap the cluster: `talosctl bootstrap`
    - Apply the patch documented in [talos.md](./talos.md):
-     `talosctl patch mc --patch @controlplane-patch.yaml --mode try` Mode try is
+     `talosctl patch mc --patch @config/controlplane-patch.yaml --mode try` Mode try is
      important since the firewall rules may block talosctl or kubectl from
      connecting when configured incorrectly.  When everything works as expected,
      the config can be applied.  (Possibly also a `talosctl upgrade-k8s` may be
@@ -36,7 +36,12 @@ mentioned in the documentation here.
    - Generate the kubeconfig `talosctl gen kubeconfig`
    - Store the patch and the `secrets.yaml` securely (patch can be added to a repo unencrypted if it contains no secrets)
 
-3. Bootstrap flux into the cluster (with a deploy key to this repo)
+3. Install Cilium CNI
+
+   With the patch documented in [talos.md](./talos.md) the default CNI installation
+   as well as the kube-proxy are disabled.
+
+4. Bootstrap flux into the cluster (with a deploy key to this repo)
 
    - Create a GitHub repo and add a deploy key genereted with e.g. `ssh-keygen`
    - Use the deploy key to bootstrap flux:
@@ -49,7 +54,7 @@ mentioned in the documentation here.
     --path clusters/mcathome
    ```
 
-4. The initialisation of _this_ repo will fail, since the deploy key to the
+5. The initialisation of _this_ repo will fail, since the deploy key to the
    private repo containing the variables is not yet configured, and the SOPS key
    used to decrypt some of the variables is not yet present. Create the necessary
    secret manually:
