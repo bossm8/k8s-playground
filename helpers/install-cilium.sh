@@ -37,7 +37,7 @@ for arg in "$@"; do
         --set serviceMonitor.enabled=true
         --set dashboards.enabled=true
         --set dashboards.annotations.grafana_folder=Cilium
-        --set hubble.metrics.enabled={dns,drop,tcp,flow,port-distribution,icmp,httpV2:exemplars=true;labelsContext=source_ip\,source_namespace\,source_workload\,destination_ip\,destination_namespace\,destination_workload\,traffic_direction}
+        --set hubble.metrics.enabled={dns,drop,tcp,flow,port-distribution,icmp,httpV2:labelsContext=source_ip\,source_namespace\,source_workload\,destination_ip\,destination_namespace\,destination_workload\,traffic_direction}
         --set hubble.metrics.enableOpenMetrics=true
         --set hubble.metrics.serviceMonitor.enabled=true
         --set hubble.metrics.dashboards.enabled=true
