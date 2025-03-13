@@ -124,6 +124,10 @@ portSelector:
     - 10249                     # kube-proxy
     - 10257                     # kube-controller-manager
     - 10259                     # kube-scheduler 
+    - 9962                      # cilium-agent
+    - 9964                      # cilium-envoy
+    - 9963                      # cilium-operator
+    - 9965                      # hubble
   protocol: tcp
 ingress:
   - subnet: 10.244.0.0/16       # Pod network
