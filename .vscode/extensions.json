@@ -3,6 +3,7 @@
     "weaveworks.vscode-gitops-tools",
     "ms-kubernetes-tools.vscode-kubernetes-tools",
     "redhat.vscode-yaml",
-    "kubescape.kubescape"
+    "kubescape.kubescape",
+    "aquasecurityofficial.trivy-vulnerability-scanner"
   ]
 }
