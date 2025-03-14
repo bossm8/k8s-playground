@@ -26,7 +26,6 @@ metadata:
       This policy ensures that non admin users can only create namespaces
       prefixed with their username.
 spec:
-  validationFailureAction: Enforce
   background: false
   rules:
     - name: require-namespace-prefix
@@ -38,8 +37,9 @@ spec:
       exclude:
         any:
           - clusterRoles:
-              - cluster-admin
+            - cluster-admin
       validate:
+        failureAction: Enforce
         message: Namespace names must start with "{{ request.userInfo.username }}-"
         pattern:
           metadata:
@@ -57,7 +57,6 @@ metadata:
     policies.kyverno.io/description: >-
       This policy adds the tenant label to a created namespace by a non admin
 spec:
-  validationFailureAction: Enforce
   background: false
   rules:
     - name: add-tenant-label
@@ -88,7 +87,6 @@ metadata:
     policies.kyverno.io/description: >-
       This policy adds default newtorkpolicies to the tenant namespace
 spec:
-  validationFailureAction: Enforce
   background: false
   rules:
     - name: create-network-policy
@@ -119,17 +117,17 @@ spec:
               - Egress
             ingress:
               - from:
-                  - namespaceSelector:
-                      matchLabels:
-                        kyverno.io/tenant: '{{ request.object.metadata.labels."kyverno.io/tenant" }}'
-                  - namespaceSelector:
-                      matchExpressions:
-                        - key: kubernetes.io/metadata.name
-                          operator: In
-                          values: 
-                            - infra-observability
-                            - ingress-traefik
-                            - ingress-nginx
+                - namespaceSelector:
+                    matchLabels:
+                      kyverno.io/tenant: '{{ request.object.metadata.labels."kyverno.io/tenant" }}'
+                - namespaceSelector:
+                    matchExpressions:
+                      - key: kubernetes.io/metadata.name
+                        operator: In
+                        values: 
+                          - infra-observability
+                          - ingress-traefik
+                          - ingress-nginx
             egress:
               - to:
                 - namespaceSelector:
@@ -155,7 +153,6 @@ metadata:
       This policy assigns namespace admin permissions to the user which created
       the namespace by binding the ClusterRole namespace-owner.
 spec:
-  validationFailureAction: Enforce
   background: false
   rules:
     - name: assign-namespace-owner
@@ -186,3 +183,38 @@ spec:
             - kind: User
               name: '{{ request.userInfo.username }}'
               apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: deny-loadbalancer-and-nodeport-services
+  annotations:
+    policies.kyverno.io/title: Deny Services of Type LoadBalancer and NodePort
+    policies.kyverno.io/category: Multi-Tenancy Playground
+    policies.kyverno.io/subject: Service
+    policies.kyverno.io/severity: warning
+    policies.kyverno.io/description: >
+      This policy denies creating Services of type LoadBalancer and NodePort.
+      A user of the playground should create Ingress resources instead.
+spec:
+  background: false
+  rules:
+    - name: deny-loadbalancer-and-nodeport-services
+      match:
+        any:
+          - resources:
+              kinds:
+                - Service
+              namespaceSelector:
+                matchExpressions:
+                  - key: kyverno.io/tenant
+                    operator: Exists
+      validate:
+        failureAction: Enforce
+        message: You are not allowed to create a Service of type '{{ request.object.spec.type }}'
+        deny:
+          conditions:
+            any:
+              - key: '{{ request.object.spec.type }}'
+                operator: AnyIn
+                value: [LoadBalancer, NodePort]
