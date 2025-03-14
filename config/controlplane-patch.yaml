@@ -10,16 +10,16 @@ machine:
           - rw
   network:
     nameservers:
-      - 192.168.178.1  # Use gateway to enable Pi-Hole protection
-      - 9.9.9.9        # Quad 9
-      - 8.8.8.8        # Google
-      - 1.1.1.1        # Cloudflare
+      - 192.168.178.1           # Use gateway to enable Pi-Hole protection
+      - 9.9.9.9                 # Quad 9
+      - 8.8.8.8                 # Google
+      - 1.1.1.1                 # Cloudflare
 cluster:
   network:
     cni:
       name: none
   proxy:
-    disabled: true     # Use Cilium
+    disabled: true              # Use Cilium
   controllerManager:
     extraArgs:
       bind-address: 0.0.0.0
@@ -121,7 +121,7 @@ portSelector:
     - 9100                      # node-exporter
     - 10257                     # kube-controller-manager
     - 10259                     # kube-scheduler 
-    - 9962-9975                 # cilium + hubble
+    - 9962-9965                 # cilium + hubble
   protocol: tcp
 ingress:
   - subnet: 10.244.0.0/16       # Pod network
