@@ -5,6 +5,7 @@ namespace: infra-observability
 
 resources:
   - job.yaml
+  - secrets.yaml
 
 configMapGenerator:
   - name: backup-script
