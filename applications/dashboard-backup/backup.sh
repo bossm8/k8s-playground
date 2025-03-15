@@ -10,7 +10,7 @@ echo "level=info msg=starting backup of dashboards tagged with ${BACKUP_DASHBOAR
 git clone https://oauth2:${BACKUP_GIT_TOKEN}@${BACKUP_GIT_REPO} grafana-backup
 
 curl \
-  --silent --method GET \
+  --silent --request GET \
   --header "Authorization: Bearer ${BACKUP_GRAFANA_TOKEN}" \
   --header "Accept: application/json" \
   --output dashboards.json \
@@ -26,7 +26,7 @@ jq -c '.[]' dashboards.json | while read -r item; do
   echo "level=info msg=getting dashboard '$title' ($uid)"
 
   curl \
-    --silent --method GET \
+    --silent --request GET \
     --header "Authorization: Bearer ${BACKUP_GRAFANA_TOKEN}" \
     --header "Accept: application/json" \
     --output grafana-backup/$folder/$title.json \
