@@ -11,11 +11,10 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: whoami
+      app.kubernete.io/name: whoami
   template:
     metadata:
       labels:
-        app: whoami
         app.kubernetes.io/component: debug
         app.kubernetes.io/instance: traefik-whoami
         app.kubernetes.io/name: whoami
@@ -23,7 +22,7 @@ spec:
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
-        allowPrivilegeEscalation: false
+        runAsNonRoot: true
       containers:
         - name: whoami
           image: traefik/whoami:latest
@@ -31,6 +30,19 @@ spec:
             - containerPort: 8080
           args:
             - --port=8080
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFileSystem: true
+            capabilities:
+              drop: 
+                - ALL
+          resources:
+            requests:
+              cpu: "0.02"
+              memory: "2Mi"
+            limits:
+              cpu: "0.05"
+              memory: "5Mi"
 ---
 apiVersion: v1
 kind: Service
@@ -44,7 +56,7 @@ metadata:
 spec:
   type: NodePort
   selector:
-    app: whoami
+    app.kubernetes.io/name: whoami
   ports:
     - port: 80
       targetPort: 8080
