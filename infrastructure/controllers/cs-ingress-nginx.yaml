@@ -44,6 +44,10 @@ spec:
           volumeMounts:
             - name: crowdsec-bouncer-plugin
               mountPath: /lua_plugins
+          securityContext:
+            allowPrivilegeEscalation: false
+            seccompProfile:
+              type: RuntimeDefault
       extraVolumeMounts:
         - name: crowdsec-bouncer-plugin
           mountPath: /etc/nginx/lua/plugins/crowdsec
