@@ -1,5 +1,5 @@
 #!/bin/bash
-set -eu
+set -eux
 
 slugify() {
   echo "$1" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | sed -E 's/[^a-z0-9-]//g' | sed 's/-\+/-/g'
