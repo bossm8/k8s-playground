@@ -29,8 +29,11 @@ jq -c '.[]' dashboards.json | while read -r item; do
     --silent --request GET \
     --header "Authorization: Bearer ${BACKUP_GRAFANA_TOKEN}" \
     --header "Accept: application/json" \
-    --output grafana-backup/$folder/$title.json \
+    --output $title.json \
    "${BACKUP_GRAFANA_URL}/api/dashboards/uid/$uid"
+
+   jq '.dashboard' $title.json > grafana-backup/$folder/$title.json
+   rm -rf $title.json
 done
   
 cd grafana-backup
