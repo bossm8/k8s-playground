@@ -2,7 +2,7 @@
 set -eu
 
 slugify() {
-  echo "$1" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | sed -E 's/[^a-z0-9-]//g' | sed 's/-\+/-/g'
+  echo tr '[:upper:]' '[:lower:]' | tr ' ' '-' | sed -E 's/[^a-z0-9-]//g' | sed 's/-\+/-/g'
 }
 
 echo "level=info msg=starting backup of dashboards tagged with ${BACKUP_DASHBOARD_TAG}"
