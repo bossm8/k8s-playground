@@ -11,7 +11,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app.kubernete.io/name: whoami
+      app.kubernetes.io/name: whoami
   template:
     metadata:
       labels:
