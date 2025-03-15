@@ -146,6 +146,10 @@ spec:
               .payload = del(.message)
             }
 
+            if exists(.payload.level) {
+              .level = del(.payload.level)
+            }
+
       sinks:
 
         prom_exporter:
