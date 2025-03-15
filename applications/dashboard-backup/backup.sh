@@ -5,7 +5,7 @@ slugify() {
   echo "$1" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | sed -E 's/[^a-z0-9-]//g' | sed 's/-\+/-/g'
 }
 
-echo "level=info msg=starting backup of dashboards labeled with ${BACKUP_LABEL}"
+echo "level=info msg=starting backup of dashboards tagged with ${BACKUP_DASHBOARD_TAG}"
 
 git config --user.name "Grafana Backup"
 git config --user.email "grafana-backup@mcathome.ch"
