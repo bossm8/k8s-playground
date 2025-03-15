@@ -5,9 +5,6 @@ slugify() {
   echo "$1" | tr '[:upper:]' '[:lower:]' | tr ' ' '-' | sed -E 's/[^a-z0-9-]//g' | sed 's/-\+/-/g'
 }
 
-apk update
-apk add --no-cache git curl jq
-
 echo "level=info msg=starting backup of dashboards labeled with ${BACKUP_LABEL}"
 
 git config --user.name "Grafana Backup"
