@@ -154,7 +154,7 @@ spec:
             }
 
             if exists(.payload.level) {
-              .level = del(.payload.level)
+              .level = downcase(del(.payload.level))
             }
 
       sinks:
