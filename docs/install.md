@@ -21,25 +21,31 @@ mentioned in the documentation here.
    In general:
 
    - Genereate talos secrets: `talosctl gen secrets -o secrets.yaml`
-   - Generate configuration: `talosctl gen config --with-secrets secrets.yaml <cluster-name> <single-node-local-ip>`
+   - Generate configuration:
+     `talosctl gen config --with-secrets secrets.yaml <cluster-name> <single-node-local-ip>`
    - Move the `talosconfig` to `~/.talos/config` to be picked up as default
-   - Apply the intial configuration: `talosctl apply config --insecure --nodes <single-node-local-ip> --file controlplane.yaml`
-   - Edit the `talosconfig` and add `endpoints` and `nodes` with the single node local IP:
-     `contexts.<cluster>.(endpoints|nodes)[<single-node-cluster-ip>]`
+   - Apply the intial configuration:
+     `talosctl apply config --insecure --nodes <single-node-local-ip> --file controlplane.yaml`
+   - Edit the `talosconfig` and add `endpoints` and `nodes` with the single node
+     local IP: `contexts.<cluster>.(endpoints|nodes)[<single-node-cluster-ip>]`
    - Bootstrap the cluster: `talosctl bootstrap`
    - Apply the patch documented in [talos.md](./talos.md):
-     `talosctl patch mc --patch @config/controlplane-patch.yaml --mode try` Mode try is
-     important since the firewall rules may block talosctl or kubectl from
-     connecting when configured incorrectly.  When everything works as expected,
-     the config can be applied.  (Possibly also a `talosctl upgrade-k8s` may be
-     needed so that pods get restarted with the added arguments)
+     `talosctl patch mc --patch @config/controlplane-patch.yaml --mode try` Mode
+     try is important since the firewall rules may block talosctl or kubectl
+     from connecting when configured incorrectly.  When everything works as
+     expected, the config can be applied.  (Possibly also a `talosctl
+     upgrade-k8s` may be needed so that pods get restarted with the added
+     arguments)
    - Generate the kubeconfig `talosctl gen kubeconfig`
-   - Store the patch and the `secrets.yaml` securely (patch can be added to a repo unencrypted if it contains no secrets)
+   - Store the patch and the `secrets.yaml` securely (patch can be added to a
+     repo unencrypted if it contains no secrets)
 
 3. Install Cilium CNI
 
-   With the patch documented in [talos.md](./talos.md) the default CNI installation
-   as well as the kube-proxy are disabled.
+   With the patch documented in [talos.md](./talos.md) the default CNI
+   installation as well as the kube-proxy are disabled. This means a different
+   CNI needs to be installed.  this can be done with the
+   [helper script](../helpers/install-cilium.sh).
 
 4. Bootstrap flux into the cluster (with a deploy key to this repo)
 
@@ -56,8 +62,8 @@ mentioned in the documentation here.
 
 5. The initialisation of _this_ repo will fail, since the deploy key to the
    private repo containing the variables is not yet configured, and the SOPS key
-   used to decrypt some of the variables is not yet present. Create the necessary
-   secret manually:
+   used to decrypt some of the variables is not yet present. Create the
+   necessary secret manually:
   
    - Deploy key:
 
@@ -67,12 +73,21 @@ mentioned in the documentation here.
        --url ssh://git@github.com/bossm8/k8s-playground-vars.git
       ```
 
-   - SOPS secret with age:
+   - [SOPS](https:getsops.io) secret with [age](https://github.com/FiloSottile/age):
       (Documentation about how to create age keys and encrypt secrets can be
-      found [here]() and [here]())
+      found
+      [here (flux)](https://fluxcd.io/flux/guides/mozilla-sops/#encrypting-secrets-using-age)
+      and [here (sops)](https://getsops.io/docs/#encrypting-using-age))
 
       ```bash
       cat age.agekey | kubectl create secret generic sops-age \
          --namespace flux-system \
          --from-file age.agekey=/dev/stdin
       ```
+
+6. Update Cilium CNI
+
+   When Prometheus has installed the CRDs in the cluster the [cilium helper
+   script](../helpers/install-cilium.sh) can be re-run with the
+   `--with-prometheus` flag, this will install ServiceMonitors and Grafana
+   dashboards for cilium services into the cluster.

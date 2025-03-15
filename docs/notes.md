@@ -7,8 +7,6 @@ kubectl run -it --rm --image=busybox test-pod -- sh
 wget --no-check-certificate -O - https://${KUBERNETES_SERVICE_HOST}:${KUBERNETES_SERVICE_PORT}
 ```
 
-(TBD: why 6443?)
-
 ## Cleaning up prometheus-stack leftovers for reinstall
 
 When reinstalling kube-prometheus-stack there may be issues with the new installation.
@@ -37,3 +35,6 @@ kubectl api-resources --verbs=list -o name \
 kubectl delete pod --field-selector=status.phase==Suceeded -A
 kubectl delete pod --field-selector=status.phase==Failed -A
 ```
+
+Note: this is now also implemented with a cleanup policy in kyverno:
+[cleanup-finished-pods](../infrastructure/policy/policies.yaml#L43)

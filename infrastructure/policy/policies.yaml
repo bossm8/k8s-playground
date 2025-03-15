@@ -40,3 +40,31 @@ spec:
                 - infra-observability
               names:
                 - '*node-exporter'
+---
+apiVersion: kyverno.io/v2
+kind: ClusterCleanupPolicy
+metadata:
+  name: cleanup-finished-pods
+  annotations:
+    policies.kyverno.io/title: Remove Finished Pods
+    policies.kyverno.io/category: Cluster Maintenance
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/severity: info
+    policies.kyverno.io/description: >-
+      This policy removes 'dead' pods which occur after e.g. a talos node reboot.
+      Normally they would be removed with:
+
+      kubectl delete pod --field-selector=status.phase==Suceeded -A
+      kubectl delete pod --field-selector=status.phase==Failed -A
+spec:
+  match:
+    any:
+      - resources:
+          kinds:
+            - Pod
+  conditions:
+    all:
+      - key: '{{ request.object.status.phase }}'
+        operator: AnyIn
+        value: [Suceeded, Failed]
+  schedule: '0 * * * *'
