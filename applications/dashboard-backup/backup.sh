@@ -7,7 +7,7 @@ slugify() {
 
 echo "level=info msg=starting backup of dashboards tagged with ${BACKUP_DASHBOARD_TAG}"
 
-git clone https://oauth2:${BACKUP_GIT_TOKEN}@${BACKUP_GIT_REPO} -o grafana-backup
+git clone https://oauth2:${BACKUP_GIT_TOKEN}@${BACKUP_GIT_REPO} grafana-backup
 
 curl \
   --silent --method GET \
