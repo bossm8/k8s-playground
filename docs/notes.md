@@ -37,4 +37,4 @@ kubectl delete pod --field-selector=status.phase==Failed -A
 ```
 
 Note: this is now also implemented with a cleanup policy in kyverno:
-[cleanup-finished-pods](../infrastructure/policy/policies.yaml#L43)
+[cleanup-finished-pods](../infrastructure/policy/configs/policies.yaml#L43)

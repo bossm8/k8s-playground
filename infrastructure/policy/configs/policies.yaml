@@ -64,7 +64,7 @@ spec:
             - Pod
   conditions:
     all:
-      - key: '{{ request.object.status.phase }}'
+      - key: '{{ target.status.phase }}'
         operator: AnyIn
         value: [Suceeded, Failed]
   schedule: '0 * * * *'
