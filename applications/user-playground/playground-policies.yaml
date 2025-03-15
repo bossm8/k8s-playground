@@ -194,8 +194,9 @@ metadata:
     policies.kyverno.io/subject: Service
     policies.kyverno.io/severity: warning
     policies.kyverno.io/description: >
-      This policy denies creating Services of type LoadBalancer and NodePort.
-      A user of the playground should create Ingress resources instead.
+      This policy denies creating Services of type LoadBalancer and NodePort by
+      tenants. A user of the playground should create Ingress resources
+      instead.
 spec:
   background: false
   rules:
@@ -209,6 +210,10 @@ spec:
                 matchExpressions:
                   - key: kyverno.io/tenant
                     operator: Exists
+      exclude:
+        any:
+          - clusterRoles:
+              - cluster-admin
       validate:
         failureAction: Enforce
         message: You are not allowed to create a Service of type '{{ request.object.spec.type }}'
