@@ -49,6 +49,6 @@ spec:
       grafana:
         dashboards:
           multicluster:
-            enabled: false # need to add cluster label
+            enabled: false
         folder:
-          name: Kyverno/Policy Reporter
+          name: Kyverno

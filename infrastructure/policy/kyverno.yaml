@@ -36,6 +36,11 @@ spec:
     features:
       logging:
         format: json
+      backgroundScan:
+        # https://kyverno.io/docs/installation/customization/#resource-filters
+        # Need to use resource filters, else the specified exluded namespaces
+        # are still included in background scans
+        skipResourceFilters: false
 
     grafana:
       enabled: true
