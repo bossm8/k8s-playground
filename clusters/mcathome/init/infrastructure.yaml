@@ -132,13 +132,35 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infra-policy
+  name: infra-policy-controllers
   namespace: flux-system
 spec:
   interval: 10m0s
   dependsOn:
     - name: infra-observability-traces
-  path: ./infrastructure/policy
+  path: ./infrastructure/policy/controllers
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m0s
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-policy-configs
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  dependsOn:
+    - name: infra-policy-controllers
+  path: ./infrastructure/policy/configs
   postBuild:
     substituteFrom:
       - kind: ConfigMap
