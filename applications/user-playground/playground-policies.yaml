@@ -132,7 +132,8 @@ spec:
               - to:
                 - namespaceSelector:
                     matchLabels:
-                      kyverno.io/tenant: '{{ request.object.metadata.labels."kyverno.io/tenant" }}'
+                      kyverno.io/tenant: >-
+                        '{{ request.object.metadata.labels."kyverno.io/tenant" }}'
                 - ipBlock:
                     cidr: 0.0.0.0/0
                     except:
@@ -216,7 +217,9 @@ spec:
               - cluster-admin
       validate:
         failureAction: Enforce
-        message: You are not allowed to create a Service of type '{{ request.object.spec.type }}'
+        message: >-
+          You are not allowed to create a Service of type 
+          '{{ request.object.spec.type }}'
         deny:
           conditions:
             any:

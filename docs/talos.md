@@ -104,7 +104,7 @@ kubeEtcd:
 ### Ingress Firewall
 
 **NOTE**: It's advised to wait with this until the cluster is setup. It can then
-be applied with --mode=try to see if all works before enforcing it
+be applied with `--mode=try` to see if all works before enforcing it
 
 Since we opened the services on all interfaces, we now make sure to block
 request coming from external, allowing only API and HTTP/HTTPS traffic.
@@ -118,6 +118,9 @@ This is because those are already processed in the pre-routing table.
 [source](https://routemyip.com/posts/k8s/networking/nodeport-iptable-under-the-hood/)
 
 To block NodePorts a CNI which provides this functionality needs to be used, e.g. cilium.
+(Note: this does not seem to work either, currently NodePorts are open, but
+traffic is then blocked with NetworkPolicies inside the cluster)
+
 See the full list of rules in the [patch](../config/controlplane-patch.yaml).
 
 ## DNS Settings

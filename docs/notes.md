@@ -29,7 +29,7 @@ kubectl api-resources --verbs=list -o name \
 - [Kubernetes RBAC](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 - [Kubernetes x509](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#x509-client-certificates)
 
-## Cleanup Pods after talosctl reboot
+## Cleanup Pods after `talosctl reboot`
 
 ```bash
 kubectl delete pod --field-selector=status.phase==Suceeded -A

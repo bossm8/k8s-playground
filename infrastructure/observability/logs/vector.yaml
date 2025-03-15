@@ -120,7 +120,7 @@ spec:
             del(.kubernetes)
 
             # Filter kube probe access logs
-            if match(.message, r'kube-probe/\d\.\d+') {
+            if match(string!(.message), r'kube-probe/\d\.\d+') {
               abort
             }
 
