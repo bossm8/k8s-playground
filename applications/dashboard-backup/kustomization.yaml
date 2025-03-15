@@ -12,6 +12,10 @@ configMapGenerator:
     files:
       - backup.sh
 
+generatorOptions:
+  annotations:
+    kustomize.toolkit.fluxcd.io/substitute: disabled
+
 labels:
   - includeSelectors: false
     pairs:
