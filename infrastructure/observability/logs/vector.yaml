@@ -94,7 +94,10 @@ spec:
           inputs:
             - external_logs_raw
           source: |
-            res, err = parse_regex(string!(.tag), r'(?P<node>([^/]*))/(?P<container>.*)')
+            res, err = parse_regex(
+              string!(.tag),
+              r'(?P<node>([^/]*))/(?P<container>.*)'
+            )
             if err == null {
               .node = res.node
               .container = res.container
