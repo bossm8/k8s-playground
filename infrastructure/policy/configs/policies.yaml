@@ -66,5 +66,5 @@ spec:
     all:
       - key: '{{ target.status.phase }}'
         operator: AnyIn
-        value: [Suceeded, Failed]
+        value: [Succeeded, Failed]
   schedule: '0 * * * *'
