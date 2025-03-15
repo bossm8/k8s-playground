@@ -18,7 +18,7 @@ curl \
 
 jq -c '.[]' dashboards.json | while read -r item; do
   uid=$(echo "$item" | jq -r '.uid')
-  folder=$(echo "$item" | jq -r '.folderTitle')
+  folder=$(echo "$item" | jq -r '.meta.folderTitle')
   title=$(echo "$item" | jq -r '.title' | slugify)
 
   test -d grafana-backup/$folder || mkdir grafana-backup/$folder
