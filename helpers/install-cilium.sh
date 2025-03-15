@@ -9,7 +9,7 @@ function deploy() {
   helm upgrade --install \
       cilium \
       cilium/cilium \
-        --version 1.17.1 \
+        --version 1.17.2 \
         --namespace kube-system \
         --set ipam.mode=kubernetes \
         --set kubeProxyReplacement=true \
@@ -23,6 +23,13 @@ function deploy() {
         --set hubble.ui.enabled=true \
         --set hubble.relay.enabled=true \
         --set hubble.tls.auto.method=cronJob \
+        --set envoy.log.format=null \
+        --set envoy.log.format_json.date="%Y-%m-%dT%T.%e" \
+        --set envoy.log.format_json.thread_id="%t" \
+        --set envoy.log.format_json.source_line="%s:%#" \
+        --set envoy.log.format_json.level="%l" \
+        --set envoy.log.format_json.logger="%n" \
+        --set envoy.log.format_json.message="%j" \
         $PROMETHEUS_FLAGS \
         --set operator.replicas=1
 }

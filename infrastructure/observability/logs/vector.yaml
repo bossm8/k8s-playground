@@ -109,6 +109,7 @@ spec:
           type: remap
           inputs:
             - kubernetes_logs_raw
+          drop_on_abort: true
           source: |
             .node = del(.kubernetes.pod_node_name)
             .namespace = del(.kubernetes.pod_namespace)
@@ -117,6 +118,11 @@ spec:
 
             del(.file)
             del(.kubernetes)
+
+            # Filter kube probe access logs
+            if match(.message, r'kube-probe/\d\.\d+') {
+              abort
+            }
 
         processed_logs:
           type: remap
