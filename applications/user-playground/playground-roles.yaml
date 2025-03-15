@@ -13,7 +13,7 @@ kind: ClusterRole
 metadata:
   name: namespace-owner
 rules:
-  - apiGroups: ["", "apps"]
+  - apiGroups: ["", "apps", "batch"]
     resources: ["*"]
     verbs: ["*"]
   - apiGroups: [networking.k8s.io]
