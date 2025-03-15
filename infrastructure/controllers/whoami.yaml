@@ -20,8 +20,8 @@ spec:
         app.kubernetes.io/name: whoami
     spec:
       securityContext:
-        runAsUser: 1000
-        runAsGroup: 1000
+        runAsUser: 10001
+        runAsGroup: 10001
         runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
@@ -34,7 +34,7 @@ spec:
             - --port=8080
           securityContext:
             allowPrivilegeEscalation: false
-            readOnlyRootFileSystem: true
+            readOnlyRootFilesystem: true
             capabilities:
               drop: 
                 - ALL
