@@ -28,22 +28,23 @@ metadata:
 spec:
   background: false
   rules:
-    - name: require-namespace-prefix
-      match:
-        any:
-          - resources:
-              kinds:
-                - Namespace
-      exclude:
-        any:
-          - clusterRoles:
-            - cluster-admin
-      validate:
-        failureAction: Enforce
-        message: Namespace names must start with "{{ request.userInfo.username }}-"
-        pattern:
-          metadata:
-            name: '{{ request.userInfo.username }}-*'
+  - name: require-namespace-prefix
+    match:
+      any:
+      - resources:
+          kinds:
+          - Namespace
+    exclude:
+      any:
+      - clusterRoles:
+        - cluster-admin
+    validate:
+      failureAction: Enforce
+      message: >-
+        Namespace names must start with "{{ request.userInfo.username }}-"
+      pattern:
+        metadata:
+          name: '{{ request.userInfo.username }}-*'
 ---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -59,21 +60,21 @@ metadata:
 spec:
   background: false
   rules:
-    - name: add-tenant-label
-      match:
-        any:
-          - resources:
-              kinds:
-                - Namespace
-      exclude:
-        any:
-          - clusterRoles:
-            - cluster-admin
-      mutate:
-        patchStrategicMerge:
-          metadata:
-            labels:
-              kyverno.io/tenant: '{{ request.userInfo.username }}'
+  - name: add-tenant-label
+    match:
+      any:
+      - resources:
+          kinds:
+          - Namespace
+    exclude:
+      any:
+      - clusterRoles:
+        - cluster-admin
+    mutate:
+      patchStrategicMerge:
+        metadata:
+          labels:
+            kyverno.io/tenant: '{{ request.userInfo.username }}'
 ---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -89,57 +90,59 @@ metadata:
 spec:
   background: false
   rules:
-    - name: create-network-policy
-      match:
-        any:
-          - resources:
-              kinds:
-                - Namespace
-              selector:
+  - name: create-network-policy
+    match:
+      any:
+      - resources:
+          kinds:
+           - Namespace
+          selector:
+            matchExpressions:
+            - key: kyverno.io/tenant
+              operator: Exists
+    generate:
+      generateExisting: true
+      synchronize: true
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      name: default
+      namespace: '{{ request.object.metadata.name }}'
+      data:
+        spec:
+          metadata:
+            labels:
+              kyverno.io/tenant: >-
+                '{{ request.object.metadata.labels."kyverno.io/tenant" }}'
+          podSelector: {}
+          policyTypes:
+            - Ingress
+            - Egress
+          ingress:
+          - from:
+            - namespaceSelector:
+                matchLabels:
+                  kyverno.io/tenant: >-
+                    '{{ request.object.metadata.labels."kyverno.io/tenant" }}'
+            - namespaceSelector:
                 matchExpressions:
-                  - key: kyverno.io/tenant
-                    operator: Exists
-      generate:
-        generateExisting: true
-        synchronize: true
-        apiVersion: networking.k8s.io/v1
-        kind: NetworkPolicy
-        name: default
-        namespace: '{{ request.object.metadata.name }}'
-        data:
-          spec:
-            metadata:
-              labels:
-                kyverno.io/tenant: '{{ request.object.metadata.labels."kyverno.io/tenant" }}'
-            podSelector: {}
-            policyTypes:
-              - Ingress
-              - Egress
-            ingress:
-              - from:
-                - namespaceSelector:
-                    matchLabels:
-                      kyverno.io/tenant: '{{ request.object.metadata.labels."kyverno.io/tenant" }}'
-                - namespaceSelector:
-                    matchExpressions:
-                      - key: kubernetes.io/metadata.name
-                        operator: In
-                        values: 
-                          - infra-observability
-                          - ingress-traefik
-                          - ingress-nginx
-            egress:
-              - to:
-                - namespaceSelector:
-                    matchLabels:
-                      kyverno.io/tenant: >-
-                        '{{ request.object.metadata.labels."kyverno.io/tenant" }}'
-                - ipBlock:
-                    cidr: 0.0.0.0/0
-                    except:
-                      - 10.0.0.0/8
-                      - 192.168.0.0/16
-                      - 172.16.0.0/12
+                - key: kubernetes.io/metadata.name
+                  operator: In
+                  values: 
+                    - infra-observability
+                    - ingress-traefik
+                    - ingress-nginx
+          egress:
+          - to:
+            - namespaceSelector:
+                matchLabels:
+                  kyverno.io/tenant: >-
+                    '{{ request.object.metadata.labels."kyverno.io/tenant" }}'
+            - ipBlock:
+                cidr: 0.0.0.0/0
+                except:
+                  - 10.0.0.0/8
+                  - 192.168.0.0/16
+                  - 172.16.0.0/12
 ---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -156,34 +159,34 @@ metadata:
 spec:
   background: false
   rules:
-    - name: assign-namespace-owner
-      match:
-        any:
-          - resources:
-              kinds:
-                - Namespace
-      exclude:
-        any:
-          - clusterRoles:
-              - cluster-admin
-      generate:
-        synchronize: false
-        apiVersion: rbac.authorization.k8s.io/v1
-        kind: RoleBinding
-        name: namespace-owner
-        namespace: '{{ request.object.metadata.name }}'
-        data:
-          metadata:
-            labels:
-              kyverno.io/tenant: '{{ request.userInfo.username }}'
-          roleRef:
-            apiGroup: rbac.authorization.k8s.io
-            kind: ClusterRole
-            name: namespace-owner
-          subjects:
-            - kind: User
-              name: '{{ request.userInfo.username }}'
-              apiGroup: rbac.authorization.k8s.io
+  - name: assign-namespace-owner
+    match:
+      any:
+      - resources:
+          kinds:
+          - Namespace
+    exclude:
+      any:
+      - clusterRoles:
+        - cluster-admin
+    generate:
+      synchronize: false
+      apiVersion: rbac.authorization.k8s.io/v1
+      kind: RoleBinding
+      name: namespace-owner
+      namespace: '{{ request.object.metadata.name }}'
+      data:
+        metadata:
+          labels:
+            kyverno.io/tenant: '{{ request.userInfo.username }}'
+        roleRef:
+          apiGroup: rbac.authorization.k8s.io
+          kind: ClusterRole
+          name: namespace-owner
+        subjects:
+        - kind: User
+          name: '{{ request.userInfo.username }}'
+          apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -201,28 +204,28 @@ metadata:
 spec:
   background: false
   rules:
-    - name: deny-loadbalancer-and-nodeport-services
-      match:
-        any:
-          - resources:
-              kinds:
-                - Service
-              namespaceSelector:
-                matchExpressions:
-                  - key: kyverno.io/tenant
-                    operator: Exists
-      exclude:
-        any:
-          - clusterRoles:
-              - cluster-admin
-      validate:
-        failureAction: Enforce
-        message: >-
-          You are not allowed to create a Service of type 
-          '{{ request.object.spec.type }}'
-        deny:
-          conditions:
-            any:
-              - key: '{{ request.object.spec.type }}'
-                operator: AnyIn
-                value: [LoadBalancer, NodePort]
+  - name: deny-loadbalancer-and-nodeport-services
+    match:
+      any:
+      - resources:
+          kinds:
+          - Service
+          namespaceSelector:
+            matchExpressions:
+            - key: kyverno.io/tenant
+              operator: Exists
+    exclude:
+      any:
+      - clusterRoles:
+        - cluster-admin
+    validate:
+      failureAction: Enforce
+      message: >-
+        You are not allowed to create a Service of type 
+        '{{ request.object.spec.type }}'
+      deny:
+        conditions:
+          any:
+          - key: '{{ request.object.spec.type }}'
+            operator: AnyIn
+            value: [LoadBalancer, NodePort]
