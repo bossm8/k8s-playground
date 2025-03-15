@@ -31,7 +31,7 @@ spec:
             volumeMounts:
               - mountPath: /workspace
                 name: workspace
-              - mountPath: /scripts/backup.sh
+              - mountPath: /scripts
                 name: backup-script
                 readOnly: true
             workingDir: /workspace
@@ -54,7 +54,7 @@ spec:
               emptyDir: {}
             - name: backup-script
               projected:
-                defaultMode: 0770
+                defaultMode: 0777
                 sources:
                 - configMap:
                     name: backup-script
