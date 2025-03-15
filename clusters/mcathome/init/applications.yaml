@@ -2,13 +2,13 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: user-playground
+  name: applications
   namespace: flux-system
 spec:
   dependsOn:
     - name: infra-policy-configs
   interval: 10m0s
-  path: ./applications/user-playground
+  path: ./applications
   postBuild:
     substituteFrom:
       - kind: ConfigMap
