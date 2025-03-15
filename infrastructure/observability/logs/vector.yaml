@@ -132,7 +132,8 @@ spec:
           source: |
             res = null
             err = null
-            if includes(["tempo", "grafana", "loki"], string!(.container)) {
+            if includes(["tempo", "grafana", "loki", "cilium-agent", "cilium-operator", "node-exporter"], string!(.container)) ||
+               match_any(string!(.pod), [r'hubble-.*', r'alertmanager-.*', r'kube-prometheus-stack-operator-.*']) {
               res, err = parse_logfmt(string!(.message))
             } else if !is_object(.message) {
               res, err = parse_json(string!(.message)) ??
