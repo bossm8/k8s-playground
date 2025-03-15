@@ -98,7 +98,3 @@ spec:
         enabled: true
         address: otel-collector-opentelemetry-collector.infra-observability
         port: 4317
-    
-    config:
-      resourceFiltersExcludeNamespaces:
-        - kube-system
