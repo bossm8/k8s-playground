@@ -5,6 +5,8 @@ kind: Kustomization
 resources:
   - local-path-provisioner.yaml
 
-commonLabels:
-  k8s.mcathome.ch/component: storage
-  k8s.mcathome.ch/application: local-path-provisioner
+labels:
+- includeSelectors: false
+  pairs:
+    k8s.mcathome.ch/component: storage
+    k8s.mcathome.ch/application: local-path-provisioner

@@ -74,7 +74,7 @@ spec:
       patchStrategicMerge:
         metadata:
           labels:
-            kyverno.io/tenant: '{{ request.userInfo.username }}'
+            k8s.mcathome.ch/tenant: '{{ request.userInfo.username }}'
 ---
 apiVersion: kyverno.io/v1
 kind: ClusterPolicy
@@ -98,7 +98,7 @@ spec:
            - Namespace
           selector:
             matchExpressions:
-            - key: kyverno.io/tenant
+            - key: k8s.mcathome.ch/tenant
               operator: Exists
     generate:
       generateExisting: true
@@ -111,8 +111,8 @@ spec:
         spec:
           metadata:
             labels:
-              kyverno.io/tenant: >-
-                '{{ request.object.metadata.labels."kyverno.io/tenant" }}'
+              k8s.mcathome.ch/tenant: >-
+                '{{ request.object.metadata.labels."k8s.mcathome.ch/tenant" }}'
           podSelector: {}
           policyTypes:
             - Ingress
@@ -121,8 +121,8 @@ spec:
           - from:
             - namespaceSelector:
                 matchLabels:
-                  kyverno.io/tenant: >-
-                    '{{ request.object.metadata.labels."kyverno.io/tenant" }}'
+                  k8s.mcathome.ch/tenant: >-
+                    '{{ request.object.metadata.labels."k8s.mcathome.ch/tenant" }}'
             - namespaceSelector:
                 matchExpressions:
                 - key: kubernetes.io/metadata.name
@@ -135,8 +135,8 @@ spec:
           - to:
             - namespaceSelector:
                 matchLabels:
-                  kyverno.io/tenant: >-
-                    '{{ request.object.metadata.labels."kyverno.io/tenant" }}'
+                  k8s.mcathome.ch/tenant: >-
+                    '{{ request.object.metadata.labels."k8s.mcathome.ch/tenant" }}'
             - ipBlock:
                 cidr: 0.0.0.0/0
                 except:
@@ -178,7 +178,7 @@ spec:
       data:
         metadata:
           labels:
-            kyverno.io/tenant: '{{ request.userInfo.username }}'
+            k8s.mcathome.ch/tenant: '{{ request.userInfo.username }}'
         roleRef:
           apiGroup: rbac.authorization.k8s.io
           kind: ClusterRole
@@ -212,7 +212,7 @@ spec:
           - Service
           namespaceSelector:
             matchExpressions:
-            - key: kyverno.io/tenant
+            - key: k8s.mcathome.ch/tenant
               operator: Exists
     exclude:
       any:

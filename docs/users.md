@@ -17,7 +17,7 @@ which has basic namespace creation permissions.
 ## Tenancy Enforcement
 
 When the user creates a new namespace, the namespace will be assigned tenancy
-label `kyverno.io/tenant: <username>`. This label is used to create a default
+label `k8s.mcathome.ch/tenant: <username>`. This label is used to create a default
 network policy which allows communication with all resources in namespaces
 of the same tenant and with the internet. The user will also get permissions
 to manage core api resources as well as listing the networking resources with
