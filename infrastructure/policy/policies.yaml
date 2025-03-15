@@ -19,3 +19,24 @@ spec:
       interval: 10m0s
   values:
     validationFailureAction: Audit
+
+    policyExclude:
+      disallow-host-path:
+        any:
+          - resources:
+              kinds:
+                - DaemonSet
+              namespaces:
+                - infra-observability
+              names:
+                - '*node-exporter'
+                - 'vector'
+      disallow-host-namespaces:
+        any:
+          - resources:
+              kinds:
+                - DaemonSet
+              namespaces:
+                - infra-observability
+              names:
+                - '*node-exporter'
