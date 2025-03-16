@@ -53,10 +53,10 @@ spec:
             resources:
               requests:
                 cpu: '0.2'
-                memory: '10kiB'
+                memory: '10Ki'
               limits:
                 cpu: '0.5'
-                memory: '25kiB'
+                memory: '25Ki'
           restartPolicy: OnFailure
           automountServiceAccountToken: false
           volumes:
