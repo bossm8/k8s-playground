@@ -105,7 +105,9 @@ spec:
               del(.tag)
             }
             .namespace = "external"
-            .message = del(.line)
+            if exists(.line) {
+              .message = del(.line)
+            }
             del(.host)
 
         kubernetes_logs:
