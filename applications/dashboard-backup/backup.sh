@@ -5,7 +5,7 @@ slugify() {
   tr '[:upper:]' '[:lower:]' | tr ' ' '-' | sed -E 's/[^a-z0-9-]//g' | sed 's/-\+/-/g'
 }
 
-echo "level=info msg=starting backup of dashboards tagged with ${BACKUP_DASHBOARD_TAG}"
+echo "level=info msg=starting backup of dashboards tagged with '${BACKUP_DASHBOARD_TAG}'"
 
 test -d grafana-backup && rm -rf grafana-backup
 git clone https://oauth2:${BACKUP_GIT_TOKEN}@${BACKUP_GIT_REPO} grafana-backup

@@ -44,7 +44,7 @@ spec:
               memory: '50kiB'
             limits:
               cpu: '0.05'
-              memory: '100KiB'
+              memory: '100kiB'
 ---
 apiVersion: v1
 kind: Service
