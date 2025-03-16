@@ -114,4 +114,4 @@ grafana:
       geoip:
         gnetId: 17877
         datasource: Prometheus
-        # revision: 5
+        # revision: 6
