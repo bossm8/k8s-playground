@@ -7,6 +7,7 @@ slugify() {
 
 echo "level=info msg=starting backup of dashboards tagged with ${BACKUP_DASHBOARD_TAG}"
 
+test -d grafana-backup && rm -rf grafana-backup
 git clone https://oauth2:${BACKUP_GIT_TOKEN}@${BACKUP_GIT_REPO} grafana-backup
 
 curl \
@@ -44,7 +45,7 @@ git config user.name "Grafana Backup"
 git config user.email "grafana-backup@mcathome.ch"
 
 git add .
-git commit -m "Backup $(date)"
+git commit -m "Backup $(date)" || true
 git push
 
 cd -
