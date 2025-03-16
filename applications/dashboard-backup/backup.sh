@@ -21,6 +21,17 @@ jq -c '.[]' dashboards.json | while read -r item; do
   uid=$(echo "$item" | jq -r '.uid')
   title=$(echo "$item" | jq -r '.title' | slugify)
 
+  echo "level=info msg=checking for existing dashboards with uid '$uid'"
+
+  for file in $(find grafana-backup -type f -iname "*.json"); do
+    exuid=$(jq -r '.uid' $file)
+    extitle=$(jq -r '.title' $file | slugify)
+    if [[ "$exuid" == "$uid" ]] && [[ "$extitle" != "$title" ]]; then
+      echo "level=warn msg=found dashboard with same uid but different title, removing the old one: '$file'"
+      rm -rf $file
+    fi
+  done
+
   echo "level=info msg=getting dashboard '$title' ($uid)"
 
   curl \
@@ -35,11 +46,19 @@ jq -c '.[]' dashboards.json | while read -r item; do
 
   echo "level=info msg=storing dashboard '$title' in folder '$folder'"
 
-   jq '.dashboard' $title.json > grafana-backup/$folder/$title.json
-   rm -rf $title.json
+  jq '.dashboard' $title.json > grafana-backup/$folder/$title.json
+  rm -rf $title.json
 done
   
 cd grafana-backup
+
+echo "level=info msg=searching for files which have not changed in this backup"
+for file in $(find . -type f -mmin +15 -iname "*.json"); do
+  echo "level=warn msg=file '$file' has not changed in this backup, moving to '.Deprecated'"
+  test -d .Deprecated || mkdir .Deprecated
+  test -d .Deprecated/$(dirname $file) || mkdir -p .Deprecated$(dirname $file)
+  mv $file .Deprecated/$(dirname $file)
+done
 
 git config user.name "Grafana Backup"
 git config user.email "grafana-backup@mcathome.ch"
