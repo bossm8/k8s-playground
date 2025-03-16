@@ -53,11 +53,14 @@ done
 cd grafana-backup
 
 echo "level=info msg=searching for files which have not changed in this backup"
-for file in $(find . -type f -mmin +15 -iname "*.json"); do
-  echo "level=warn msg=file '$file' has not changed in this backup, moving to '.Deprecated'"
-  test -d .Deprecated || mkdir .Deprecated
-  test -d .Deprecated/$(dirname $file) || mkdir -p .Deprecated$(dirname $file)
-  mv $file .Deprecated/$(dirname $file)
+for file in $(find . -type f -iname "*.json"); do
+  exuid=$(jq -r '.uid' $file)
+  if ! jq --exit-status --arg exuid "$exuid" '.[] | select(.uid == $exuid)' dashboards.json; then
+    echo "level=warn msg=file '$file' has not changed in this backup, moving to '.Deprecated'"
+    test -d .Deprecated || mkdir .Deprecated
+    test -d .Deprecated/$(dirname $file) || mkdir -p .Deprecated$(dirname $file)
+    mv $file .Deprecated/$(dirname $file)
+  fi
 done
 
 git config user.name "Grafana Backup"
