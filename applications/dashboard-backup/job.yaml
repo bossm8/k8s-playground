@@ -50,6 +50,13 @@ spec:
                   name: grafana-backup-service-account
               - secretRef:
                   name: grafana-backup-git-access-token
+            resources:
+              requests:
+                cpu: '0.2'
+                memory: '10kiB'
+              limits:
+                cpu: '0.5'
+                memory: '25kiB'
           restartPolicy: OnFailure
           automountServiceAccountToken: false
           volumes:
