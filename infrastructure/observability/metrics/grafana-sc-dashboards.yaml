@@ -40,6 +40,12 @@ grafana:
           type: file
           options:
             path: /var/lib/grafana/dashboards/flux
+        - name: security
+          orgId: 1
+          folder: Security
+          type: file
+          options:
+            path: /var/lib/grafana/dashboards/security
   dashboards:
     # https://github.com/grafana/helm-charts/blob/dd5ddc09b40f7b3db2cce2d1a48bb5cbbe84cbe8/charts/grafana/values.yaml#L813
     ingress:
@@ -100,3 +106,12 @@ grafana:
         url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/refs/heads/main/monitoring/configs/dashboards/cluster.json
       contol-plane:
         url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/refs/heads/main/monitoring/configs/dashboards/control-plane.json
+    security:
+      crowdsec:
+        gnetId: 21419
+        datasource: Prometheus
+        # revision: 1
+      geoip:
+        gnetId: 17877
+        datasource: Prometheus
+        # revision: 5
