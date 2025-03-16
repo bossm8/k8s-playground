@@ -114,6 +114,9 @@ spec:
             grafana_folder: Kubernetes
           provider:
             foldersFromFilesStructure: true
+      persistence:
+        enabled: true
+        size: 5Gi
 
     nodeExporter:
       enabled: true
