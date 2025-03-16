@@ -5,8 +5,11 @@ metadata:
   name: grafana-dashboard-backup
 spec:
   schedule: "0 * * * *"
+  concurrencyPolicy: Replace
   jobTemplate:
     spec:
+      backoffLimit: 3
+      activeDeadlineSeconds: 300
       template:
         spec:
           containers:

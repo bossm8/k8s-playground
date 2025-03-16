@@ -18,10 +18,7 @@ curl \
 
 jq -c '.[]' dashboards.json | while read -r item; do
   uid=$(echo "$item" | jq -r '.uid')
-  folder=$(echo "$item" | jq -r '.meta.folderTitle')
   title=$(echo "$item" | jq -r '.title' | slugify)
-
-  test -d grafana-backup/$folder || mkdir grafana-backup/$folder
 
   echo "level=info msg=getting dashboard '$title' ($uid)"
 
@@ -31,6 +28,11 @@ jq -c '.[]' dashboards.json | while read -r item; do
     --header "Accept: application/json" \
     --output $title.json \
    "${BACKUP_GRAFANA_URL}/api/dashboards/uid/$uid"
+
+  folder=$(jq -r '.meta.folderTitle' $title.json)
+  test -d grafana-backup/$folder || mkdir grafana-backup/$folder
+
+  echo "level=info msg=storing dashboard '$title' in folder '$folder'"
 
    jq '.dashboard' $title.json > grafana-backup/$folder/$title.json
    rm -rf $title.json
@@ -47,3 +49,5 @@ git push
 
 cd -
 rm -rf grafana-backup
+
+echo "level=info msg=backup done"
