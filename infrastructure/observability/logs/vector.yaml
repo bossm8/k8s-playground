@@ -143,7 +143,10 @@ spec:
                 "loki",
                 "cilium-agent",
                 "cilium-operator",
-                "node-exporter"
+                "node-exporter",
+                "fritzbox_exp",
+                "blackbox_exp",
+                "crowdsec",
             ], string!(.container)) || match_any(string!(.pod), [
                 r'hubble-.*',
                 r'alertmanager-.*',
