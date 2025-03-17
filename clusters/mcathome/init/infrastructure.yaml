@@ -7,7 +7,7 @@ metadata:
 spec:
   interval: 10m0s
   dependsOn:
-    - name: cluster-variables
+    - name: cluster-configs
   path: ./infrastructure/storage
   postBuild:
     substituteFrom:

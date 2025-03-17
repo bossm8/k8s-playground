@@ -41,10 +41,14 @@ metadata:
   namespace: flux-system
 spec:
   interval: 10m0s
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
+  dependsOn:
+    - name: cluster-variables
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
   path: ./configs
   prune: true
   sourceRef:
