@@ -22,6 +22,7 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: blackbox-targets
+      targetPath: serviceMonitor.targets 
 
   values:
     namespaceOverride: infra-observability
