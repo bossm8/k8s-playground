@@ -110,6 +110,28 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  name: infra-observability-probes
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  dependsOn:
+    - name: infra-observability-logs
+  path: ./infrastructure/observability/probes
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m0s
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
   name: infra-observability-traces
   namespace: flux-system
 spec:
