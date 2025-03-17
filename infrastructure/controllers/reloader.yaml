@@ -33,11 +33,12 @@ spec:
       interval: 10m0s
   values:
 
-    logFormat: json
+    reloader:
+      logFormat: json
 
-    readOnlyRootFilesystem: true
+      readOnlyRootFilesystem: true
 
-    enableMetricsByNamespace: true
+      enableMetricsByNamespace: true
 
-    serviceMonitor:
-      enabled: true
+      serviceMonitor:
+        enabled: true
