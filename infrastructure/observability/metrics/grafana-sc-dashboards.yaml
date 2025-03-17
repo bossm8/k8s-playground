@@ -46,6 +46,12 @@ grafana:
           type: file
           options:
             path: /var/lib/grafana/dashboards/security
+        - name: services
+          orgId: 1
+          folder: Services
+          type: file
+          options:
+            path: /var/lib/grafana/dashboards/services
   dashboards:
     # https://github.com/grafana/helm-charts/blob/dd5ddc09b40f7b3db2cce2d1a48bb5cbbe84cbe8/charts/grafana/values.yaml#L813
     ingress:
@@ -115,3 +121,7 @@ grafana:
         gnetId: 17877
         datasource: Prometheus
         # revision: 6
+    services:
+      blackbox:
+        gnetId: 13659
+        datasource: Prometheus
