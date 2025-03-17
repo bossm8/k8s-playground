@@ -10,48 +10,56 @@ grafana:
           type: file
           options:
             path: /var/lib/grafana/dashboards/ingress
+          disableDeletion: false
         - name: loki-sb
           orgId: 1
           folder: Loki Single Binary
           type: file
           options:
             path: /var/lib/grafana/dashboards/loki-sb
+          disableDeletion: false
         - name: tempo
           orgId: 1
           folder: Tempo
           type: file
           options:
             path: /var/lib/grafana/dashboards/tempo
+          disableDeletion: false
         - name: cert-manager
           orgId: 1
           folder: Cert-Manager
           type: file
           options:
             path: /var/lib/grafana/dashboards/cert-manager
+          disableDeletion: false
         - name: otelcol
           orgId: 1
           folder: OpenTelemetry
           type: file
           options:
             path: /var/lib/grafana/dashboards/otelcol
+          disableDeletion: false
         - name: flux
           orgId: 1
           folder: FluxCD
           type: file
           options:
             path: /var/lib/grafana/dashboards/flux
+          disableDeletion: false
         - name: security
           orgId: 1
           folder: Security
           type: file
           options:
             path: /var/lib/grafana/dashboards/security
+          disableDeletion: false
         - name: services
           orgId: 1
           folder: Services
           type: file
           options:
             path: /var/lib/grafana/dashboards/services
+          disableDeletion: false
   dashboards:
     # https://github.com/grafana/helm-charts/blob/dd5ddc09b40f7b3db2cce2d1a48bb5cbbe84cbe8/charts/grafana/values.yaml#L813
     ingress:
