@@ -53,12 +53,12 @@ grafana:
           options:
             path: /var/lib/grafana/dashboards/security
           disableDeletion: false
-        - name: services
+        - name: hardware
           orgId: 1
-          folder: Services
+          folder: Hardware
           type: file
           options:
-            path: /var/lib/grafana/dashboards/services
+            path: /var/lib/grafana/dashboards/hardware
           disableDeletion: false
   dashboards:
     # https://github.com/grafana/helm-charts/blob/dd5ddc09b40f7b3db2cce2d1a48bb5cbbe84cbe8/charts/grafana/values.yaml#L813
@@ -129,3 +129,10 @@ grafana:
         gnetId: 17877
         datasource: Prometheus
         revision: 6
+    hardware:
+      node-exporter:
+        gnetId: 1860
+        datasource: Prometheus
+      smartctl-exporter:
+        gnetId: 22381
+        datasource: Prometheus
