@@ -3,8 +3,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: prometheus-blackbox-exporter
-  # Use flux-system to use valuesFrom with values from the vars repo
-  namespace: flux-system
+  namespace: infra-observability
 spec:
   interval: 10m0s
   driftDetection:
@@ -24,7 +23,6 @@ spec:
       name: blackbox-targets
 
   values:
-    namespaceOverride: infra-observability
 
     config:
       modules:

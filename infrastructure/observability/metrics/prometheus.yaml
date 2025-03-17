@@ -1,11 +1,4 @@
 ---
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: infra-observability
-  labels:
-    pod-security.kubernetes.io/enforce: privileged
----
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
@@ -39,6 +32,8 @@ spec:
       name: flux-crs-metrics
     - kind: ConfigMap
       name: grafana-sc-dashboards
+    - kind: ConfigMap
+      name: scrape-targets
 
   values:
     global:
