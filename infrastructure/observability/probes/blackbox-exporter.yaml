@@ -44,6 +44,7 @@ spec:
 
     prometheusRule:
       enabled: true
+      namespace: infra-observability
       rules:
         - alert: BlackboxProbeFailed
           expr: probe_success == 0

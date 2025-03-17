@@ -120,7 +120,7 @@ grafana:
       geoip:
         gnetId: 17877
         datasource: Prometheus
-        # revision: 6
+        revision: 6
     services:
       blackbox:
         gnetId: 13659
