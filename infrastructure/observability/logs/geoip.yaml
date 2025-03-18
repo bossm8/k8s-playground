@@ -6,7 +6,7 @@ metadata:
   namespace: infra-observability
 type: Opaque
 stringData:
-  GEOIPUPDATE_ACCOUNT_ID: |
-    ${geoIpAccountId}
+  # See: https://fluxcd.io/flux/components/kustomize/kustomizations/#post-build-substitution-of-numbers-and-booleans
+  GEOIPUPDATE_ACCOUNT_ID: ${quote}${geoIpAccountId}${quote}
   GEOIPUPDATE_LICENSE_KEY: ${geoIpLicenseKey}
   GEOIPUPDATE_EDITION_IDS: GeoLite2-City
