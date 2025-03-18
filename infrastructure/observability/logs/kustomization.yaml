@@ -5,11 +5,4 @@ kind: Kustomization
 resources:
   - loki.yaml
   - vector.yaml
-
-configMapGenerator:
-  - name: geoip-account-config
-    namespace: infra-observability
-    env: geoip.env
-
-configurations:
-  - kustomizeconfig.yaml
+  - geoip.yaml
