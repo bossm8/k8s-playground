@@ -245,6 +245,8 @@ spec:
       - name: geoip-download
         image: maxmindinc/geoipupdate:latest
         securityContext:
+          runAsUser: 10001
+          runAsGroup: 10001
           runAsNonRoot: true
           readOnlyRootFilesystem: true
           privileged: false
