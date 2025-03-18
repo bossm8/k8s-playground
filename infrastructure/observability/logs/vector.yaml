@@ -235,6 +235,8 @@ spec:
     extraVolumes:
       - name: geoip-mmdb
         emptyDir: {}
+      - name: geoip-tmp
+        emptyDir: {}
 
     extraVolumeMounts:
       - name: geoip-mmdb
@@ -262,4 +264,6 @@ spec:
         volumeMounts:
           - name: geoip-mmdb
             mountPath: /usr/share/GeoIP
+          - name: geoip-tmp
+            mountPath: /tmp
 
