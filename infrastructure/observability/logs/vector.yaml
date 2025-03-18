@@ -193,17 +193,19 @@ spec:
             - crowdsec_event_logs_raw
           source: |
             res, err = parse_regex(string!(.msg), r'.*\) (?P<scenario>[^ ]*) by ip (?P<ip>[^ ]*) \((?P<country>[^\/]*)/(?P<postal_code>[^\)]*)\) : (?P<duration>[^ ]*) (?P<action>[^ ]*) on .*') ??
-                       parse_regex(string!(.msg), r'Ip (?P<ip>[^ ]*) (?P<action>[^ ]*) \'(?P<scenario>[^\']*)\' \((?P<events>\d+) events over (?P<duration>[^ ]*)\).*')
+                       parse_regex(string!(.msg), r'.*Ip (?P<ip>[^ ]*) (?P<action>[^ ]*) \'(?P<scenario>[^\']*)\' \((?P<events>\d+) events over (?P<duration>[^ ]*)\).*')
             if err != null {
+              log(err, level: "error")
               abort
             }
             .event = res
             res, err = get_enrichment_table_record("geoip", {"ip": .payload.event.ip})
             if err != null {
-              abort
-            }
-            .event.geoip = filter(object(res)) -> |key, _val| {
-              includes(["city_name", "continent_code", "country_code", "latitude", "longitude", "postal_code"], key)
+              log(err, level: "error")
+            } else {
+              .event.geoip = filter(object(res)) -> |key, _val| {
+                includes(["city_name", "continent_code", "country_code", "latitude", "longitude", "postal_code"], key)
+              }
             }
             del(.payload)
             .container = "crowdsec:events"
