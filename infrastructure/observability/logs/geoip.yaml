@@ -6,6 +6,8 @@ metadata:
   namespace: infra-observability
 type: Opaque
 stringData:
+  # Need to explicitely map strings with yaml due to kustomize removing quotes
+  # See: https://github.com/kubernetes-sigs/kustomize/issues/3485
   GEOIPUPDATE_ACCOUNT_ID: |
     ${geoIpAccountId}
   GEOIPUPDATE_LICENSE_KEY: |
