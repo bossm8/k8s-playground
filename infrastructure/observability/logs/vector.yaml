@@ -203,7 +203,7 @@ spec:
               abort
             }
             .event.geoip = filter(object!(res)) -> |key, _val| {
-              includes(["city_name", "continent_code", "country_code", "latitude", "longitude", "postal_code"], key) {
+              includes(["city_name", "continent_code", "country_code", "latitude", "longitude", "postal_code"], key)
             }
             del(.payload)
             .container = "crowdsec:events"
