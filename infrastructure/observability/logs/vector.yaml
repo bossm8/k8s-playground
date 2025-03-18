@@ -241,7 +241,7 @@ spec:
         mountPath: /var/geoip
         readOnly: true
 
-    extraInitContainers:
+    initContainers:
       - name: geoip-download
         image: maxmindinc/geoipupdate:latest
         securityContext:
