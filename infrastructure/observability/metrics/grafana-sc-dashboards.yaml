@@ -133,6 +133,7 @@ grafana:
       node-exporter:
         gnetId: 1860
         datasource: Prometheus
+        revision: 36
       smartctl-exporter:
         gnetId: 22381
         datasource: Prometheus
