@@ -6,7 +6,7 @@ resources:
   - loki.yaml
   - vector.yaml
 
-secretGenerator:
+configMapGenerator:
   - name: geoip-account-config
     namespace: infra-observability
     literals:

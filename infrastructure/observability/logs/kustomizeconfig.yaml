@@ -1,6 +1,6 @@
 ---
 nameReference:
-  - kind: Secret
+  - kind: ConfigMap
     version: v1
     fieldSpecs:
       - path: spec/values/initContainers/envFrom/secretRef/name
