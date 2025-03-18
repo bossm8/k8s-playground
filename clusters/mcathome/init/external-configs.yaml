@@ -2,7 +2,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: GitRepository
 metadata:
-  name: cluster-variables
+  name: external-configs
   namespace: flux-system
 spec:
   url: ssh://git@github.com/bossm8/k8s-playground-vars.git
@@ -31,7 +31,7 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: cluster-variables
+    name: external-configs
   timeout: 5m0s
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -53,5 +53,5 @@ spec:
   prune: true
   sourceRef:
     kind: GitRepository
-    name: cluster-variables
+    name: external-configs
   timeout: 5m0s

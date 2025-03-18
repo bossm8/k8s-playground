@@ -32,7 +32,7 @@ spec:
       name: flux-crs-metrics
     - kind: ConfigMap
       name: grafana-sc-dashboards
-    # Stored in the vars repo
+    # Stored in the external-configs
     - kind: ConfigMap
       name: scrape-targets
 

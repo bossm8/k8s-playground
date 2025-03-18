@@ -19,7 +19,7 @@ spec:
       interval: 10m0s
 
   valuesFrom:
-    # Stored in the vars repo
+    # Stored in the external-configs
     - kind: ConfigMap
       name: blackbox-targets
 

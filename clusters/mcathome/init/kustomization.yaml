@@ -4,6 +4,6 @@ kind: Kustomization
 
 resources:
   - namespaces.yaml
-  - variables.yaml
   - infrastructure.yaml
   - applications.yaml
+  - external-configs.yaml
