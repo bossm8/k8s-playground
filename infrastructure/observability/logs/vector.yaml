@@ -63,6 +63,11 @@ spec:
         address: 127.0.0.1:8686
         playground: false
 
+      enrichment_tables:
+        geoip:
+          type: geoip
+          path: /var/geoip/GeoLite2-City.mmdb
+
       sources:
 
         kubernetes_logs_raw:
@@ -175,6 +180,34 @@ spec:
               .level = downcase(string!(del(.payload.level)))
             }
 
+        crowdsec_event_logs:
+          type: filter
+          inputs:
+            - processed_logs
+          condition: |
+            .container == "crowdsec" && exists(.payload.msg) && match_any(string!(.payload.msg), [r'ban on', r'performed'])
+
+        crowdsec_event_logs_parsed:
+          type: remap
+          inputs:
+            - crowdsec_ban_logs
+          source: |
+            res, err = parse_regex(string!(.msg), r'.*\) (?P<scenario>[^ ]*) by ip (?P<ip>[^ ]*) \((?P<country>[^\/]*)/(?P<postal_code>[^\)]*)\) : (?P<duration>[^ ]*) (?P<action>[^ ]*) on .*') ??
+                       parse_regex(string!(.msg), r'Ip (?P<ip>[^ ]*) (?P<action>[^ ]*) \'(?P<scenario>[^\']*)\' \((?P<events>\d+) events over (?P<duration>[^ ]*)\).*')
+            if err != null {
+              abort
+            }
+            .event = res
+            res, err = get_entrichment_table_record("geoip", {"ip": .payload.event.ip})
+            if err != null {
+              abort
+            }
+            .event.geoip = filter(object!(res)) -> |key, _val| {
+              includes(["city_name", "continent_code", "country_code", "latitude", "longitude", "postal_code"], key) {
+            }
+            del(.payload)
+            .container = "crowdsec:events"
+
       sinks:
 
         prom_exporter:
@@ -188,6 +221,7 @@ spec:
           endpoint: http://loki:3100
           inputs:
             - processed_logs
+            - crowdsec_event_logs_parsed
           encoding:
             codec: json
           labels:
@@ -197,4 +231,33 @@ spec:
             pod: '{{ "{{ pod }}" }}'
             container: '{{ "{{ container }}" }}'
           remove_label_fields: true
+
+    extraVolumes:
+      - name: geoip-mmdb
+        emptyDir: {}
+
+    extraVolumeMounts:
+      - name: geoip-mmdb
+        mountPath: /var/geoip
+        readOnly: true
+
+    extraInitContainer:
+      - name: geoip-download
+        image: maxmindinc/geoipupdate:latest
+        securityContext:
+          runAsNonRoot: true
+          readOnlyRootFilesystem: true
+          privileged: false
+          allowPrivilegeEscalation: false
+          seccompProfile: 
+            type: RuntimeDefault
+          capabilities:
+            drop:
+            - ALL
+        envFrom:
+          - secretRef:
+              name: geoip-account-config
+        volumeMounts:
+          - name: geoip-mmdb
+            mountPath: /usr/share/GeoIP
 
