@@ -192,8 +192,8 @@ spec:
           inputs:
             - crowdsec_event_logs_raw
           source: |
-            res, err = parse_regex(string!(.msg), r'.*\) (?P<scenario>[^ ]*) by ip (?P<ip>[^ ]*) \((?P<country>[^\/]*)/(?P<postal_code>[^\)]*)\) : (?P<duration>[^ ]*) (?P<action>[^ ]*) on .*') ??
-                       parse_regex(string!(.msg), r'.*Ip (?P<ip>[^ ]*) (?P<action>[^ ]*) \'(?P<scenario>[^\']*)\' \((?P<events>\d+) events over (?P<duration>[^ ]*)\).*')
+            res, err = parse_regex(string!(.payload.msg), r'.*\) (?P<scenario>[^ ]*) by ip (?P<ip>[^ ]*) \((?P<country>[^\/]*)/(?P<postal_code>[^\)]*)\) : (?P<duration>[^ ]*) (?P<action>[^ ]*) on .*') ??
+                       parse_regex(string!(.payload.msg), r'.*Ip (?P<ip>[^ ]*) (?P<action>[^ ]*) \'(?P<scenario>[^\']*)\' \((?P<events>\d+) events over (?P<duration>[^ ]*)\).*')
             if err != null {
               log(err, level: "error")
               abort
