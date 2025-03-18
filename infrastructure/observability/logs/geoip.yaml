@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: geoip-account-config
+  namespace: infra-observability
 type: Opaque
 stringData:
   GEOIPUPDATE_ACCOUNT_ID: |
