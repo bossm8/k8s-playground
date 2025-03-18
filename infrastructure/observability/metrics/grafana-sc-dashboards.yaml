@@ -124,7 +124,11 @@ grafana:
       crowdsec:
         gnetId: 21419
         datasource: Prometheus
-        revision: 2
+        revision: 5
+      crowdsec-fw-bouncer:
+        gnetID: 23110
+        datasource: Prometheus
+        revision: 1
       geoip:
         gnetId: 17877
         datasource: Prometheus
