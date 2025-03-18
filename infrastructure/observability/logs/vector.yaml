@@ -180,17 +180,17 @@ spec:
               .level = downcase(string!(del(.payload.level)))
             }
 
-        crowdsec_event_logs:
+        crowdsec_event_logs_raw:
           type: filter
           inputs:
             - processed_logs
           condition: |
             .container == "crowdsec" && exists(.payload.msg) && match_any(string!(.payload.msg), [r'ban on', r'performed'])
 
-        crowdsec_event_logs_parsed:
+        crowdsec_event_logs:
           type: remap
           inputs:
-            - crowdsec_ban_logs
+            - crowdsec_event_logs_raw
           source: |
             res, err = parse_regex(string!(.msg), r'.*\) (?P<scenario>[^ ]*) by ip (?P<ip>[^ ]*) \((?P<country>[^\/]*)/(?P<postal_code>[^\)]*)\) : (?P<duration>[^ ]*) (?P<action>[^ ]*) on .*') ??
                        parse_regex(string!(.msg), r'Ip (?P<ip>[^ ]*) (?P<action>[^ ]*) \'(?P<scenario>[^\']*)\' \((?P<events>\d+) events over (?P<duration>[^ ]*)\).*')
@@ -221,7 +221,7 @@ spec:
           endpoint: http://loki:3100
           inputs:
             - processed_logs
-            - crowdsec_event_logs_parsed
+            - crowdsec_event_logs
           encoding:
             codec: json
           labels:
