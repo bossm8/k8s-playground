@@ -199,7 +199,7 @@ spec:
               abort
             }
             .event = res
-            res, err = get_enrichment_table_record("geoip", {"ip": .payload.event.ip})
+            res, err = get_enrichment_table_record("geoip", {"ip": .event.ip})
             if err != null {
               log(err, level: "error")
             } else {
