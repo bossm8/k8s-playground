@@ -207,6 +207,7 @@ spec:
                 includes(["city_name", "continent_code", "country_code", "latitude", "longitude", "postal_code"], key)
               }
             }
+            .event.flag = "https://flagcdn.com/40x30/" + downcase(string!(.event.geoip.country_code)) + ".png"
             del(.payload)
             .container = "crowdsec:events"
 
