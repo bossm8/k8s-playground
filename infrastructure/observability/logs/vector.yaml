@@ -258,6 +258,9 @@ spec:
           capabilities:
             drop:
             - ALL
+        env:
+          - name: GEOIPUPDATE_ACCOUNT_ID
+            value: "${geoIpAccountId}"
         envFrom:
           - secretRef:
               name: geoip-account-config
