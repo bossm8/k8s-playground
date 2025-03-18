@@ -5,4 +5,14 @@ kind: Kustomization
 resources:
   - loki.yaml
   - vector.yaml
-  - geoip.yaml
+
+secretGenerator:
+  - name: geoip-account-config
+    namespace: infra-observability
+    literals:
+    - GEOIPUPDATE_ACCOUNT_ID=${geoIpAccountId}
+    - GEOIPUPDATE_LICENSE_KEY=${geoIpLicenseKey}
+    - GEOIPUPDATE_EDITION_IDS=GeoLite2-City
+
+configurations:
+  - kustomizeconfig.yaml
