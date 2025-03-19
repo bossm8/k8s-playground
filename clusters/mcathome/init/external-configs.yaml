@@ -5,7 +5,7 @@ metadata:
   name: external-configs
   namespace: flux-system
 spec:
-  url: ssh://git@github.com/bossm8/k8s-playground-vars.git
+  url: ssh://git@github.com/bossm8/k8s-playground-configs.git
   interval: 10m0s
   ref:
     branch: main
