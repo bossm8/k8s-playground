@@ -110,7 +110,8 @@ spec:
               del(.tag)
             } else if err == null {
               .node = res.node
-              .filename = split(string!(.file), "/")[-1]
+              .container = split(string!(.file), "/")[-1]
+              .pod = "none"
             }
             .namespace = "external"
             if exists(.line) {
