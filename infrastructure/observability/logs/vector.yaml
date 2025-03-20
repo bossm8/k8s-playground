@@ -231,6 +231,49 @@ spec:
           source: |
             .payload = del(.message)
 
+        iptables_event_logs_raw:
+          type: filter
+          inputs:
+            - processed_container_logs
+          condition: |
+            .container == "iptables.log"
+        
+        iptables_event_logs:
+          type: remap
+          inputs:
+            - iptables_event_logs_raw
+          source: |
+            res, err = parse_regex(string!(.payload), r'.*\[iptables\] (?P<message>.*)$')
+            if err != null {
+              log(err, level: "error")
+              abort
+            }
+            res, err = parse_logfmt(string!(res.message))
+            if err != null {
+              log(err, level: "error")
+              abort
+            }
+            payload = {}
+            # transform all json keys to snake_case
+            for_each(object!(res)) -> |key, val| {
+                payload = set!(payload, path: [snakecase(key)], data: val)
+            }
+            .event = payload
+
+            # TODO: use same config for all ip's to parse - i.e. unify
+            res, err = get_enrichment_table_record("geoip", {"ip": .event.src})
+            if err != null {
+              log(err, level: "error")
+            } else {
+              .event.geoip = filter(object(res)) -> |key, _val| {
+                includes(["city_name", "continent_code", "country_code", "latitude", "longitude", "postal_code"], key)
+              }
+            }
+            .event.flag = "https://flagcdn.com/40x30/" + downcase(string!(.event.geoip.country_code)) + ".png"
+            del(.payload)
+            .container = "iptables:events"
+
+
         processed_unmatched_logs:
           type: remap
           inputs:
@@ -254,6 +297,7 @@ spec:
             - processed_container_logs
             - processed_file_logs
             - crowdsec_event_logs
+            - iptables_event_logs
           encoding:
             codec: json
           labels:
