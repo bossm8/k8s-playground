@@ -103,11 +103,14 @@ spec:
               string!(.tag),
               r'(?P<node>([^/]*))/(?P<container>.*)'
             )
-            if err == null {
+            if err == null && res.container != "file" {
               .node = res.node
               .container = res.container
               .pod = .container
               del(.tag)
+            } else if err == null {
+              .node = res.node
+              .filename = split(string!(.file), "/")[-1]
             }
             .namespace = "external"
             if exists(.line) {
@@ -134,11 +137,20 @@ spec:
               abort
             }
 
-        processed_logs:
-          type: remap
+        filtered_logs:
+          type: route
           inputs:
             - kubernetes_logs
             - external_logs
+          reroute_unmatched: true
+          route:
+            container: exists(.container)
+            file: exists(.filename)
+
+        processed_container_logs:
+          type: remap
+          inputs:
+            - filtered_logs.container
           source: |
             res = null
             err = null
@@ -183,7 +195,7 @@ spec:
         crowdsec_event_logs_raw:
           type: filter
           inputs:
-            - processed_logs
+            - processed_container_logs
           condition: |
             .container == "crowdsec" && exists(.payload.msg) && match_any(string!(.payload.msg), [r'ban on', r'performed'])
 
@@ -211,6 +223,20 @@ spec:
             del(.payload)
             .container = "crowdsec:events"
 
+        processed_file_logs:
+          txpe: remap
+          inputs:
+            - filtered_logs.file
+          source: |
+            .payload = del(.message)
+
+        processed_unmatched_logs:
+          type: remap
+          inputs:
+            - filtered_logs._unmatched
+          source: |
+            .unmatched = true
+
       sinks:
 
         prom_exporter:
@@ -223,7 +249,9 @@ spec:
           type: loki
           endpoint: http://loki:3100
           inputs:
-            - processed_logs
+            - processed_unmatched_logs
+            - processed_container_logs
+            - processed_file_logs
             - crowdsec_event_logs
           encoding:
             codec: json
