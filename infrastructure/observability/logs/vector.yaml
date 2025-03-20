@@ -224,7 +224,7 @@ spec:
             .container = "crowdsec:events"
 
         processed_file_logs:
-          txpe: remap
+          type: remap
           inputs:
             - filtered_logs.file
           source: |
