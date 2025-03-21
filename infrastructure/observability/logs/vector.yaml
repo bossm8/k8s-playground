@@ -256,7 +256,7 @@ spec:
             }
             payload = {}
             # transform all json keys to snake_case
-            for_each(object!(res)) -> |key, val| {
+            for_each(object(res)) -> |key, val| {
                 payload = set!(payload, path: [snakecase(key)], data: val)
             }
             .event = payload
