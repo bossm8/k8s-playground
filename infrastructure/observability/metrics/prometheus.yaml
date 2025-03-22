@@ -206,3 +206,27 @@ spec:
                   - image-reflector-controller
           podMetricsEndpoints:
             - port: http-prom
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: infinity-datasource
+  namespace: infra-observability
+  labels:
+    grafana_datasource: "1"
+data:
+  infinity.yaml: |
+    apiVersion: 1
+    datasources:
+      - name: CrowdSec-CTI
+        type: yesoreyeram-infinity-datasource
+        uid: crowdsec-cti
+        orgId: 1
+        basicAuth: false
+        isDefault: false
+        jsonData:
+          allowedHosts:
+            - https://cti.api.crowdsec.net
+          httpHeaderName1: x-api-key
+        secureJsonData:
+          httpHeaderValue1: ${crowdsecApiKey}
