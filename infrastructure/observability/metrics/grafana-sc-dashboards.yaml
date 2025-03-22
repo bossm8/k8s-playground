@@ -129,10 +129,6 @@ grafana:
         gnetId: 23110
         datasource: Prometheus
         revision: 3
-      geoip:
-        gnetId: 17877
-        datasource: Prometheus
-        revision: 6
     hardware:
       node-exporter:
         gnetId: 1860
