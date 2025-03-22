@@ -103,6 +103,8 @@ spec:
         hosts:
           - ${grafanaHostName}
         tls: []
+      plugins:
+        - yesoreyeram-infinity-datasource
       sidecar:
         dashboards:
           folderAnnotation: grafana_folder
