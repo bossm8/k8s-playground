@@ -283,12 +283,12 @@ spec:
             - geoip_enriched_events
           metrics:
             - name: countries_seen_total
-              field: event.geoip_country_code
+              field: event.geoip.country_code
               namespace: event
               type: counter
               tags:
                 type: '{{ "{{ container }}" }}'
-                country: '{{ "{{ event.geoip_country_code }}" }}'
+                country: '{{ "{{ event.geoip.country_code }}" }}'
 
         processed_unmatched_logs:
           type: remap
