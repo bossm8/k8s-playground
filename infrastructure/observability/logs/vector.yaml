@@ -67,6 +67,9 @@ spec:
         geoip:
           type: geoip
           path: /var/geoip/GeoLite2-City.mmdb
+        asn:
+          type: mmdb
+          path: /var/geoip/GeoLite2-ASN.mmdb
 
       sources:
 
@@ -215,16 +218,6 @@ spec:
             del(.payload)
             .container = "crowdsec:events"
 
-            res, err = get_enrichment_table_record("geoip", {"ip": .event.src})
-            if err != null {
-              log(err, level: "error")
-            } else {
-              .event.geoip = filter(object(res)) -> |key, _val| {
-                includes(["city_name", "continent_code", "country_code", "latitude", "longitude", "postal_code"], key)
-              }
-            }
-            .event.flag = "https://flagcdn.com/40x30/" + downcase(string!(.event.geoip.country_code)) + ".png"
-
         processed_file_logs:
           type: remap
           inputs:
@@ -276,7 +269,26 @@ spec:
                 includes(["city_name", "continent_code", "country_code", "latitude", "longitude", "postal_code"], key)
               }
             }
+            res, err = get_enrichment_table_record("asn", {"ip": .event.src})
+            if err != null {
+              log(err, level: "error")
+            } else {
+              .event.asn = res
+            }
             .event.flag = "https://flagcdn.com/40x30/" + downcase(string!(.event.geoip.country_code)) + ".png"
+
+        geoip_country_count:
+          type: log_to_metric
+          inputs:
+            - geoip_enriched_events
+          metrics:
+            field: event.geoip_country_code
+            name: countries_seen_total
+            namespace: event
+            type: counter
+            tags:
+              type: '{{ "{{ container }}" }}'
+              country: '{{ "{{ event.geoip_country_code }}" }}'
 
         processed_unmatched_logs:
           type: remap
@@ -291,7 +303,9 @@ spec:
           type: prometheus_exporter
           inputs: 
             - internal_metrics
+            - geoip_country_count
           address: 0.0.0.0:9090
+          suppress_timestamp: true
 
         loki:
           type: loki
@@ -322,7 +336,7 @@ spec:
         mountPath: /var/geoip
         readOnly: true
 
-    initContainers:
+    extraContainers:
       - name: geoip-download
         image: maxmindinc/geoipupdate:latest
         securityContext:
@@ -337,6 +351,13 @@ spec:
         envFrom:
           - secretRef:
               name: geoip-account-config
+        env:
+          - name: GEOIPUPDATE_EDITION_IDS
+            value: 'GeoLite2-City GeoLite2-ASN'
+          - name: GEOIPUPDATE_FREQUENCY
+            value: '12'
+          - name: GEOIPUPDATE_VERBOSE
+            value: '1'
         volumeMounts:
           - name: geoip-mmdb
             mountPath: /usr/share/GeoIP
