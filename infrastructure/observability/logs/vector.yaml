@@ -306,6 +306,7 @@ spec:
             - geoip_country_count
           address: 0.0.0.0:9090
           suppress_timestamp: true
+          flush_period_secs: 1209600 # two weeks
 
         loki:
           type: loki
