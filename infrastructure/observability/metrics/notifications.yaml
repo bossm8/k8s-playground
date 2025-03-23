@@ -59,3 +59,29 @@ spec:
     - kind: HelmRelease
       name: '*'
       namespace: ingress-traefik
+---
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Alert
+metadata:
+  name: discord-helmrepos
+  namespace: flux-system
+spec:
+  providerRef:
+    name: discord
+  eventSeverity: info
+  eventSources:
+    - kind: HelmRepository
+      name: '*'
+      namespace: infra-observability
+    - kind: HelmRepository
+      name: '*'
+      namespace: kyverno
+    - kind: HelmRepository
+      name: '*'
+      namespace: infra-reloader
+    - kind: HelmRepository
+      name: '*'
+      namespace: cert-manager
+    - kind: GitRepository
+      name: '*'
+      namespace: infra-storage
