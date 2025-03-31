@@ -29,7 +29,7 @@ spec:
         value: Watchdog
     continue: false
     groupWait: 0s
-    groupInterval: 0s
+    groupInterval: 5s
     repeatInterval: 24h
     routes:
       - receiver: discord
