@@ -20,6 +20,10 @@ spec:
   route:
     receiver: "null"
     matchers: []
+    groupBy:
+    - alertname
+    - cluster
+    - job
     continue: true
     routes:
       - receiver: healthchecks
