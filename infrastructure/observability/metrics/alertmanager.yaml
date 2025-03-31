@@ -18,20 +18,33 @@ metadata:
 spec:
   route:
     matchers:
-      - name: alertname
-        matchType: =~
-        value: .+
+    - name: alertname
+      matchType: '='
+      value: Watchdog
     groupBy:
-      - alertname
-      - cluster
-      - job
-    groupWait: 5m
-    groupInterval: 10m
-    repeatInterval: 24h
-    receiver: discord
+    - alertname
+    - cluster
+    - job
+    receiver: healthchecks
+    routes:
+      - matchers:
+        - name: alertname
+          matchType: '=~'
+          value: '.+'
+        groupBy:
+        - alertname
+        - cluster
+        - job
+        groupWait: 5m
+        groupInterval: 10m
+        repeatInterval: 24h
+        receiver: discord
   receivers:
-    - name: discord
-      discordConfigs:
-        - apiURL:
-            name: discord-webhook-url
-            key: address
+  - name: discord
+    discordConfigs:
+    - apiURL:
+        name: discord-webhook-url
+        key: address
+  - name: healthchecks
+    webhook_configs:
+    - url: ${watchdogAlertUrl}
