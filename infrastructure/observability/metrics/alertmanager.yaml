@@ -19,6 +19,7 @@ metadata:
 spec:
   route:
     receiver: "null"
+    continue: true
     routes:
       - receiver: healthchecks
         matchers:
