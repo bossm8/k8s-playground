@@ -18,20 +18,20 @@ metadata:
     alertmanager: ${clusterName}
 spec:
   route:
-    receiver: healthchecks
-    groupBy:
-      - alertname
-      - cluster
-      - job
-    matchers:
-      - name: alertname
-        matchType: "="
-        value: Watchdog
-    continue: false
-    groupWait: 0s
-    groupInterval: 5s
-    repeatInterval: 24h
     routes:
+      - receiver: healthchecks
+        groupBy:
+          - alertname
+          - cluster
+          - job
+        matchers:
+          - name: alertname
+            matchType: "="
+            value: Watchdog
+        continue: false
+        groupWait: 0s
+        groupInterval: 5s
+        repeatInterval: 24h
       - receiver: discord
         matchers:
         - name: alertname
