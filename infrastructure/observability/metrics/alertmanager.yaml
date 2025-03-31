@@ -19,7 +19,6 @@ metadata:
 spec:
   route:
     receiver: "null"
-    matchers: []
     groupBy:
     - alertname
     - cluster
