@@ -17,28 +17,30 @@ metadata:
     alertmanager: ${clusterName}
 spec:
   route:
-    matchers:
-    - name: alertname
-      matchType: '='
-      value: Watchdog
-    groupBy:
-    - alertname
-    - cluster
-    - job
-    receiver: healthchecks
     routes:
-      - matchers:
-        - name: alertname
-          matchType: '=~'
-          value: '.+'
-        groupBy:
-        - alertname
-        - cluster
-        - job
-        groupWait: 5m
-        groupInterval: 10m
-        repeatInterval: 24h
-        receiver: discord
+    - matchers:
+      - name: alertname
+        matchType: '='
+        value: Watchdog
+      groupBy:
+      - cluster
+      receiver: healthchecks
+      continue: false
+      groupWait: 0s
+      groupInterval: 0s
+      repeatInterval: 24h
+    - matchers:
+      - name: alertname
+        matchType: '=~'
+        value: '.+'
+      groupBy:
+      - alertname
+      - cluster
+      - job
+      groupWait: 5m
+      groupInterval: 10m
+      repeatInterval: 24h
+      receiver: discord
   receivers:
   - name: discord
     discordConfigs:
