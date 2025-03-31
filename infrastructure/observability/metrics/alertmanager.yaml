@@ -8,21 +8,22 @@ type: Opaque
 stringData:
   address: ${discordAlertmanagerAddress}
 ---
+# https://blog.ediri.io/how-to-set-up-a-dead-mans-switch-in-prometheus
 apiVersion: monitoring.coreos.com/v1alpha1
 kind: AlertmanagerConfig
 metadata:
-  name: discord
+  name: ${clusterName}
   namespace: infra-observability
   labels:
     alertmanager: ${clusterName}
 spec:
   route:
-    receiver: 'null'
+    receiver: "null"
     routes:
       - receiver: healthchecks
         matchers:
         - name: alertname
-          matchType: '='
+          matchType: "="
           value: Watchdog
         groupBy:
         - cluster
@@ -33,8 +34,8 @@ spec:
       - receiver: discord
         matchers:
         - name: alertname
-          matchType: '=~'
-          value: '.+'
+          matchType: "=~"
+          value: ".+"
         groupBy:
         - alertname
         - cluster
