@@ -336,7 +336,7 @@ spec:
             - name: helm_info
               namespace: nova
               type: counter
-              field: deprecated
+              field: outdated
               tags:
                 namespace: '{{ "{{ namespace }}" }}'
                 name: '{{ "{{ chartName }}" }}'
