@@ -18,16 +18,9 @@ metadata:
     alertmanager: ${clusterName}
 spec:
   route:
-    receiver: "null"
-    matchers:
-    - name: alertname
-      matchType: "=~"
-      value: ".+"
+    receiver: 'null'
     groupBy:
     - alertname
-    groupWait: 0s
-    groupInterval: 5s
-    repeatInterval: 24h
     routes:
       - receiver: healthchecks
         groupBy:
@@ -36,7 +29,7 @@ spec:
           - job
         matchers:
           - name: alertname
-            matchType: "="
+            matchType: '='
             value: Watchdog
         continue: false
         groupWait: 0s
@@ -45,8 +38,8 @@ spec:
       - receiver: discord
         matchers:
           - name: alertname
-            matchType: "=~"
-            value: ".+"
+            matchType: '=~'
+            value: '.+'
         groupBy:
           - alertname
         groupWait: 5m
@@ -61,3 +54,4 @@ spec:
   - name: healthchecks
     webhookConfigs:
     - url: ${watchdogAlertUrl}
+  - name: 'null'
