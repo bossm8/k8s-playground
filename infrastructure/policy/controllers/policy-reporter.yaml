@@ -39,7 +39,6 @@ spec:
       discord:
         name: discord
         webhook: ${discordKyvernoAddress}
-        skipExistingOnStartup: false
         minimumSeverity: info
 
     ui:
