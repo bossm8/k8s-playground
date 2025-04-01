@@ -342,7 +342,7 @@ spec:
                 helm_version: '{{ "{{ helmVersion }}" }}'
                 installed_version: '{{ "{{ Installed.version }}" }}'
                 latest_version: '{{ "{{ Latest.version }}" }}'
-                update_available: '{{ "{{ deprecated }}" }}'
+                update_available: '{{ "{{ outdated }}" }}'
 
         nova_container_metrics:
           type: log_to_metric
