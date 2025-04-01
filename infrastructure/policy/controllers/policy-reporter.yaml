@@ -38,6 +38,7 @@ spec:
     target:
       discord:
         webhook: ${discordKyvernoAddress}
+        skipExistingOnStartup: false
 
     ui:
       enabled: true
@@ -52,3 +53,9 @@ spec:
             enabled: false
         folder:
           name: Kyverno
+
+    plugin:
+      kyverno:
+        enabled: true
+      trivy:
+        enabled: false

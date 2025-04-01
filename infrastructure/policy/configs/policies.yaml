@@ -23,23 +23,23 @@ spec:
     policyExclude:
       disallow-host-path:
         any:
-          - resources:
-              kinds:
-                - DaemonSet
-              namespaces:
-                - infra-observability
-              names:
-                - '*node-exporter'
-                - 'vector'
+        - resources:
+            kinds:
+            - DaemonSet
+            namespaces:
+            - infra-observability
+            names:
+            - '*node-exporter'
+            - 'vector'
       disallow-host-namespaces:
         any:
-          - resources:
-              kinds:
-                - DaemonSet
-              namespaces:
-                - infra-observability
-              names:
-                - '*node-exporter'
+        - resources:
+            kinds:
+            - DaemonSet
+            namespaces:
+            - infra-observability
+            names:
+            - '*node-exporter'
 ---
 apiVersion: kyverno.io/v2
 kind: ClusterCleanupPolicy
@@ -59,12 +59,12 @@ metadata:
 spec:
   match:
     any:
-      - resources:
-          kinds:
-            - Pod
+    - resources:
+        kinds:
+        - Pod
   conditions:
     all:
-      - key: '{{ target.status.phase }}'
-        operator: AnyIn
-        value: [Succeeded, Failed]
+    - key: '{{ target.status.phase }}'
+      operator: AnyIn
+      value: [Succeeded, Failed]
   schedule: '0 * * * *'
