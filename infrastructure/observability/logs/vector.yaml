@@ -165,8 +165,8 @@ spec:
                 "cilium-agent",
                 "cilium-operator",
                 "node-exporter",
+                "blackbox-exporter",
                 "fritzbox_exp",
-                "blackbox_exp",
                 "crowdsec",
             ], string!(.container)) || match_any(string!(.pod), [
                 r'hubble-.*',
