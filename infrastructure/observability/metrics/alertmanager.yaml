@@ -8,7 +8,6 @@ type: Opaque
 stringData:
   address: ${discordAlertmanagerAddress}
 ---
-# https://blog.ediri.io/how-to-set-up-a-dead-mans-switch-in-prometheus
 apiVersion: monitoring.coreos.com/v1alpha1
 kind: AlertmanagerConfig
 metadata:
@@ -19,9 +18,9 @@ metadata:
 spec:
   route:
     receiver: 'null'
-    groupBy:
-    - alertname
+    continue: true
     routes:
+      # https://blog.ediri.io/how-to-set-up-a-dead-mans-switch-in-prometheus
       - receiver: healthchecks
         groupBy:
           - alertname
@@ -31,10 +30,10 @@ spec:
           - name: alertname
             matchType: '='
             value: Watchdog
-        continue: false
         groupWait: 0s
         groupInterval: 5s
         repeatInterval: 24h
+        continue: false
       - receiver: discord
         matchers:
           - name: alertname
@@ -46,6 +45,7 @@ spec:
         groupInterval: 10m
         repeatInterval: 24h
   receivers:
+  - name: 'null'
   - name: discord
     discordConfigs:
     - apiURL:
@@ -54,4 +54,3 @@ spec:
   - name: healthchecks
     webhookConfigs:
     - url: ${watchdogAlertUrl}
-  - name: 'null'
