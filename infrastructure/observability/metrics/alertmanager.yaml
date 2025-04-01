@@ -54,3 +54,6 @@ spec:
   - name: healthchecks
     webhookConfigs:
     - url: ${watchdogAlertUrl}
+      httpConfig:
+        tlsConfig:
+          insecureSkipVerify: true
