@@ -336,7 +336,7 @@ spec:
               type: counter
               field: deprecated
               tags:
-                namespace: '{{ "{{ container }}" }}'
+                namespace: '{{ "{{ namespace }}" }}'
                 name: '{{ "{{ chartName }}" }}'
                 release: '{{ "{{ release }}" }}'
                 helm_version: '{{ "{{ helmVersion }}" }}'
