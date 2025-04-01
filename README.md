@@ -24,6 +24,7 @@ Manifests in this repository are deployed with [FluxCD](https://fluxcd.io).
 - [Loki](https://grafana.com/oss/loki)
 - [Tempo](https://grafana.com/oss/tempo)
 - [Grafana](https://grafana.com/oss/grafana)
+- [Nova](https://nova.docs.fairwinds.com)
 
 ### Ingress Controllers
 

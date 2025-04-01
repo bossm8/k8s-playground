@@ -92,6 +92,8 @@ spec:
           type: splunk_hec
           address: 0.0.0.0:8088
 
+        # Used to receive json events uploaded by the nova cronjob
+        # https://nova.docs.fairwinds.com/usage/#helm-releases-and-container-images-combined-output
         nova_json_receiver:
           type: http_server
           address: 0.0.0.0:8090
