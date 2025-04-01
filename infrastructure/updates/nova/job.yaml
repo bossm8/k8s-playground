@@ -39,6 +39,9 @@ spec:
               - mountPath: /scripts
                 name: find-script
                 readOnly: true
+            env:
+              - name: NOVA_VECTOR_JSON_ENDPOINT
+                value: http://vector.infra-observability:8090
             workingDir: /workspace
             resources:
               requests:

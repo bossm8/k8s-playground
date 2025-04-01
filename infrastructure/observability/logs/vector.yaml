@@ -92,6 +92,12 @@ spec:
           type: splunk_hec
           address: 0.0.0.0:8088
 
+        nova_json_receiver:
+          type: http_server
+          address: 0.0.0.0:8090
+          encoding: json
+          response_code: 204
+
         internal_metrics:
           type: internal_metrics
 
@@ -297,6 +303,66 @@ spec:
           source: |
             .unmatched = true
 
+        handle_nova_helm_json:
+          type: remap
+          inputs:
+            - nova_json_receiver
+          source: |
+            . = del(.log.helm)
+            . = unnest!(.)
+
+        handle_nova_container_json_pre:
+          type: remap
+          inputs:
+            - nova_json_receiver
+          source: |
+            . = del(.log.container.container_images)
+            . = unnest!(.)
+
+        handle_nova_container_json:
+          type: remap
+          inputs:
+            - handle_nova_container_json_pre
+          source: |
+            . = unnest!(affectedWorkloads)
+
+        nova_helm_metrics:
+          type: log_to_metric
+          inputs:
+            - handle_nova_helm_json
+          metrics:
+            - name: helm_info
+              namespace: nova
+              type: counter
+              field: deprecated
+              tags:
+                namespace: '{{ "{{ container }}" }}'
+                name: '{{ "{{ chartName }}" }}'
+                release: '{{ "{{ release }}" }}'
+                helm_version: '{{ "{{ helmVersion }}" }}'
+                installed_version: '{{ "{{ Installed.version }}" }}'
+                latest_version: '{{ "{{ Latest.version }}" }}'
+                update_available: '{{ "{{ deprecated }}" }}'
+
+        nova_container_metrics:
+          type: log_to_metric
+          inputs:
+            - handle_nova_container_json
+          metrics:
+            - name: helm_info
+              namespace: nova
+              type: counter
+              field: deprecated
+              tags:
+                workload_name: '{{ affectedWorkloads.name }}'
+                workload_namespace: '{{ affectedWorkloads.namespace }}'
+                workload_container: '{{ affectedWorkloads.container }}'
+                workload_kind: '{{ affectedWorkloads.kind }}'
+                installed_version: '{{ "{{ current_version }}" }}'
+                latest_version: '{{ "{{ latest_version }}" }}'
+                update_available: '{{ "{{ outdated }}" }}'
+                image: '{{ "{{ name }}" }}'
+
       sinks:
 
         prom_exporter:
@@ -304,6 +370,8 @@ spec:
           inputs: 
             - internal_metrics
             - geoip_country_count
+            - nova_helm_metrics
+            - nova_container_metrics
           address: 0.0.0.0:9090
           suppress_timestamp: true
           flush_period_secs: 1209600 # two weeks
