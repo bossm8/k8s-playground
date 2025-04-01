@@ -308,7 +308,7 @@ spec:
           inputs:
             - nova_json_receiver
           source: |
-            . = del(.log.helm)
+            . = .helm
             . = unnest!(.)
 
         handle_nova_container_json_pre:
@@ -316,7 +316,7 @@ spec:
           inputs:
             - nova_json_receiver
           source: |
-            . = del(.log.container.container_images)
+            . = .container.container_images
             . = unnest!(.)
 
         handle_nova_container_json:
