@@ -26,20 +26,22 @@ spec:
         - resources:
             kinds:
             - DaemonSet
+            - Pod
             namespaces:
             - infra-observability
             names:
-            - '*node-exporter'
-            - 'vector'
+            - '*node-exporter*'
+            - 'vector*'
       disallow-host-namespaces:
         any:
         - resources:
             kinds:
             - DaemonSet
+            - Pod
             namespaces:
             - infra-observability
             names:
-            - '*node-exporter'
+            - '*node-exporter*'
 ---
 apiVersion: kyverno.io/v2
 kind: ClusterCleanupPolicy
