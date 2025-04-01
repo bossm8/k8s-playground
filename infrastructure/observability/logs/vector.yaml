@@ -349,7 +349,7 @@ spec:
           inputs:
             - handle_nova_container_json
           metrics:
-            - name: helm_info
+            - name: container_info
               namespace: nova
               type: counter
               field: outdated
