@@ -339,6 +339,8 @@ spec:
                 namespace: '{{ "{{ namespace }}" }}'
                 name: '{{ "{{ chartName }}" }}'
                 release: '{{ "{{ release }}" }}'
+                url: '{{ "{{ home }}" }}'
+                icon: '{{ "{{ icon }}" }}'
                 helm_version: '{{ "{{ helmVersion }}" }}'
                 installed_version: '{{ "{{ Installed.version }}" }}'
                 latest_version: '{{ "{{ Latest.version }}" }}'
