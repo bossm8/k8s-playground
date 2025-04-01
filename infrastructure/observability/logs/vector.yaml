@@ -352,7 +352,7 @@ spec:
             - name: helm_info
               namespace: nova
               type: counter
-              field: deprecated
+              field: outdated
               tags:
                 workload_name: '{{ affectedWorkloads.name }}'
                 workload_namespace: '{{ affectedWorkloads.namespace }}'
