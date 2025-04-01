@@ -324,7 +324,7 @@ spec:
           inputs:
             - handle_nova_container_json_pre
           source: |
-            . = unnest!(affectedWorkloads)
+            . = unnest!(.affectedWorkloads)
 
         nova_helm_metrics:
           type: log_to_metric
