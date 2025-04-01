@@ -32,7 +32,7 @@ spec:
             value: Watchdog
         groupWait: 0s
         groupInterval: 5s
-        repeatInterval: 24h
+        repeatInterval: 10m
         continue: false
       - receiver: discord
         matchers:
