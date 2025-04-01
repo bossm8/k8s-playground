@@ -61,3 +61,11 @@ spec:
         enabled: true
       trivy:
         enabled: false
+
+    sourceFilters:
+      - selector:
+          source: kyverno
+        uncontrolledOnly: false
+        disableClusterReports: false
+        kinds:
+          exclude: [ReplicaSet]
