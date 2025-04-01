@@ -58,6 +58,8 @@ spec:
     plugin:
       kyverno:
         enabled: true
+        logging:
+          encoding: json
       trivy:
         enabled: false
 
