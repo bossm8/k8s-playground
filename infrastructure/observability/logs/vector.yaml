@@ -374,11 +374,18 @@ spec:
           inputs: 
             - internal_metrics
             - geoip_country_count
-            - nova_helm_metrics
-            - nova_container_metrics
           address: 0.0.0.0:9090
           suppress_timestamp: true
           flush_period_secs: 1209600 # two weeks
+
+        nova_prom_exporter:
+          type: prometheus_exporter
+          inputs: 
+            - nova_helm_metrics
+            - nova_container_metrics
+          address: 0.0.0.0:9091
+          suppress_timestamp: true
+          flush_period_secs: 15000 # 4+ hours
 
         loki:
           type: loki
