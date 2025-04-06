@@ -378,7 +378,7 @@ spec:
           suppress_timestamp: true
           flush_period_secs: 1209600 # two weeks
 
-        nova_prom_exporter:
+        nova_prom_exp:
           type: prometheus_exporter
           inputs: 
             - nova_helm_metrics
@@ -443,4 +443,32 @@ spec:
             mountPath: /usr/share/GeoIP
           - name: geoip-tmp
             mountPath: /tmp
-
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  labels:
+    app.kubernetes.io/component: Agent
+    app.kubernetes.io/instance: vector
+    app.kubernetes.io/name: vector
+  name: vector-nova
+  namespace: infra-observability
+spec:
+  jobLabel: app.kubernetes.io/name
+  namespaceSelector:
+    matchNames:
+    - infra-observability
+  podMetricsEndpoints:
+  - honorLabels: false
+    honorTimestamps: true
+    path: /metrics
+    port: nova-prom-exp
+    relabelings:
+    - action: replace
+      replacement: mcathome
+      targetLabel: cluster
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: Agent
+      app.kubernetes.io/instance: vector
+      app.kubernetes.io/name: vector
