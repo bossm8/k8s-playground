@@ -1,3 +1,41 @@
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: host-firewall
+spec:
+  nodeSelector: {}
+  ingress:
+  - fromCIDR:
+    - ${proxyIP}/32
+    toPorts:
+    - ports:
+      - port: '30080'
+        protocol: TCP
+      - port: '30433'
+        protocol: TCP
+      - port: '31080'
+        protocol: TCP
+      - port: '31433'
+        protocol: TCP
+  - fromCIDR:
+    - ${proxyIP}/24
+    toPorts:
+    - ports:
+      - port: '6443'
+        protocol: TCP
+  - fromCIDRSet:
+    - cidr: ${proxyIP}/24
+      except:
+      -  192.168.178.200/25
+    toPorts:
+    - ports:
+      - port: '50000'
+        protocol: TCP
+  - fromEntities:
+    - cluster
+  egress:
+  - toEntities:
+    - all
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -30,20 +68,7 @@ spec:
           - method: GET
             path: /metrics
           - method: GET
-            path: /probe
----
-apiVersion: cilium.io/v2
-kind: CiliumClusterwideNetworkPolicy
-metadata:
-  name: allow-all
-spec: 
-  endpointSelector: {} 
-  ingress: 
-  - fromEntities: 
-    - all
-  egress:
-  - toEntities: 
-    - all
+            path: /probe.*
 ---
 apiVersion: cilium.io/v2
 kind: CiliumClusterwideNetworkPolicy
@@ -62,6 +87,8 @@ spec:
       rules:
         dns:
         - matchPattern: "*"
+  - toEntities:
+    - all
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
