@@ -4,6 +4,13 @@ metadata:
   name: host-firewall
 spec:
   nodeSelector: {}
+  ingressDeny:
+  - fromEntities:
+    - all
+    toPorts:
+    - ports:
+      - port: '30000'
+        endPort: 32767
   ingress:
   - fromCIDR:
     - ${proxyIP}/32
