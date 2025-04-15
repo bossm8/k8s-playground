@@ -1,35 +1,68 @@
-#---
-#apiVersion: cilium.io/v2
-#kind: CiliumClusterwideNetworkPolicy
-#metadata:
-#  name: allow-all
-#spec: 
-#  endpointSelector: {} 
-#  ingress: 
-#  - fromEntities: 
-#    - all
-#  egress:
-#  - toEntities: 
-#    - all
-#---
-#apiVersion: cilium.io/v2
-#kind: CiliumClusterwideNetworkPolicy
-#metadata:
-#  name: dns
-#spec:
-#  endpointSelector: {}
-#  egress:
-#  - toEndpoints:
-#    - matchLabels:
-#        io.kubernetes.pod.namespace: kube-system
-#        k8s-app: kube-dns
-#    toPorts:
-#    - ports:
-#      - port: "53"
-#      rules:
-#        dns:
-#        - matchPattern: "*"
-#---
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: blackbox-deny-all
+  namespace: infra-observability
+spec:
+  endpointSelector:
+    matchExpressions:
+      - key: app.kubernetes.io/name
+        operator: In
+        values: 
+        - prometheus-blackbox-exporter
+  egress:
+  - toEntities:
+    - all
+  ingress:
+  - fromEndpoints:
+    - matchExpressions:
+      - key: app.kubernetes.io/name
+        operator: In
+        values:
+        - prometheus
+    toPorts:
+    - ports:
+      - port: '9115'
+        protocol: TCP
+      rules:
+        http:
+          - method: GET
+            path: /metrics
+          - method: GET
+            path: /probe
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: allow-all
+spec: 
+  endpointSelector: {} 
+  ingress: 
+  - fromEntities: 
+    - all
+  egress:
+  - toEntities: 
+    - all
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: dns
+spec:
+  endpointSelector: {}
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        io.kubernetes.pod.namespace: kube-system
+        k8s-app: kube-dns
+    toPorts:
+    - ports:
+      - port: "53"
+      rules:
+        dns:
+        - matchPattern: "*"
+---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
