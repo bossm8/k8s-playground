@@ -90,9 +90,6 @@ spec:
         - matchPattern: "*"
   - toEntities:
     - all
-  ingress:
-  - fromEntities:
-    - all
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
