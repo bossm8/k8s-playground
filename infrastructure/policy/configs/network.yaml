@@ -11,24 +11,24 @@
 #  egress:
 #  - toEntities: 
 #    - all
----
-apiVersion: cilium.io/v2
-kind: CiliumClusterwideNetworkPolicy
-metadata:
-  name: dns
-spec:
-  endpointSelector: {}
-  egress:
-  - toEndpoints:
-    - matchLabels:
-        io.kubernetes.pod.namespace: kube-system
-        k8s-app: kube-dns
-    toPorts:
-    - ports:
-      - port: "53"
-      rules:
-        dns:
-        - matchPattern: "*"
+#---
+#apiVersion: cilium.io/v2
+#kind: CiliumClusterwideNetworkPolicy
+#metadata:
+#  name: dns
+#spec:
+#  endpointSelector: {}
+#  egress:
+#  - toEndpoints:
+#    - matchLabels:
+#        io.kubernetes.pod.namespace: kube-system
+#        k8s-app: kube-dns
+#    toPorts:
+#    - ports:
+#      - port: "53"
+#      rules:
+#        dns:
+#        - matchPattern: "*"
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
