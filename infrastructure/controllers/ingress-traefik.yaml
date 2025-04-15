@@ -159,8 +159,8 @@ spec:
       - ${proxyIP}/32
     - fromEndpoints:
       - matchLabels:
-          k8s:io.kubernetes.pod.namespace: infra-observability
-          k8s:app.kubernetes.io/name: prometheus
+          io.kubernetes.pod.namespace: infra-observability
+          app.kubernetes.io/name: prometheus
       toPorts:
       - ports:
         - port: '9100' 
