@@ -1,6 +1,6 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelRepository
+kind: HelmRepository
 metadata:
   name: kubescape
   namespace: infra-security
