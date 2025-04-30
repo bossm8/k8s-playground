@@ -33,13 +33,22 @@ spec:
     logger:
       name: json
 
-    components:
-      otelCollector:
-        enabled: false
+    capabilities:
+      ksOtel: disabled
+      relevany: disabled
+      runtimeObservability: disabled
+      networkPolicyService: disabled
+      runtimeDetection: disabled
+      malwareDetection: disabled
+      nodeProfileService: disabled
+      seccompProfileService: disabled
 
     configurations:
       otelUrl: grpc://otel-collector-opentelemetry-collector.infra-observability:4317
       persistence: enable
+    
+    otelCollector:
+      disable: true
 
     kubescape:
       serviceMonitor:
