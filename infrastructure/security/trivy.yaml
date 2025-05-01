@@ -38,6 +38,9 @@ spec:
 
     webhookBroadcastURL: ${discordTrivyAddress}
 
+    operator:
+      builtInTrivyServer: false
+
     serviceMonitor:
       enabled: true
       
