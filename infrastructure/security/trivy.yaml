@@ -27,7 +27,7 @@ spec:
         namespace: infra-security
       interval: 10m0s
   values:
-    targetWorkloads:
+    targetWorkloads: ""
 
     metricsFindingsEnabled: true
     metricsExposedSecretInfo: true
