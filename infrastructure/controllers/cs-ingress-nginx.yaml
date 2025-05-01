@@ -45,10 +45,6 @@ spec:
             - name: crowdsec-bouncer-plugin
               mountPath: /lua_plugins
           securityContext:
-            allowPrivilegeEscalation: false
-            runAsNonRoot: true
-            runAsUser: 10001
-            runAsGroup: 10001
             capabilities:
               drop:
                 - ALL
