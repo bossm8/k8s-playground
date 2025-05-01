@@ -29,17 +29,21 @@ spec:
   values:
     targetWorkloads: ""
 
-    metricsFindingsEnabled: true
-    metricsExposedSecretInfo: true
-    metricsRbacAssementInfo: true
-    metricsInfraAssessmentInfo: true
-    metricsImageInfo: true
-    metricsClusterComplianceInfo: true
-
-    webhookBroadcastURL: ${discordTrivyAddress}
-
     operator:
       builtInTrivyServer: true
+    
+      webhookBroadcastURL: ${discordTrivyAddress}
+
+      # Enable all metrics for the moment to test
+      # TODO: disable some again due to cardinality
+      metricsFindingsEnabled: true
+      metricsVulnIdEnabled: true
+      metricsExposedSecretInfo: true
+      metricsConfigAuditInfo: true
+      metricsRbacAssessmentInfo: true
+      metricsInfraAssessmentInfo: true
+      metricsImageInfo: true
+      metricsClusterComplianceInfo: true
 
     serviceMonitor:
       enabled: true
