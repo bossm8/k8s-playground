@@ -46,6 +46,10 @@ spec:
               mountPath: /lua_plugins
           securityContext:
             allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            capabilities:
+              drop:
+                - ALL
             seccompProfile:
               type: RuntimeDefault
       extraVolumeMounts:
