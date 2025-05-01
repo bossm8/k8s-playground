@@ -61,7 +61,7 @@ spec:
         logging:
           encoding: json
       trivy:
-        enabled: false
+        enabled: true
 
     sourceFilters:
       - selector:
