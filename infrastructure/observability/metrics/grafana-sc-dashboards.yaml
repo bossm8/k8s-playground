@@ -46,12 +46,12 @@ grafana:
           options:
             path: /var/lib/grafana/dashboards/flux
           disableDeletion: false
-        - name: security
+        - name: cssecurity
           orgId: 1
-          folder: Security
+          folder: Security/CrowdSec
           type: file
           options:
-            path: /var/lib/grafana/dashboards/security
+            path: /var/lib/grafana/dashboards/cssecurity
           disableDeletion: false
         - name: hardware
           orgId: 1
@@ -120,7 +120,7 @@ grafana:
         url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/refs/heads/main/monitoring/configs/dashboards/cluster.json
       contol-plane:
         url: https://raw.githubusercontent.com/fluxcd/flux2-monitoring-example/refs/heads/main/monitoring/configs/dashboards/control-plane.json
-    security:
+    cssecurity:
       crowdsec:
         gnetId: 21419
         datasource: Prometheus
