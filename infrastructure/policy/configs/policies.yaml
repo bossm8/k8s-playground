@@ -29,9 +29,11 @@ spec:
             - Pod
             namespaces:
             - infra-observability
+            - infra-security
             names:
             - '*node-exporter*'
             - 'vector*'
+            - 'node-collector*'
       disallow-host-namespaces:
         any:
         - resources:
@@ -40,8 +42,10 @@ spec:
             - Pod
             namespaces:
             - infra-observability
+            - infra-security
             names:
             - '*node-exporter*'
+            - 'node-collector*'
 ---
 apiVersion: kyverno.io/v2
 kind: ClusterCleanupPolicy
