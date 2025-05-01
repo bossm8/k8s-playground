@@ -1,0 +1,44 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: aquasec
+  namespace: infra-security
+spec:
+  interval: 1h30m
+  url: https://aquasecurity.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: trivy-operator
+  namespace: infra-security
+spec:
+  interval: 1h30m
+  driftDetection: 
+    mode: enabled
+  chart:
+    spec:
+      chart: trivy-operator
+      version: 0.27.x
+      sourceRef:
+        kind: HelmRepository
+        name: aquasec
+        namespace: infra-security
+      interval: 10m0s
+  values:
+    targetWorkloads:
+
+    metricsFindingsEnabled: true
+    metricsExposedSecretInfo: true
+    metricsRbacAssementInfo: true
+    metricsInfraAssessmentInfo: true
+    metricsImageInfo: true
+    metricsClusterComplianceInfo: true
+
+    webhookBroadcastURL: ${discordTrivyAddress}
+
+    serviceMonitor:
+      enabled: true
+      
+    
