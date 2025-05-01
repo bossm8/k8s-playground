@@ -58,6 +58,7 @@ spec:
         - name: var-lib-kube-controller-manager
           mountPath: /var/lib/kube-controller-manager
           readOnly: true
+        # https://www.talos.dev/v1.10/learn-more/architecture/#the-file-system
         # - name: etc-systemd
         #   mountPath: /etc/systemd
         #   readOnly: true
