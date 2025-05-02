@@ -1,0 +1,59 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: falcosecurity
+  namespace: infra-security
+spec:
+  interval: 1h30m
+  url: https://falcosecurity.github.io/charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: falco
+  namespace: infra-security
+spec:
+  interval: 1h30m
+  driftDetection:
+    mode: enabled
+  chart:
+    spec:
+      chart: falco
+      version: 4.21.*
+      sourceRef:
+        kind: HelmRepository
+        name: falcosecurity
+        namespace: infra-security
+      interval: 10m0s
+  values:
+    scc:
+      create: false
+
+    tolerations: []
+
+    metrics:
+      enabled: true
+      outputRule: true
+
+    kubernetes:
+      enabled: true
+
+    serviceMonitor:
+      create: true
+
+    grafana:
+      dasboards:
+        enaled: true
+        configMaps:
+          falco:
+            folder: Security
+
+    falco:
+      http_output:
+        enabled: true
+        url: ${discordFalcoAddress}
+      webserver:
+        prometheus_metrics_enabled: true
+      metrics:
+        enabled: true

@@ -6,4 +6,5 @@ resources:
   - namespace.yaml
   - trivy.yaml
   - trivy-polr-adapter.yaml
+  - falco.yaml
 
