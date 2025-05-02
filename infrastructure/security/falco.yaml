@@ -20,7 +20,7 @@ spec:
   chart:
     spec:
       chart: falco
-      version: 4.21.*
+      version: 4.21.x
       sourceRef:
         kind: HelmRepository
         name: falcosecurity
