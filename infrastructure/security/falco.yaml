@@ -54,9 +54,12 @@ spec:
         prometheus_metrics_enabled: true
       metrics:
         enabled: true
+      priority: warning
 
     falcosidekick:
       enabled: true
+      webui:
+        enabled: true
       serviceMonitor:
         enabled: true
       prometheusRules:
