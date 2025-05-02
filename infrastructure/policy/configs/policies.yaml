@@ -34,6 +34,7 @@ spec:
             - '*node-exporter*'
             - 'vector*'
             - 'node-collector*'
+            - 'falco-*'
       disallow-host-namespaces:
         any:
         - resources:
@@ -46,6 +47,16 @@ spec:
             names:
             - '*node-exporter*'
             - 'node-collector*'
+      disallow-privileged-containers:
+        any:
+        - resources:
+            kinds:
+            - DaemonSet
+            - Pod
+            namespaces:
+            - infra-security
+            names:
+            - 'falco-*'
 ---
 apiVersion: kyverno.io/v2
 kind: ClusterCleanupPolicy
