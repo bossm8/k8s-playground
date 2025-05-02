@@ -58,8 +58,10 @@ spec:
 
     falcosidekick:
       enabled: true
+      replicaCount: 1
       webui:
         enabled: true
+        replicaCount: 1
       serviceMonitor:
         enabled: true
       prometheusRules:
