@@ -76,6 +76,7 @@ spec:
         discord:
           webhookurl: ${discordFalcoAddress}
         loki:
+          hostport: http://loki.infra-observability:3100
           grafanaDashboard:
             enabled: true
             configMap:
