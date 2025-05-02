@@ -44,7 +44,7 @@ spec:
 
     grafana:
       dashboards:
-        enaled: true
+        enabled: true
         configMaps:
           falco:
             folder: Security
