@@ -43,7 +43,7 @@ spec:
       create: true
 
     grafana:
-      dasboards:
+      dashboards:
         enaled: true
         configMaps:
           falco:
