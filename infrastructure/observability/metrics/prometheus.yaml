@@ -95,6 +95,8 @@ spec:
       enabled: true
       adminUser: ${grafanaAdminUser}
       adminPassword: ${grafanaAdminPassword}
+      initChownData:
+        enabled: false
       ingress:
         enabled: true
         annotations:
