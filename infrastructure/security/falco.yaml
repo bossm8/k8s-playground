@@ -50,10 +50,23 @@ spec:
             folder: Security
 
     falco:
-      http_output:
-        enabled: true
-        url: ${discordFalcoAddress}
       webserver:
         prometheus_metrics_enabled: true
       metrics:
         enabled: true
+
+    falcosidekick:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+      prometheusRules:
+        enabled: true
+      grafana:
+        dashboards:
+          enabled: true
+          configMaps:
+            falcosidekick:
+              folder: Security
+      config:
+        discord:
+          webhookurl: ${discordFalcoAddress}
