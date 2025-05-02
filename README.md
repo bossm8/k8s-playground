@@ -36,6 +36,11 @@ Manifests in this repository are deployed with [FluxCD](https://fluxcd.io).
 
 - [Kyverno](https://kyverno.io)
 
+### Security
+
+- [Trivy Operator](https://aquasecurity.github.io/trivy-operator/latest/)
+- [Falco](https://falco.org/)
+
 ## Additional Functionalities
 
 - Tenant Playground Namespaces
