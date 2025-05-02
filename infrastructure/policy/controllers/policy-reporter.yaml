@@ -53,6 +53,7 @@ spec:
           multicluster:
             enabled: false
         folder:
+          annotation: grafana_dashboard_folder
           name: Kyverno
 
     plugin:

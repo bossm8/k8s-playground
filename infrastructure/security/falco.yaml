@@ -44,7 +44,6 @@ spec:
 
     grafana:
       dashboards:
-        enabled: true
         configMaps:
           falco:
             folder: Security
@@ -75,3 +74,8 @@ spec:
       config:
         discord:
           webhookurl: ${discordFalcoAddress}
+        loki:
+          grafanaDashboard:
+            enabled: true
+            configMap:
+              folder: Security
