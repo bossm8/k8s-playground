@@ -109,9 +109,9 @@ spec:
         - yesoreyeram-infinity-datasource
       sidecar:
         dashboards:
-          folderAnnotation: grafana_folder
+          folderAnnotation: grafana_dashboard_folder
           annotations:
-            grafana_folder: Kubernetes
+            grafana_dashboard_folder: Kubernetes
           provider:
             foldersFromFilesStructure: true
       persistence:

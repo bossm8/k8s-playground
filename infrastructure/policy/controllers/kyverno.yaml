@@ -45,7 +45,7 @@ spec:
     grafana:
       enabled: true
       annotations:
-        grafana_folder: Kyverno
+        grafana_dashboard_folder: Kyverno
     
     admissionController:
       serviceMonitor:
