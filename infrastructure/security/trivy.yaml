@@ -20,7 +20,7 @@ spec:
   chart:
     spec:
       chart: trivy-operator
-      version: 0.27.x
+      version: 0.28.x
       sourceRef:
         kind: HelmRepository
         name: aquasec
