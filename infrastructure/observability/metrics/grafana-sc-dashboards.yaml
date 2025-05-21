@@ -137,3 +137,6 @@ grafana:
       smartctl-exporter:
         gnetId: 22381
         datasource: Prometheus
+      mdadm:
+        gnetId: 20989
+        datasource: Prometheus
