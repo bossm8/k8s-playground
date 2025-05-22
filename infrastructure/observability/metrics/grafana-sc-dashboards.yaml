@@ -111,7 +111,9 @@ grafana:
     otelcol:
       data-flow:
         gnetId: 18309
-        datasource: Prometheus
+        datasource:
+          - name: DS_PROMETHEUS
+            value: Prometheus
         # revision: 2
         # https://github.com/grafana/grafana/issues/10786
     flux:
