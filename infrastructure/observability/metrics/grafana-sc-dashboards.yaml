@@ -139,4 +139,6 @@ grafana:
         datasource: Prometheus
       mdadm:
         gnetId: 20989
-        datasource: Prometheus
+        datasource:
+          - name: DS_PROMETHEUS
+            value: Prometheus
