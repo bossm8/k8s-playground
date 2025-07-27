@@ -64,7 +64,7 @@ mentioned in the documentation here.
    private repo containing the variables is not yet configured, and the SOPS key
    used to decrypt some of the variables is not yet present. Create the
    necessary secret manually:
-  
+
    - Deploy key:
 
       ```bash
@@ -91,3 +91,12 @@ mentioned in the documentation here.
    script](../helpers/install-cilium.sh) can be re-run with the
    `--with-prometheus` flag, this will install ServiceMonitors and Grafana
    dashboards for cilium services into the cluster.
+
+7. Intall Extensions
+
+   To install system extension head to [factory.talos.dev](https://factory.talos.dev),
+   select the extensions to install and run the following command:
+
+   ```bash
+   talosctl upgrade -i factory.talos.dev/metal-installer/<generated-id>:<tag>
+   ```
