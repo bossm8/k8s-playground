@@ -11,7 +11,7 @@ spec:
   chart:
     spec:
       chart: kyverno-policies
-      version: 3.4.x
+      version: 3.5.x
       sourceRef:
         kind: HelmRepository
         name: kyverno
