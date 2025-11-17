@@ -25,7 +25,7 @@ spec:
   chart:
     spec:
       chart: kyverno
-      version: 3.5.x
+      version: 3.6.x
       sourceRef:
         kind: HelmRepository
         name: kyverno
