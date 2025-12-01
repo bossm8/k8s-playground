@@ -68,13 +68,13 @@ spec:
   muteTimeIntervals:
     - name: remote-backup-active
       timeIntervals:
-        - weekdays: [Saturday]
+        - weekdays: [saturday]
           #location: Europe/Zurich
           times:
           - startTime: 21:00
-        - weekdays: [Sunday]
+        - weekdays: [sunday]
           #location: Europe/Zurich
-        - weekdays: [Monday]
+        - weekdays: [monday]
           #location: Europe/Zurich
           times:
           - endTime: 10:00
