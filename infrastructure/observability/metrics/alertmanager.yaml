@@ -39,6 +39,14 @@ spec:
           - name: alertname
             matchType: '=~'
             value: '.+'
+        routes:
+          - receiver: discord
+            matchers:
+              - name: instance
+                matchType: '=~'
+                value: '${backupServerIP}:.*'
+            activeTimeIntervals:
+              - remote-backup-active
         groupBy:
           - alertname
         groupWait: 5m
