@@ -50,7 +50,7 @@ spec:
         TargetDown: true
 
     additionalPrometheusRulesMap:
-      TargetDown:
+      target-down:
         groups:
           - name: general.rules
             rules:
