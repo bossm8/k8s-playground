@@ -8,7 +8,7 @@ type: Opaque
 stringData:
   address: ${discordAlertmanagerAddress}
 ---
-apiVersion: monitoring.coreos.com/v1alpha1
+apiVersion: monitoring.coreos.com/v1beta1
 kind: AlertmanagerConfig
 metadata:
   name: ${clusterName}
@@ -57,3 +57,16 @@ spec:
       httpConfig:
         tlsConfig:
           insecureSkipVerify: true
+  timeIntervals:
+    - name: remote-backup-active
+      timeIntervals:
+        - weekdays: [Saturday]
+          location: Europe/Zurich
+          times:
+          - startTime: 21:00
+        - weekdays: [Sunday]
+          location: Europe/Zurich
+        - weekdays: [Monday]
+          location: Europe/Zurich
+          times:
+          - endTime: 10:00
