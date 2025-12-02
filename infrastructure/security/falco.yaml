@@ -54,6 +54,7 @@ spec:
         prometheus_metrics_enabled: true
       metrics:
         enabled: true
+        outputRule: false
       priority: warning
 
     customRules:
