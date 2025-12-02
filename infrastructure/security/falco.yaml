@@ -56,6 +56,19 @@ spec:
         enabled: true
       priority: warning
 
+    customRules:
+      # https://falco.org/docs/concepts/rules/overriding/
+      # https://falco.org/docs/concepts/rules/exceptions/
+      rule-overrides.yaml: |-
+        - rule: Drop and execute new binary in container
+          append: true
+          exceptions:
+            - name: cilium
+              fields: [evt.type, proc.cmdline, proc.exe]
+              comps: [=, contains, =]
+              values:
+                - [execve, cilium-cni, /opt/cni/bin/cilium-cni]
+
     falcosidekick:
       enabled: true
       replicaCount: 1
