@@ -34,7 +34,7 @@ spec:
 
     metrics:
       enabled: true
-      outputRule: true
+      outputRule: false
 
     kubernetes:
       enabled: true
@@ -54,7 +54,6 @@ spec:
         prometheus_metrics_enabled: true
       metrics:
         enabled: true
-        outputRule: false
       priority: warning
 
     customRules:
