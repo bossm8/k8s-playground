@@ -46,7 +46,7 @@ spec:
       enabled: true
       annotations:
         grafana_dashboard_folder: Kyverno
-    
+
     admissionController:
       serviceMonitor:
         enabled: true
@@ -75,7 +75,7 @@ spec:
             - apiGroups: ["rbac.authorization.k8s.io"]
               resources: ["rolebindings"]
               verbs: ["get"]
-      
+
     cleanupController:
       serviceMonitor:
         enabled: true
@@ -89,6 +89,9 @@ spec:
             # Needed to cleanup 'dead' pods (see policies.yaml#L43)
             - apiGroups: [""]
               resources: ["pods"]
+              verbs: ["get", "watch", "list", "delete"]
+            - apiGroups: ["batch"]
+              resources: ["jobs"]
               verbs: ["get", "watch", "list", "delete"]
 
     reportsController:

@@ -85,3 +85,34 @@ spec:
       operator: AnyIn
       value: [Succeeded, Failed]
   schedule: '0 * * * *'
+---
+apiVersion: kyverno.io/v2
+kind: ClusterCleanupPolicy
+metadata:
+  name: cleanup-failed-jobs
+  annotations:
+    policies.kyverno.io/title: Delete Failed Jobs
+    policies.kyverno.io/category: Cluster Maintenance
+    policies.kyverno.io/subject: Job
+    policies.kyverno.io/severity: info
+    policies.kyverno.io/description: >-
+      This policies removes failed jobs as soon as there has been a more recent
+      successfull job execution.
+      Normalliy they would be deleted with:
+
+      kubectl delete job --field-selector=status.phase==Failed -A
+spec:
+  match:
+    any:
+    - resources:
+        kinds:
+        - Job
+        selector:
+          matchLabels:
+            k8s.mcathome.ch/cleanup: 'true'
+  conditions:
+    all:
+    - key: '{{ target.status.failed }}'
+      operator: GreaterThan
+      value: 0
+  schedule: '0 1 * * *'

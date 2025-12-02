@@ -6,11 +6,16 @@ metadata:
 spec:
   schedule: "0 */4 * * *"
   concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       backoffLimit: 3
       activeDeadlineSeconds: 300
       template:
+        metadata:
+          labels:
+            k8s.mcathome.ch/cleanup: 'true'
         spec:
           serviceAccountName: nova-find
           automountServiceAccountToken: true
@@ -28,7 +33,7 @@ spec:
               readOnlyRootFilesystem: true
               privileged: false
               allowPrivilegeEscalation: false
-              seccompProfile: 
+              seccompProfile:
                 type: RuntimeDefault
               capabilities:
                 drop:

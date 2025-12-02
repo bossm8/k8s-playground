@@ -6,11 +6,16 @@ metadata:
 spec:
   schedule: "0 * * * *"
   concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       backoffLimit: 3
       activeDeadlineSeconds: 300
       template:
+        metadata:
+          labels:
+            k8s.mcathome.ch/cleanup: 'true'
         spec:
           containers:
           - name: grafana-backup
@@ -26,7 +31,7 @@ spec:
               readOnlyRootFilesystem: true
               privileged: false
               allowPrivilegeEscalation: false
-              seccompProfile: 
+              seccompProfile:
                 type: RuntimeDefault
               capabilities:
                 drop:
