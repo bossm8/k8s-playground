@@ -98,9 +98,6 @@ metadata:
     policies.kyverno.io/description: >-
       This policies removes failed jobs as soon as there has been a more recent
       successfull job execution.
-      Normalliy they would be deleted with:
-
-      kubectl delete job --field-selector=status.phase==Failed -A
 spec:
   match:
     any:
