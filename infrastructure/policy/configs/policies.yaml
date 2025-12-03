@@ -112,7 +112,7 @@ spec:
             k8s.mcathome.ch/cleanup: 'true'
   conditions:
     all:
-    - key: '{{ target.status.failed }}'
+    - key: "{{ target.status.failed || '0' }}"
       operator: GreaterThan
       value: 0
   schedule: '0 1 * * *'
