@@ -20,7 +20,7 @@ spec:
   chart:
     spec:
       chart: vector
-      version: 0.48.x
+      version: 0.49.x
       sourceRef:
         kind: HelmRepository
         name: vector
