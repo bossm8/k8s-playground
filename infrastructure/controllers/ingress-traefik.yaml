@@ -25,7 +25,7 @@ spec:
   chart:
     spec:
       chart: traefik
-      version: 35.4.x
+      version: 38.0.x
       sourceRef:
         kind: HelmRepository
         name: ingress-traefik
