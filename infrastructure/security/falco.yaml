@@ -20,7 +20,7 @@ spec:
   chart:
     spec:
       chart: falco
-      version: 7.0.x
+      version: 7.1.x
       sourceRef:
         kind: HelmRepository
         name: falcosecurity
