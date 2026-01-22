@@ -1,0 +1,68 @@
+ARG K8S_VERSION=1.35.0
+ARG FLUX_VERSION=2.7.5
+ARG BAO_VERSION=2.4.3
+ARG KIND_VERSION=0.31.0
+ARG DOCKER_VERSION=20.10
+ARG HELM_VERSION=3.19
+
+# Hack stages since 'COPY --from' cannot expand env
+FROM alpine/kubectl:${K8S_VERSION} AS kubectl
+FROM fluxcd/flux-cli:v${FLUX_VERSION} AS flux
+FROM openbao/openbao:${BAO_VERSION} AS bao
+FROM alpine/helm:${HELM_VERSION} AS helm
+FROM docker:${DOCKER_VERSION} AS docker
+
+# ---
+
+FROM ubuntu:latest AS kind
+
+# Need to redefine already defined args for the stages for them to work
+ARG KIND_VERSION
+ARG TARGETARCH
+
+RUN apt-get update \
+    && apt-get install -y curl
+
+RUN curl -LO --fail https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-${TARGETARCH} \
+    && curl -LO --fail https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-${TARGETARCH}.sha256sum \
+    && sha256sum --check kind-linux-arm64.sha256sum \
+    && install -o root -g root -m 0755 kind-linux-${TARGETARCH} /usr/local/bin/kind
+
+# ---
+
+FROM ubuntu:latest
+
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y \
+        bash-completion \
+        curl \
+        git \
+        inotify-tools \
+        make \
+        python3 \
+        rsync
+
+COPY --from=kubectl /usr/local/bin/kubectl /usr/local/bin/
+COPY --from=docker /usr/local/bin/docker /usr/local/bin/
+COPY --from=kind /usr/local/bin/kind /usr/local/bin/
+COPY --from=flux /usr/local/bin/flux /usr/local/bin/
+COPY --from=helm /usr/bin/helm /usr/local/bin/
+COPY --from=bao /bin/bao /usr/local/bin/
+
+# Add bash completion scripts
+RUN kind completion bash > /etc/bash_completion.d/kind \
+    && flux completion bash > /etc/bash_completion.d/flux \
+    && kubectl completion bash > /etc/bash_completion.d/kubectl \
+    && helm completion bash > /etc/bash_completion.d/helm \
+    && bao -autocomplete-install \
+    && curl --fail -o /etc/bash_completion.d/docker -L \
+      https://raw.githubusercontent.com/docker/docker-ce/master/components/cli/contrib/completion/bash/docker \
+    && cp /etc/skel/.bashrc /root/.bashrc \
+    && mkdir -p ~/.kube \
+    && curl --fail -o ~/.kube/aliases \
+      https://raw.githubusercontent.com/ahmetb/kubectl-aliases/master/.kubectl_aliases \
+    && echo "test -f ~/.kube/aliases && source ~/.kube/aliases" >> ~/.bashrc \
+    && echo "complete -F __start_kubectl k" >>~/.bashrc
+
+ENTRYPOINT ["/bin/bash"]

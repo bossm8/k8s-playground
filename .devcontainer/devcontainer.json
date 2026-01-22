@@ -1,0 +1,37 @@
+{
+  "name": "K8s Playground",
+
+  "dockerComposeFile": "docker-compose.yml",
+
+  "service": "git-auto-commit",
+  "workspaceFolder": "/workspace/k8s-playground",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens",
+        "weaveworks.vscode-gitops-tools",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "ms-python.python",
+        "redhat.vscode-yaml"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash"
+           }
+        },
+	      "vs-kubernetes": {
+		      "vs-kubernetes.kubeconfig": "/root/.kube/config",
+		      "vs-kubernetes.knownKubeconfigs": [
+            "/root/.kube/config",
+            "/root/.kube/local-fleet-cluster"
+          ]
+	      }
+      }
+    }
+  },
+
+  "postCreateCommand": "make save-local-cluster-kubeconfig 2>&1 >/dev/null || make create-local-cluster"
+}
