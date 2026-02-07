@@ -2,9 +2,9 @@
 create-local-cluster:
 	kind delete cluster --name k8s-playground
 	kind create cluster --name k8s-playground --config .devcontainer/assets/cluster.yml
+	/bin/bash ./helpers/install-cilium.sh
 	kubectl wait --for=condition=ready pods --namespace=kube-system -l k8s-app=kube-dns
 	kubectl cluster-info | grep -q 127.0.0.1
-	/bin/bash ./helpers/install-cilium.sh
 	flux install
 	echo "${EXTERNAL_REPO_SSH_KEY}" | base64 -d | flux create secret git k8s-playground-vars --private-key-file /dev/stdin --url ssh://git@github.com/bossm8/k8s-playground-vars.git
 	echo "${SOPS_AGE_KEY}" | base64 -d |  kubectl create secret generic sops-age --namespace flux-system --from-file age.agekey=/dev/stdin
