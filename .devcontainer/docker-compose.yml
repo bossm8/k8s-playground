@@ -19,8 +19,9 @@ services:
             /var/www/git/k8s-playground.git
 
           git config \
-            --global \
+            --file /var/www/git/k8s-playground.git/config \
             http.receivepack true
+
           git config \
             --global \
             --add safe.directory \
@@ -29,14 +30,14 @@ services:
           chown -R apache:apache /var/www/git
 
           exec httpd -D FOREGROUND
+    volumes:
+      - ./assets/httpd.conf:/etc/apache2/conf.d/git.conf:ro
     healthcheck:
       test: /bin/bash -c "echo -n '/' > /dev/tcp/127.0.0.1/8080"
       retries: 10
       timeout: 5s
       start_period: 5s
       interval: 5s
-    volumes:
-      - ./assets/httpd.conf:/etc/apache2/conf.d/git.conf:ro
     ports:
       - 127.0.0.1:8080:8080
 
@@ -52,6 +53,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     working_dir: /git/shadow-repo
     entrypoint: /bin/bash
+    env_file: .env
     command:
       - -c
       - |

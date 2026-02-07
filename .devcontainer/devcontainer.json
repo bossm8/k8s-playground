@@ -13,7 +13,8 @@
         "weaveworks.vscode-gitops-tools",
         "ms-kubernetes-tools.vscode-kubernetes-tools",
         "ms-python.python",
-        "redhat.vscode-yaml"
+        "redhat.vscode-yaml",
+        "AquaSecurityOfficial.trivy-vulnerability-scanner"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash",
@@ -26,7 +27,7 @@
 		      "vs-kubernetes.kubeconfig": "/root/.kube/config",
 		      "vs-kubernetes.knownKubeconfigs": [
             "/root/.kube/config",
-            "/root/.kube/local-fleet-cluster"
+            "/root/.kube/ks8-playground-config"
           ]
 	      }
       }
