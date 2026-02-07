@@ -1,0 +1,121 @@
+services:
+
+  git-daemon:
+    image: alpine:latest
+    entrypoint: /bin/sh
+    container_name: k8s-playground-git
+    command:
+      - -c
+      - |
+          apk add --no-cache \
+            git \
+            bash \
+            apache2 \
+            git-daemon
+
+          git init \
+            --bare \
+            --initial-branch=main \
+            /var/www/git/k8s-playground.git
+
+          git config \
+            --file /var/www/git/k8s-playground.git/config \
+            http.receivepack true
+
+          git config \
+            --global \
+            --add safe.directory \
+            /var/www/git/k8s-playground.git
+
+          chown -R apache:apache /var/www/git
+
+          exec httpd -D FOREGROUND
+    volumes:
+      - ./assets/httpd.conf:/etc/apache2/conf.d/git.conf:ro
+    healthcheck:
+      test: /bin/bash -c "echo -n '/' > /dev/tcp/127.0.0.1/8080"
+      retries: 10
+      timeout: 5s
+      start_period: 5s
+      interval: 5s
+    ports:
+      - 127.0.0.1:8080:8080
+
+  git-auto-commit:
+    image: ubuntu:k8s
+    build:
+      context: assets
+    user: root:root
+    container_name: k8s-playground-auto-commit
+    stop_grace_period: 5m
+    volumes:
+      - ../:/workspace/k8s-playground:cached
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    working_dir: /git/shadow-repo
+    entrypoint: /bin/bash
+    env_file: .env
+    command:
+      - -c
+      - |
+          inotifypid=""
+          shutdown="false"
+
+          function do-commit {
+            git add .
+            git commit -m "[Git Auto Commit]: Update"
+            git push origin HEAD:main --force
+          }
+
+          function cleanup {
+            echo "Graceful shutdown requested"
+            shutdown="true"
+            kill -s SIGINT $$inotifypid || true
+            make destroy-local-cluster
+          }
+
+          trap cleanup SIGTERM SIGINT
+
+          git config \
+            --global \
+            --add safe.directory \
+            /git/shadow-repo
+          git config --global user.email "bot@k8s-playground.local"
+          git config --global user.name "k8s-playground Local Bot"
+
+          # Use a shadow copy of the repo to not mess up with the source
+          echo "Copying source to shadow"
+          rsync \
+            --archive \
+            --delete /workspace/k8s-playground/ \
+            --exclude=".git" \
+            /git/shadow-repo/
+
+          echo "Initializing new repo for shadow"
+          git init --initial-branch=main
+          git remote add origin http://localhost:8080/git/k8s-playground.git
+          do-commit
+
+          echo "Watching for changes"
+          while [[ "$$shutdown" != "true" ]]; do
+            inotifywait \
+              --recursive \
+              --event modify,create,delete,move \
+              --exclude '(^|/)\.git(/|$)' \
+              /workspace/k8s-playground &
+
+            inotifypid=$$!
+            wait $$inotifypid || true
+
+            echo "Detected changes"
+            rsync \
+              --delete \
+              --archive \
+              --exclude=".git" \
+              /workspace/k8s-playground/ /git/shadow-repo/
+
+            do-commit
+          done
+    network_mode: host
+    depends_on:
+      git-daemon:
+        condition: service_healthy

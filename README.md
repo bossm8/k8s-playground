@@ -44,3 +44,7 @@ Manifests in this repository are deployed with [FluxCD](https://fluxcd.io).
 ## Additional Functionalities
 
 - Tenant Playground Namespaces
+
+## Local Development
+
+Devcontainer TBD
