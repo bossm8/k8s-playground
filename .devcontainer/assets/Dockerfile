@@ -3,7 +3,7 @@ ARG FLUX_VERSION=2.7.5
 ARG BAO_VERSION=2.4.3
 ARG KIND_VERSION=0.31.0
 ARG DOCKER_VERSION=20.10
-ARG HELM_VERSION=3.19
+ARG HELM_VERSION=3.20
 
 # Hack stages since 'COPY --from' cannot expand env
 FROM alpine/kubectl:${K8S_VERSION} AS kubectl
