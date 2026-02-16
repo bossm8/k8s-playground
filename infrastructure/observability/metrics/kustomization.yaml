@@ -6,8 +6,6 @@ namespace: infra-observability
 resources:
   - prometheus.yaml
   - notifications.yaml
-  # TODO: Dependency
-  - alertmanager.yaml
 
 configMapGenerator:
   - name: flux-crs-metrics

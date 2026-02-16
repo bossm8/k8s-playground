@@ -6,7 +6,6 @@ resources:
   - ingress-nginx.yaml
   - ingress-traefik.yaml
   - cert-manager.yaml
-  - middlewares.yaml
   - whoami.yaml
   - reloader.yaml
 

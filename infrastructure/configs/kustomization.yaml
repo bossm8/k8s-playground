@@ -5,3 +5,5 @@ kind: Kustomization
 resources:
   - acme/issuers.yaml
   - rules/smartctl.yaml
+  - alertmanager/alertmanager.yaml
+  - traefik/middlewares.yaml

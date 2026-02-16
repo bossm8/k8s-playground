@@ -2,7 +2,7 @@
 create-local-cluster:
 	kind delete cluster --name k8s-playground
 	kind create cluster --name k8s-playground --config .devcontainer/assets/cluster.yml
-	/bin/bash ./helpers/install-cilium.sh
+	/bin/bash ./helpers/install-cilium.sh --kind
 	kubectl wait --for=condition=ready pods --namespace=kube-system -l k8s-app=kube-dns
 	kubectl cluster-info | grep -q 127.0.0.1
 	flux install
@@ -18,7 +18,7 @@ save-local-cluster-kubeconfig:
 		echo "kubeconfig written to default location"; \
 	else \
 		kind get kubeconfig --name k8s-playground > $(HOME)/.kube/k8s-playground-config; \
-		echo "kubeconfig written to $(HOME)/.kube/k8s-playground"; \
+		echo "kubeconfig written to $(HOME)/.kube/k8s-playground-config"; \
 	fi
 
 .PHONY: destroy-local-cluster

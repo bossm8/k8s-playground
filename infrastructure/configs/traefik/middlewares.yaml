@@ -1,0 +1,20 @@
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: int-acl
+  namespace: ingress-traefik
+spec:
+  ipAllowList:
+    sourceRange:
+      - ${proxyIP}/24
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-dashboard-redirect
+  namespace: ingress-traefik
+spec:
+  redirectRegex:
+    regex: ^(https?://[^/]*)(/dashboard)?(/)?$
+    replacement: $${1}/dashboard/

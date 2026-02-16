@@ -1,5 +1,10 @@
 #!/bin/bash
 
+K8S_ARGS='
+  --set k8sServiceHost=localhost
+  --set k8sServicePort=7445
+'
+
 function prereq() {
   helm repo add cilium https://helm.cilium.io/
   helm repo update
@@ -17,8 +22,6 @@ function deploy() {
         --set securityContext.capabilities.cleanCiliumState="{NET_ADMIN,SYS_ADMIN,SYS_RESOURCE}" \
         --set cgroup.autoMount.enabled=false \
         --set cgroup.hostRoot=/sys/fs/cgroup \
-        --set k8sServiceHost=localhost \
-        --set k8sServicePort=7445 \
         --set hostFirewall.enabled=true \
         --set hubble.ui.enabled=true \
         --set hubble.relay.enabled=true \
@@ -31,6 +34,7 @@ function deploy() {
         --set envoy.log.format_json.logger="%n" \
         --set envoy.log.format_json.message="%j" \
         $PROMETHEUS_FLAGS \
+        $K8S_ARGS \
         --set operator.replicas=1
 }
 
@@ -58,6 +62,14 @@ for arg in "$@"; do
         --set operator.dashboards.enabled=true
         --set operator.dashboards.annotations.grafana_dashboard_folder=Cilium
       '
+      shift
+      ;;
+    --kind)
+      echo "Installing Locally"
+      K8S_ARGS="
+        --set k8sServiceHost=$(docker inspect k8s-playground-control-plane -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}')
+        --set k8sServicePort=6443
+      "
       shift
       ;;
   esac

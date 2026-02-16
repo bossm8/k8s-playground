@@ -4,6 +4,7 @@ ARG BAO_VERSION=2.4.3
 ARG KIND_VERSION=0.31.0
 ARG DOCKER_VERSION=20.10
 ARG HELM_VERSION=3.20
+ARG CILIUM_CLI_VERSION=0.19.0
 
 # Hack stages since 'COPY --from' cannot expand env
 FROM alpine/kubectl:${K8S_VERSION} AS kubectl
@@ -23,10 +24,22 @@ ARG TARGETARCH
 RUN apt-get update \
     && apt-get install -y curl
 
-RUN curl -LO --fail https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-${TARGETARCH} \
-    && curl -LO --fail https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-${TARGETARCH}.sha256sum \
+RUN curl -LO --fail https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-${TARGETARCH}{,.sha256sum} \
     && sha256sum --check kind-linux-arm64.sha256sum \
     && install -o root -g root -m 0755 kind-linux-${TARGETARCH} /usr/local/bin/kind
+
+# ---
+
+FROM ubuntu:latest AS cilium
+
+ARG CILIUM_CLI_VERSION
+ARG TARGETARCH
+
+RUN apt-get update \
+    && apt-get install -y curl \
+    && curl -LO --fail https://github.com/cilium/cilium-cli/releases/download/v${CILIUM_CLI_VERSION}/cilium-linux-${TARGETARCH}.tar.gz{,.sha256sum} \
+    && sha256sum --check cilium-linux-${TARGETARCH}.tar.gz.sha256sum \
+    && tar xzvfC cilium-linux-${TARGETARCH}.tar.gz /usr/local/bin
 
 # ---
 
@@ -44,6 +57,7 @@ RUN apt-get update \
         rsync
 
 COPY --from=kubectl /usr/local/bin/kubectl /usr/local/bin/
+COPY --from=cilium /usr/local/bin/cilium /usr/local/bin/
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/
 COPY --from=kind /usr/local/bin/kind /usr/local/bin/
 COPY --from=flux /usr/local/bin/flux /usr/local/bin/
@@ -54,6 +68,7 @@ COPY --from=bao /bin/bao /usr/local/bin/
 RUN kind completion bash > /etc/bash_completion.d/kind \
     && flux completion bash > /etc/bash_completion.d/flux \
     && kubectl completion bash > /etc/bash_completion.d/kubectl \
+    && cilium completion bash > /etc/bash_completion.d/cilium \
     && helm completion bash > /etc/bash_completion.d/helm \
     && bao -autocomplete-install \
     && curl --fail -o /etc/bash_completion.d/docker -L \
