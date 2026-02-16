@@ -47,4 +47,5 @@ Manifests in this repository are deployed with [FluxCD](https://fluxcd.io).
 
 ## Local Development
 
-Devcontainer TBD
+The cluster can be run completely locally with devcontainers (and enough resources).
+For more information check out [the Medium post](https://medium.com/@bossm8/running-fluxcd-locally-gitops-for-kubernetes-on-your-laptop-7842b89d67b7).
