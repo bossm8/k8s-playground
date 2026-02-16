@@ -33,12 +33,12 @@ spec:
           http:
             method: GET
             follow_redirects: true
-        http_401:
+        http_4xx:
           prober: http
           timeout: 30s
           http:
             method: GET
-            valid_status_codes: [401]
+            valid_status_codes: [401, 404]
             follow_redirects: true
 
     prometheusRule:
@@ -55,7 +55,7 @@ spec:
               Blackbox probe failed (instance {{ index $labels "instance" }})
             description: |
               Blackbox exporter failed to probe {{ index $labels "instance" }}
-    
+
     serviceMonitor:
       enabled: true
       defaults:
