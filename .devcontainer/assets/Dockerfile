@@ -5,6 +5,7 @@ ARG KIND_VERSION=0.31.0
 ARG DOCKER_VERSION=20.10
 ARG HELM_VERSION=3.20
 ARG CILIUM_CLI_VERSION=0.19.0
+ARG CERTMANAGER_CLI_VERSION=1.12.17
 
 # Hack stages since 'COPY --from' cannot expand env
 FROM alpine/kubectl:${K8S_VERSION} AS kubectl
@@ -15,14 +16,18 @@ FROM docker:${DOCKER_VERSION} AS docker
 
 # ---
 
-FROM ubuntu:latest AS kind
+FROM ubuntu:latest AS curl
+
+RUN apt-get update \
+    && apt-get install -y curl
+
+# ---
+
+FROM curl AS kind
 
 # Need to redefine already defined args for the stages for them to work
 ARG KIND_VERSION
 ARG TARGETARCH
-
-RUN apt-get update \
-    && apt-get install -y curl
 
 RUN curl -LO --fail https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-${TARGETARCH}{,.sha256sum} \
     && sha256sum --check kind-linux-arm64.sha256sum \
@@ -30,16 +35,25 @@ RUN curl -LO --fail https://github.com/kubernetes-sigs/kind/releases/download/v$
 
 # ---
 
-FROM ubuntu:latest AS cilium
+FROM curl AS cilium
 
 ARG CILIUM_CLI_VERSION
 ARG TARGETARCH
 
-RUN apt-get update \
-    && apt-get install -y curl \
-    && curl -LO --fail https://github.com/cilium/cilium-cli/releases/download/v${CILIUM_CLI_VERSION}/cilium-linux-${TARGETARCH}.tar.gz{,.sha256sum} \
+RUN curl -LO --fail https://github.com/cilium/cilium-cli/releases/download/v${CILIUM_CLI_VERSION}/cilium-linux-${TARGETARCH}.tar.gz{,.sha256sum} \
     && sha256sum --check cilium-linux-${TARGETARCH}.tar.gz.sha256sum \
     && tar xzvfC cilium-linux-${TARGETARCH}.tar.gz /usr/local/bin
+
+# ---
+
+FROM curl AS cmctl
+
+ARG TARGETARCH
+ARG CERTMANAGER_CLI_VERSION
+
+RUN curl -LO --fail https://github.com/cert-manager/cert-manager/releases/download/v${CERTMANAGER_CLI_VERSION}/cmctl-linux-${TARGETARCH}.tar.gz \
+    && tar xzf cmctl-linux-${TARGETARCH}.tar.gz \
+    && mv cmctl /usr/local/bin
 
 # ---
 
@@ -59,6 +73,7 @@ RUN apt-get update \
 COPY --from=kubectl /usr/local/bin/kubectl /usr/local/bin/
 COPY --from=cilium /usr/local/bin/cilium /usr/local/bin/
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/
+COPY --from=cmctl /usr/local/bin/cmctl /usr/local/bin/
 COPY --from=kind /usr/local/bin/kind /usr/local/bin/
 COPY --from=flux /usr/local/bin/flux /usr/local/bin/
 COPY --from=helm /usr/bin/helm /usr/local/bin/
@@ -69,6 +84,7 @@ RUN kind completion bash > /etc/bash_completion.d/kind \
     && flux completion bash > /etc/bash_completion.d/flux \
     && kubectl completion bash > /etc/bash_completion.d/kubectl \
     && cilium completion bash > /etc/bash_completion.d/cilium \
+    && cmctl completion bash > /etc/bash_completion.d/cmctl \
     && helm completion bash > /etc/bash_completion.d/helm \
     && bao -autocomplete-install \
     && curl --fail -o /etc/bash_completion.d/docker -L \
