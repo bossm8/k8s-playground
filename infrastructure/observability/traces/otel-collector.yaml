@@ -115,6 +115,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: tempo-http
+  namespace: infra-observability
   labels:
     app.kubernetes.io/name: tempo
 spec:
