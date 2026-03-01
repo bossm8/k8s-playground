@@ -76,7 +76,7 @@ data:
         type: tempo
         uid: tempo
         access: proxy
-        url: http://tempo.infra-observability:3100
+        url: http://tempo.infra-observability:3200
         basicAuth: false
         isDefault: false
         jsonData:
