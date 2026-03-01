@@ -57,6 +57,14 @@ spec:
           endpoint: tempo.infra-observability:4317
           tls:
             insecure: true
+        prometheus:
+          endpoint: "0.0.0.0:9464"
+          resource_to_telemetry_conversion:
+            enabled: true
+        otlphttp/loki:
+          endpoint: http://loki.infra-observability:3100/otlp
+          tls:
+            insecure: true
       service:
         telemetry:
           logs:
@@ -70,6 +78,22 @@ spec:
             exporters:
               - debug
               - otlp/tempo
+            processors:
+              - memory_limiter
+              - batch
+            receivers:
+              - otlp
+          metrics:
+            exporters:
+              - prometheus
+            processors:
+              - memory_limiter
+              - batch
+            receivers:
+              - otlp
+          logs:
+            exporters:
+              - otlphttp/loki
             processors:
               - memory_limiter
               - batch
@@ -107,6 +131,9 @@ spec:
 
     serviceMonitor:
       enabled: true
+      metricsEndpoints:
+        - port: metrics
+        - port: prom-exp
 
     prometheusRule:
       enabled: false
