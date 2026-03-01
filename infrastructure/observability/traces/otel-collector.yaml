@@ -115,6 +115,11 @@ spec:
         enabled: false
       zipkin:
         enabled: false
+      prom-exp:
+        enabled: true
+        containerPort: 9464
+        servicePort: 9464
+        protocol: TCP
 
     ingress:
       enabled: true
