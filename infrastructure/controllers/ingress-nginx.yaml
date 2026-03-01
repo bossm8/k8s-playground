@@ -81,11 +81,11 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: allow-nginx-nodeports-for-proxy
+  name: allow-nginx-nodeports
   namespace: ingress-nginx
   annotations:
     description: >
-      Allows traffic from external to this namespace only from the reverse proxy.
+      Allows traffic from external to this namespace only from the internal net.
       This policy still allows access to other NodePort services not targeting
       the ingress-nginx pod.
 spec:
@@ -94,14 +94,14 @@ spec:
       app.kubernetes.io/name: ingress-nginx
   ingress:
     - fromCIDR:
-      - ${proxyIP}/32
+      - ${proxyIP}/24
     - fromEndpoints:
       - matchLabels:
           io.kubernetes.pod.namespace: infra-observability
           app.kubernetes.io/name: prometheus
       toPorts:
       - ports:
-        - port: '10254' 
+        - port: '10254'
           protocol: TCP
         rules:
           http:
