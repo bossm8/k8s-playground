@@ -79,15 +79,15 @@ spec:
     ports:
       otlp:
         enabled: true
-      otlp-http: 
+      otlp-http:
         enabled: true
-      metrics: 
+      metrics:
         enabled: true
-      jaeger-compact: 
+      jaeger-compact:
         enabled: false
-      jaeger-grpc: 
+      jaeger-grpc:
         enabled: false
-      jaeger-thrift: 
+      jaeger-thrift:
         enabled: false
       zipkin:
         enabled: false
@@ -104,9 +104,28 @@ spec:
               pathType: Prefix
               port: 4318
       tls: []
-    
+
     serviceMonitor:
       enabled: true
 
     prometheusRule:
       enabled: false
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tempo-http
+  labels:
+    app.kubernetes.io/name: tempo
+spec:
+  rules:
+  - host: ${otlpHostName}
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: otel-collector-opentelemetry-collector
+            port:
+              number: 4318
