@@ -5,7 +5,9 @@
     "schedule:weekly"
   ],
   "flux": {
-    "fileMatch": ["(infrastructure|(?:^|/)gotk-components|applications)/.+\\.yaml$"]
+    "managerFilePatterns": [
+      "/(infrastructure|(?:^|/)gotk-components|applications)/.+\\.yaml$/"
+    ]
   },
   "minimumReleaseAge": "14 days"
 }
