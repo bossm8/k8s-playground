@@ -31,7 +31,7 @@ spec:
     mode: deployment
     image:
       repository: otel/opentelemetry-collector-contrib
-      tag: 0.150.1
+      tag: 0.151.0
 
     presets:
       logsCollection:
