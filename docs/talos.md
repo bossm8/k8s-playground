@@ -61,7 +61,7 @@ cluster:
     cni:
       name: none
   proxy:
-    disabled: true 
+    disabled: true
 ```
 
 Then the Cilium CNI can be installed
@@ -154,3 +154,15 @@ Or directly on the node when the default was installed:
 ```bash
 talosctl patch mc --patch @config/controlplane-patch.yaml
 ```
+
+## Expired Certificates
+
+Update certificates with the following command:
+
+```bash
+talosctl gen config -t talosconfig --with-secrets secrets.yaml <cluster> <endpoint> -o ~/.talos/config
+```
+
+Using the secrets file generated with `talosctl get secrets` (see [install.md](./install.md)).
+
+This will remove nodes and endpoints from the config, so make sure to re-add if wanted.
