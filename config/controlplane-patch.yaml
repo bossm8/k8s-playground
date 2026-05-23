@@ -1,5 +1,10 @@
 machine:
   kubelet:
+    extraArgs:
+      container-log-max-size: "50Mi"
+      container-log-max-files: "3"
+      image-gc-high-threshold: "75"
+      image-gc-low-threshold: "65"
     extraMounts:
       - destination: /var/mnt
         type: bind
@@ -120,7 +125,7 @@ portSelector:
     - 2381                      # etcd
     - 9100                      # node-exporter
     - 10257                     # kube-controller-manager
-    - 10259                     # kube-scheduler 
+    - 10259                     # kube-scheduler
     - 9962-9965                 # cilium + hubble
   protocol: tcp
 ingress:
@@ -131,7 +136,7 @@ kind: NetworkRuleConfig
 name: cilium-hubble-peer
 portSelector:
   ports:
-    - 4244 
+    - 4244
   protocol: tcp
 ingress:
   - subnet: 10.244.0.0/16       # Pod network
