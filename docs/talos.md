@@ -166,3 +166,30 @@ talosctl gen config -t talosconfig --with-secrets secrets.yaml <cluster> <endpoi
 Using the secrets file generated with `talosctl get secrets` (see [install.md](./install.md)).
 
 This will remove nodes and endpoints from the config, so make sure to re-add if wanted.
+
+## Upgrading
+
+### Talos
+
+To upgrade Talos follow the official documentation on:
+
+- [Upgrading Talos](https://docs.siderolabs.com/talos/v1.13/configure-your-talos-cluster/lifecycle-management/upgrading-talos)
+- [Talos Image Factory](https://factory.talos.dev/)
+
+The command probably looks something like this:
+
+```bash
+talosctl upgrade --image factory.talos.dev/metal-installer/<hash>:v<tag>
+```
+
+### K8s
+
+To upgrade k8s check the official versions on [kuberentes.io](https://kubernetes.io/releases/)
+The upgrade path typically involves upgrading to the latest patch version of
+each minor release sequentially, as skipping minor versions is unsupported.
+
+The Talos command to upgrade k8s then looks something like this:
+
+```bash
+talosctl upgrade-k8s --to <k8s-version>
+```
