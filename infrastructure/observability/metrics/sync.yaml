@@ -34,9 +34,9 @@ spec:
       name: flux-metrics
     - kind: ConfigMap
       name: grafana-dashboards
-    # Stored in the external-configs
-    - kind: ConfigMap
-      name: scrape-targets
+    # # Stored in the external-configs
+    # - kind: ConfigMap
+    #   name: scrape-targets
 
   values:
     global:

@@ -5,6 +5,7 @@ namespace: cilium-system
 
 resources:
   - namespace.yaml
+  - rbac.yaml
   - sync.yaml
 
 configMapGenerator:

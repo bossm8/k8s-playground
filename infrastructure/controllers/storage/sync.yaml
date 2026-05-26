@@ -37,3 +37,14 @@ spec:
       - node: DEFAULT_PATH_FOR_NON_LISTED_NODES
         paths:
           - /var/mnt/
+    podSecurityContext:
+      runAsNonRoot: true
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      seccompprofile:
+        type: RuntimeDefault
+      capabilities:
+        drop: [ALL]
+      runAsUser: 65534
+      runAsGroup: 65534

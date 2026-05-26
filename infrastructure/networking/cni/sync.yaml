@@ -16,7 +16,7 @@ metadata:
   namespace: cilium-system
 spec:
   interval: 1h30m
-  timeout: 15m
+  timeout: 5m
   chart:
     spec:
       chart: cilium

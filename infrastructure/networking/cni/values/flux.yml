@@ -1,3 +1,6 @@
+# Defaults are for single node Talos cluster
+k8sServiceHost: ${ciliumK8sServiceHost:-localhost}
+k8sServicePort: ${ciliumK8sServicePort:-7445}
 prometheus:
   enabled: true
   serviceMonitor:

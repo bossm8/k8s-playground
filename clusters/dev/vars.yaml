@@ -1,9 +1,0 @@
----
-# Overrides clusterName set in external-vars
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: dev-vars
-  namespace: flux-system
-data:
-  clusterName: k8s-playground-dev

@@ -1,5 +1,3 @@
-k8sServiceHost: localhost
-k8sSerivcePort: 7445
 ipam:
   mode: kubernetes
 kubeProxyReplacement: true

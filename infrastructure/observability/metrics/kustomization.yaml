@@ -5,6 +5,7 @@ namespace: infra-observability
 
 resources:
   - sync.yaml
+  - rbac.yaml
   - namespace.yaml
 
 configMapGenerator:
