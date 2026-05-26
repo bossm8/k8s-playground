@@ -1,10 +1,10 @@
 machine:
   kubelet:
     extraArgs:
-      container-log-max-size: "50Mi"
-      container-log-max-files: "3"
-      image-gc-high-threshold: "75"
-      image-gc-low-threshold: "65"
+      container-log-max-size: 50Mi
+      container-log-max-files: 3
+      image-gc-high-threshold: 75
+      image-gc-low-threshold: 65
     extraMounts:
       - destination: /var/mnt
         type: bind

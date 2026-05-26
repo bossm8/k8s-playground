@@ -1,0 +1,79 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: storage-provisioner
+rules:
+- apiGroups: [storage.k8s.io]
+  resources: [storageclasses]
+  verbs: [get, list, watch, create, update, patch]
+- apiGroups: [rbac.authorization.k8s.io]
+  resources: [roles, clusterroles, rolebindings, clusterrolebindings]
+  verbs: [get, list, watch, create, update, patch]
+# Needed to allow creating the RBAC permissions defined in the chart.
+# The reconciler needs the same permissions for it to be able to provide them
+# to others.
+- apiGroups: ['']
+  resources: [events]
+  verbs: [create, patch]
+- apiGroups: ['']
+  resources: [nodes, configmaps, pods, pods/log]
+  verbs: [get, list, watch]
+- apiGroups: ['']
+  resources: [persistentvolumes]
+  verbs: [get, list, watch, create, patch, update, delete]
+- apiGroups: ['']
+  resources: [persistentvolumeclaims]
+  verbs: [get, list, watch, update]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: gitops-reconciler
+  namespace: infra-storage
+rules:
+- apiGroups: ['']
+  resources: ['*']
+  verbs: [get, list, watch, create, update, patch]
+- apiGroups: [apps]
+  resources: ['*']
+  verbs: [get, list, watch, create, update, patch]
+# Needed to allow creating the RBAC permissions defined in the chart.
+# The reconciler needs the same permissions for it to be able to provide them
+# to others.
+- apiGroups: ['']
+  resources: [pods]
+  verbs: [delete]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: gitops-reconciler
+  namepsace: infra-storage
+automountServiceAccountToken: false
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: storage-provisioner
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: storage-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: gitops-reconciler
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: gitops-reconciler
+  namespace: infra-storage
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: gitops-reconciler
+subjects:
+  - kind: ServiceAccount
+    name: gitops-reconciler
+    namespace: infra-storage

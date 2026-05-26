@@ -4,20 +4,20 @@ kind: Kustomization
 namespace: infra-observability
 
 resources:
-  - prometheus.yaml
-  - notifications.yaml
+  - sync.yaml
+  - namespace.yaml
 
 configMapGenerator:
-  - name: flux-crs-metrics
+  - name: flux-metrics
     files:
-      - values.yaml=flux-crs-metrics.yaml
+      - values.yaml=flux-metrics.yaml
     options:
       labels:
         app.kubernetes.io/part-of: flux
         app.kubernetes.io/component: monitoring
-  - name: grafana-sc-dashboards
+  - name: grafana-dashboards
     files:
-      - values.yaml=grafana-sc-dashboards.yaml
+      - values.yaml=grafana-dashboards.yaml
     options:
       labels:
         app.kubernetes.io/part-of: grafana

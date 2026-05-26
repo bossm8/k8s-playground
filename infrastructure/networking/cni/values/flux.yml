@@ -1,0 +1,46 @@
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+serviceMonitor:
+  enabled: true
+dashboards:
+  enabled: true
+  annotations:
+    grafana_dashboard_folder: Cilium
+hubble:
+  metrics:
+    enabled:
+      - dns
+      - drop
+      - flow
+      - httpV2:labelsContext=source_ip,source_namespace,source_workload,destination_ip,destination_namespace,destination_workload,traffic_direction
+      - icmp
+      - port-distribution
+      - tcp
+    enableOpenMetrics: true
+    serviceMonitor:
+      enabled: true
+    dashboards:
+      enabled: true
+      annotations:
+        grafana_dashboard_folder: Cilium
+  relay:
+    prometheus:
+      enabled: true
+      serviceMontiro:
+        enabled: true
+envoy:
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+operator:
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  dashboards:
+    enabled: true
+    annotations:
+      grafana_dashboard_folder: Cilium

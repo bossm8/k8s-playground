@@ -1,67 +1,25 @@
 #!/bin/bash
 
-K8S_ARGS='
-  --set k8sServiceHost=localhost
-  --set k8sServicePort=7445
-'
-
-function prereq() {
-  helm repo add cilium https://helm.cilium.io/
-  helm repo update
-}
+VALUES_PATH=./infrastructure/networking/cni/values
+INSTALL_VERSION=1.19.4
 
 function deploy() {
   helm upgrade --install \
       cilium \
-      cilium/cilium \
-        --version 1.17.2 \
-        --namespace kube-system \
-        --set ipam.mode=kubernetes \
-        --set kubeProxyReplacement=true \
-        --set securityContext.capabilities.ciliumAgent="{CHOWN,KILL,NET_ADMIN,NET_RAW,IPC_LOCK,SYS_ADMIN,SYS_RESOURCE,DAC_OVERRIDE,FOWNER,SETGID,SETUID}" \
-        --set securityContext.capabilities.cleanCiliumState="{NET_ADMIN,SYS_ADMIN,SYS_RESOURCE}" \
-        --set cgroup.autoMount.enabled=false \
-        --set cgroup.hostRoot=/sys/fs/cgroup \
-        --set hostFirewall.enabled=true \
-        --set hubble.ui.enabled=true \
-        --set hubble.relay.enabled=true \
-        --set hubble.tls.auto.method=cronJob \
-        --set envoy.log.format=null \
-        --set envoy.log.format_json.date="%Y-%m-%dT%T.%e" \
-        --set envoy.log.format_json.thread_id="%t" \
-        --set envoy.log.format_json.source_line="%s:%#" \
-        --set envoy.log.format_json.level="%l" \
-        --set envoy.log.format_json.logger="%n" \
-        --set envoy.log.format_json.message="%j" \
+      oci://quay.io/cilium/charts/cilium \
+        --version ${INSTALL_VERSION} \
+        --namespace cilium-system \
+        --create-namespace \
         $PROMETHEUS_FLAGS \
         $K8S_ARGS \
-        --set operator.replicas=1
+        --values ${VALUES_PATH}/install.yml
 }
 
 for arg in "$@"; do
   case $arg in
     --with-prometheus)
       echo "Info: Installing with prometheus monitoring enabled (Note: use only when prometheus CRDs have been installed)"
-      PROMETHEUS_FLAGS='
-        --set prometheus.enabled=true
-        --set prometheus.serviceMonitor.enabled=true
-        --set serviceMonitor.enabled=true
-        --set dashboards.enabled=true
-        --set dashboards.annotations.grafana_dashboard_folder=Cilium
-        --set hubble.metrics.enabled={dns,drop,tcp,flow,port-distribution,icmp,httpV2:labelsContext=source_ip\,source_namespace\,source_workload\,destination_ip\,destination_namespace\,destination_workload\,traffic_direction}
-        --set hubble.metrics.enableOpenMetrics=true
-        --set hubble.metrics.serviceMonitor.enabled=true
-        --set hubble.metrics.dashboards.enabled=true
-        --set hubble.metrics.dashboards.annotations.grafana_dashboard_folder=Cilium
-        --set hubble.relay.prometheus.enabled=true
-        --set hubble.relay.prometheus.serviceMonitor.enabled=true
-        --set envoy.prometheus.enabled=true
-        --set envoy.prometheus.serviceMonitor.enabled=true
-        --set operator.prometheus.enabled=true
-        --set operator.prometheus.serviceMonitor.enabled=true
-        --set operator.dashboards.enabled=true
-        --set operator.dashboards.annotations.grafana_dashboard_folder=Cilium
-      '
+      PROMETHEUS_FLAGS="--values ${VALUES_PATH}/flux.yml"
       shift
       ;;
     --kind)
@@ -75,7 +33,6 @@ for arg in "$@"; do
   esac
 done
 
-prereq
 deploy
 
 if test -z "$PROMETHEUS_FLAGS"; then
