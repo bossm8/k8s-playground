@@ -1,0 +1,49 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterWideNetworkPolicy
+metadata:
+  name: default-deny-all
+spec:
+  endpointSelector: {}
+  ingress:
+  - fromEntities:
+    # kubelet probes from localhost
+    - host
+  egress:
+  - toEntities:
+    - kube-apiserver
+  - toEndpoints:
+    - matchLabels:
+        k8s-app: kube-dns
+        io.kubernetes.pod.namespace: kube-system
+    toPorts:
+    - ports:
+      - port: '53'
+        protocol: UDP
+      - port: '53'
+        protocol: TCP
+      rules:
+        dns:
+        - matchPattern: '*'
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterWideNetworkPolicy
+metadata:
+  name: allow-prometheus-scrape
+spec:
+  endpointSelector:
+    matchLabels:
+      prometheus-scrape: 'true'
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app.kubernetes.io/name: prometheus
+        io.kubernetes.pod.namespace: infra-observability
+      toPorts:
+      - rules:
+          http:
+          - method: GET
+            path: /metrics
+          # Blackbox probes
+          - method: GET
+            path: /probe.*
