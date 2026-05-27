@@ -2,6 +2,8 @@
 create-local-cluster:
 	kind delete cluster --name k8s-playground
 	kind create cluster --name k8s-playground --config .devcontainer/assets/cluster.yml
+	sleep 2
+	docker inspect k8s-playground-control-plane -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
 	/bin/bash ./helpers/install-cilium.sh --kind
 	sleep 2
 	kubectl wait --for=condition=ready pods --namespace=kube-system -l k8s-app=kube-dns --timeout=120s
@@ -10,7 +12,7 @@ create-local-cluster:
 	echo "${EXTERNAL_REPO_SSH_KEY}" | base64 -d | flux create secret git k8s-playground-vars --private-key-file /dev/stdin --url ssh://git@github.com/bossm8/k8s-playground-vars.git
 	echo "${SOPS_AGE_KEY}" | base64 -d |  kubectl create secret generic sops-age --namespace flux-system --from-file age.agekey=/dev/stdin
 	kubectl create configmap dev-vars -n flux-system \
-    --from-literal=ciliumK8sServiceHost=$(shell docker inspect k8s-playground-control-plane -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}') \
+    --from-literal=ciliumK8sServiceHost=$$(docker inspect k8s-playground-control-plane -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}') \
     --from-literal=ciliumK8sServicePort=6443 \
     --from-literal=clusterName=k8s-playground-dev
 	kubectl kustomize clusters/dev/flux-system | kubectl apply -f - --server-side --force-conflicts

@@ -19,7 +19,7 @@ FROM docker:${DOCKER_VERSION} AS docker
 FROM ubuntu:latest AS curl
 
 RUN apt-get update \
-    && apt-get install -y curl
+    && apt-get install -y curl vim
 
 # ---
 

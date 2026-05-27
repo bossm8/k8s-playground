@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - secrets-sync.yaml
   - infrastructure.yaml
+  - netpol.yaml

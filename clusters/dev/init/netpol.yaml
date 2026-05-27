@@ -1,0 +1,25 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-flux-reconcile
+  namespace: flux-system
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/part-of: flux
+  egress:
+  - toFQDNs:
+      - matchName: github.com
+    toPorts:
+    - ports:
+      - port: '22'
+        protocol: TCP
+      - port: '443'
+        protocol: TCP
+  - toFQDNs:
+      - matchName: host.docker.internal
+    toPorts:
+      - ports:
+        - port: '8080'
+          protocol: TCP
