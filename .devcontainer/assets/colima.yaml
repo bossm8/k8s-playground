@@ -1,0 +1,47 @@
+cpu: 10
+disk: 128
+memory: 32
+arch: aarch64
+runtime: docker
+modelRunner: docker
+hostname: colima
+kubernetes:
+  enabled: false
+autoActivate: true
+network:
+  address: true
+  mode: shared
+  interface: en0
+  preferredRoute: false
+  dns:
+    - 9.9.9.9
+    - 8.8.8.8
+  dnsHosts: {}
+  hostAddresses: false
+  gatewayAddress: 192.168.5.2
+forwardAgent: false
+docker: {}
+vmType: qemu
+portForwarder: ssh
+rosetta: false
+binfmt: true
+nestedVirtualization: false
+mountType: sshfs
+mountInotify: true
+cpuType: ""
+provision:
+  - mode: system
+    script: |
+      sysctl -w fs.inotify.max_user_watches=524288
+      sysctl -w fs.inotify.max_user_instances=1024
+      echo 'fs.inotify.max_user_watches=524288' > /etc/sysctl.d/99-inotify.conf
+      echo 'fs.inotify.max_user_instances=1024' >> /etc/sysctl.d/99-inotify.conf
+      sysctl -w net.ipv6.conf.all.disable_ipv6=1
+      sysctl -w net.ipv6.conf.default.disable_ipv6=1
+      echo 'net.ipv6.conf.all.disable_ipv6=1' >> /etc/sysctl.d/99-ipv6.conf
+sshConfig: true
+sshPort: 0
+mounts: []
+diskImage: ""
+rootDisk: 20
+env: {}

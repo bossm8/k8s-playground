@@ -30,6 +30,8 @@ spec:
         namespace: infra-storage
       interval: 15m
   values:
+    commonLabels:
+      k8s.mcathome.ch/allow-kube-api: "true"
     storageClass:
       create: true
       defaultClass: true

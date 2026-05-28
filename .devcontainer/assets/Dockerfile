@@ -30,7 +30,7 @@ ARG KIND_VERSION
 ARG TARGETARCH
 
 RUN curl -LO --fail https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-${TARGETARCH}{,.sha256sum} \
-    && sha256sum --check kind-linux-arm64.sha256sum \
+    && sha256sum --check kind-linux-${TARGETARCH}.sha256sum \
     && install -o root -g root -m 0755 kind-linux-${TARGETARCH} /usr/local/bin/kind
 
 # ---
@@ -67,8 +67,10 @@ RUN apt-get update \
         git \
         inotify-tools \
         make \
+        locales \
         python3 \
-        rsync
+        rsync \
+    && locale-gen en_US.UTF-8
 
 COPY --from=kubectl /usr/local/bin/kubectl /usr/local/bin/
 COPY --from=cilium /usr/local/bin/cilium /usr/local/bin/

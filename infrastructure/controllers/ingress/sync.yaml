@@ -29,6 +29,10 @@ spec:
       interval: 10m0s
   values:
 
+    deployment:
+      podLabels:
+        k8s.mcathome.ch/allow-kube-api: "true"
+
     ingressClass:
       enabled: true
       isDefaultClass: false
@@ -44,15 +48,15 @@ spec:
         serviceMonitor:
           enabled: true
 
-    tracing:
-      addInternals: false
-      serviceName: traefik8s
-      otlp:
-        enabled: true
-        grpc:
-          enabled: true
-          endpoint: otel-collector-opentelemetry-collector.infra-observability:4317
-          insecure: true
+    # tracing:
+    #   addInternals: false
+    #   serviceName: traefik8s
+    #   otlp:
+    #     enabled: true
+    #     grpc:
+    #       enabled: true
+    #       endpoint: otel-collector-opentelemetry-collector.infra-observability:4317
+    #       insecure: true
 
     logs:
       general:

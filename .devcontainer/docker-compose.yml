@@ -1,5 +1,17 @@
 services:
 
+  registry:
+    image: ghcr.io/project-zot/zot:latest
+    container_name: k8s-playground-registry
+    command:
+      - serve
+      - /etc/zot/config.yaml
+    volumes:
+      - ./assets/zot.yaml:/etc/zot/config.yaml:ro
+      - registry-storage:/var/lib/zot
+    ports:
+      - 127.0.0.1:5000:5000
+
   git-daemon:
     image: alpine:latest
     entrypoint: /bin/sh
@@ -119,3 +131,9 @@ services:
     depends_on:
       git-daemon:
         condition: service_healthy
+      registry:
+        condition: service_started
+
+volumes:
+  registry-storage:
+    name: k8s-playground-registry-storage

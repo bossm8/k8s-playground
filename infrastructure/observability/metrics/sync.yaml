@@ -39,6 +39,9 @@ spec:
     #   name: scrape-targets
 
   values:
+    commonLabels:
+      k8s.mcathome.ch/allow-kube-api: "true"
+
     global:
       rbac:
         create: true
@@ -111,6 +114,8 @@ spec:
                     storage: 3Gi
     grafana:
       enabled: true
+      extraLabels:
+        k8s.mcathome.ch/allow-kube-api: "true"
       adminUser: ${grafanaAdminUser}
       adminPassword: ${grafanaAdminPassword}
       initChownData:
@@ -119,7 +124,7 @@ spec:
         enabled: true
         annotations:
           cert-manager.io/cluster-issuer: letsencrypt
-        ingressClassName: nginx
+        ingressClassName: traefik
         hosts:
           - ${grafanaHostName}
         tls: []

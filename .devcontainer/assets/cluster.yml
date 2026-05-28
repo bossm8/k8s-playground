@@ -1,13 +1,24 @@
 ---
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  disableDefaultCNI: true
+  kubeProxyMode: none
+containerdConfigPatches:
+- |
+    [plugins."io.containerd.cri.v1.images".registry]
+      config_path = "/etc/containerd/certs.d"
 nodes:
 - role: control-plane
   extraMounts:
   - hostPath: .devcontainer/assets/admission-config.yaml
     containerPath: /etc/kubernetes/admission/admission-config.yaml
     readOnly: true
+  - hostPath: .devcontainer/assets/registry-mirrors
+    containerPath: /etc/containerd/certs.d
+    readOnly: true
   kubeadmConfigPatches:
+  # AdmissionController
   - |
       kind: ClusterConfiguration
       apiServer:
@@ -20,7 +31,12 @@ nodes:
             mountPath: /etc/kubernetes/admission
             readonly: true
 - role: worker
+  extraMounts:
+  - hostPath: .devcontainer/assets/registry-mirrors
+    containerPath: /etc/containerd/certs.d
+    readOnly: true
 - role: worker
-networking:
-  disableDefaultCNI: true
-  kubeProxyMode: none
+  extraMounts:
+  - hostPath: .devcontainer/assets/registry-mirrors
+    containerPath: /etc/containerd/certs.d
+    readOnly: true

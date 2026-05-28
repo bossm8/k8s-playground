@@ -32,3 +32,21 @@ spec:
       rules:
         dns:
         - matchPattern: '*'
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: allow-kube-api-access
+spec:
+  endpointSelector:
+    matchExpressions:
+    - key: io.kubernetes.pod.namespace
+      operator: NotIn
+      values:
+      - kube-system
+      - cilium-system
+    - key: k8s.mcathome.ch/allow-kube-api
+      operator: Exists
+  egress:
+  - toEntities:
+    - kube-apiserver
