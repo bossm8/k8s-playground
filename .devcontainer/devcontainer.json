@@ -4,7 +4,15 @@
   "dockerComposeFile": "docker-compose.yml",
 
   "service": "git-auto-commit",
-  "workspaceFolder": "/workspace/k8s-playground",
+  "workspaceFolder": "${localWorkspaceFolder}",
+
+  // Need this for kind running in colima, if not specified, make create-local-cluster
+  // will fail to start the kind cluster, since the path is in config.yml is interpreted
+  // from /workspace/k8s-playground which does not exist in colima where the container
+  // is actually started.
+  "mounts": [
+    "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind"
+  ],
 
   "customizations": {
     "vscode": {

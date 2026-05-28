@@ -5,8 +5,9 @@ metadata:
   name: grafana
   namespace: infra-observability
 spec:
+  type: oci
   interval: 1h30m
-  url: https://grafana.github.io/helm-charts
+  url: oci://ghcr.io/grafana-community/helm-charts/
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -20,7 +21,7 @@ spec:
   chart:
     spec:
       chart: loki
-      version: 6.55.x
+      version: 7.0.0
       sourceRef:
         kind: HelmRepository
         name: grafana

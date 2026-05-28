@@ -8,9 +8,9 @@ create-local-cluster:
 	sleep 2
 	kubectl wait --for=condition=ready pods --namespace=kube-system -l k8s-app=kube-dns --timeout=120s
 	kubectl cluster-info | grep -q 127.0.0.1
-	flux install
+	flux install --network-policy=false
 	echo "${EXTERNAL_REPO_SSH_KEY}" | base64 -d | flux create secret git k8s-playground-vars --private-key-file /dev/stdin --url ssh://git@github.com/bossm8/k8s-playground-vars.git
-	echo "${SOPS_AGE_KEY}" | base64 -d |  kubectl create secret generic sops-age --namespace flux-system --from-file age.agekey=/dev/stdin
+	echo "${SOPS_AGE_KEY}" | base64 -d | kubectl create secret generic sops-age --namespace flux-system --from-file age.agekey=/dev/stdin
 	kubectl create configmap dev-vars -n flux-system \
     --from-literal=ciliumK8sServiceHost=$$(docker inspect k8s-playground-control-plane -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}') \
     --from-literal=ciliumK8sServicePort=6443 \

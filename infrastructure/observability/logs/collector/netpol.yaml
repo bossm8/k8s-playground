@@ -1,0 +1,6 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-vector-ingress
+  namespace: infra-observability

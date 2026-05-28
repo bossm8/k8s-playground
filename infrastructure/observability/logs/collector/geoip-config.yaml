@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: geoip-account-config
+  namespace: infra-observability
+type: Opaque
+stringData:
+  # See: https://fluxcd.io/flux/components/kustomize/kustomizations/#post-build-substitution-of-numbers-and-booleans
+  GEOIPUPDATE_ACCOUNT_ID: ${quote}${geoIpAccountId}${quote}
+  GEOIPUPDATE_LICENSE_KEY: ${geoIpLicenseKey}
