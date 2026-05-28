@@ -20,6 +20,24 @@ machine:
       - 8.8.8.8                 # Google
       - 1.1.1.1                 # Cloudflare
 cluster:
+  apiServer:
+    admissionControl:
+      - name: PodSecurity
+        configuration:
+          apiVersion: pod-security.admission.config.k8s.io/v1alpha1
+          kind: PodSecurityConfiguration
+          defaults:
+            enforce: baseline
+            enforce-version: latest
+            audit: restricted
+            audit-version: latest
+            warn: restricted
+            warn-version: latest
+          exemptions:
+            namespaces:
+              - kube-system
+            runtimeClasses: []
+            usernames: []
   network:
     cni:
       name: none
