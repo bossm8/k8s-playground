@@ -1,9 +1,0 @@
-{
-  "recommendations": [
-    "weaveworks.vscode-gitops-tools",
-    "ms-kubernetes-tools.vscode-kubernetes-tools",
-    "redhat.vscode-yaml",
-    "kubescape.kubescape",
-    "aquasecurityofficial.trivy-vulnerability-scanner"
-  ]
-}

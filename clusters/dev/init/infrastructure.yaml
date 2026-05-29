@@ -155,7 +155,7 @@ spec:
       - kind: ConfigMap
         name: dev-vars
   interval: 1m
-  path: ./infrastructure/networking/cni
+  path: ./infrastructure/networking/cni/dev
   prune: false
   sourceRef:
     kind: GitRepository

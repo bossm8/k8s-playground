@@ -25,6 +25,8 @@ cgroup:
   hostRoot: /sys/fs/cgroup
 hostFirewall:
   enabled: true
+bpf:
+  masquerade: true
 hubble:
   ui:
     enabled: true

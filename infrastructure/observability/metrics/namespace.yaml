@@ -4,5 +4,5 @@ kind: Namespace
 metadata:
   name: infra-observability
   labels:
-    podsecurity.kubernetes.io/enforce: privileged
-    podsecurity.kubernetes.io/warn: baseline
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: baseline

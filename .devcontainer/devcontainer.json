@@ -22,6 +22,7 @@
         "ms-kubernetes-tools.vscode-kubernetes-tools",
         "ms-python.python",
         "redhat.vscode-yaml",
+        "kubescape.kubescape",
         "AquaSecurityOfficial.trivy-vulnerability-scanner"
       ],
       "settings": {
@@ -42,5 +43,5 @@
     }
   },
 
-  "postCreateCommand": "make save-local-cluster-kubeconfig 2>&1 >/dev/null || make create-local-cluster"
+  "postAttachCommand": "make save-local-cluster-kubeconfig 2>&1 >/dev/null || make create-local-cluster"
 }

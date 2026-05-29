@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VALUES_PATH=./infrastructure/networking/cni/values
+VALUES_PATH=./infrastructure/networking/cni
 INSTALL_VERSION=1.19.4
 
 function deploy() {
@@ -9,10 +9,10 @@ function deploy() {
       oci://quay.io/cilium/charts/cilium \
         --version ${INSTALL_VERSION} \
         --namespace cilium-system \
-        --create-namespace \
+        --values ${VALUES_PATH}/base/values/install.yml \
         $PROMETHEUS_FLAGS \
-        $K8S_ARGS \
-        --values ${VALUES_PATH}/install.yml
+        $KIND_ARGS \
+        --create-namespace
 }
 
 for arg in "$@"; do
@@ -24,9 +24,10 @@ for arg in "$@"; do
       ;;
     --kind)
       echo "Installing Locally"
-      K8S_ARGS="
+      KIND_ARGS="
         --set k8sServiceHost=$(docker inspect k8s-playground-control-plane -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}')
         --set k8sServicePort=6443
+        --values ${VALUES_PATH}/dev/values.yaml
       "
       shift
       ;;
