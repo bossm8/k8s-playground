@@ -14,7 +14,7 @@ spec:
   ingress:
   - fromEntities:
     - host
-    - health
+    - remote-node
   - fromEndpoints:
     - matchLabels:
         k8s:io.kubernetes.pod.namespace: infra-observability

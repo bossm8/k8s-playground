@@ -5,6 +5,7 @@ ARG KIND_VERSION=0.31.0
 ARG DOCKER_VERSION=29.5
 ARG HELM_VERSION=4.2
 ARG CILIUM_CLI_VERSION=0.19.0
+ARG HUBBLE_CLI_VERSION=1.19.3
 ARG CERTMANAGER_CLI_VERSION=1.12.17
 
 # Hack stages since 'COPY --from' cannot expand env
@@ -46,6 +47,17 @@ RUN curl -LO --fail https://github.com/cilium/cilium-cli/releases/download/v${CI
 
 # ---
 
+FROM cul AS hubble
+
+ARG HUBBLE_CLI_VERSION
+ARG TARGETARCH
+
+RUN curl -LO --fail https://github.com/cilium/hubble/releases/download/v${HUBBLE_VERSION}/hubble-linux-${TARGETARCH}.tar.gz{,.sha256sum} \
+    && sha256sum --check hubble-linux-${TARGETARCH}.tar.gz.sha256sum \
+    && tar xzvfC hubbble-linux-${TARGETARCH}.tar.gz /usr/local/bin
+
+# ---
+
 FROM curl AS cmctl
 
 ARG TARGETARCH
@@ -74,6 +86,7 @@ RUN apt-get update \
 
 COPY --from=kubectl /usr/local/bin/kubectl /usr/local/bin/
 COPY --from=cilium /usr/local/bin/cilium /usr/local/bin/
+COPY --from=hubble /usr/local/bin/hubble /usr/local/bin/
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/
 COPY --from=cmctl /usr/local/bin/cmctl /usr/local/bin/
 COPY --from=kind /usr/local/bin/kind /usr/local/bin/

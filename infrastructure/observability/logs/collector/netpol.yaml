@@ -4,3 +4,38 @@ kind: CiliumNetworkPolicy
 metadata:
   name: allow-vector-ingress
   namespace: infra-observability
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: vector
+  ingress:
+  - fromCIDR:
+    - ${proxyIP}/32
+    toPorts:
+    - ports:
+      - port: '8088'
+        protocol: TCP
+      rules:
+        http: [{}]
+# TODO allow nova
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-vector-geoip-update
+  namespace: infra-observability
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: vector
+  egress:
+  - toFQDNs:
+    - matchName: updates.maxmind.com
+    - matchPattern: mm-prod-geoip-databases.**.cloudflarestorage.com
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP
+      rules:
+        http:
+        - method: GET

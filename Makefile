@@ -12,6 +12,9 @@ setup-colima:
 create-local-cluster:
 	kind delete cluster --name $(K8S_NAME)
 	kind create cluster --name $(K8S_NAME) --config .devcontainer/assets/cluster.yml
+	docker ps --format "{{ .Names }}" | grep -E '$(K8S_NAME)-(worker|control)' | xargs -I {} docker exec -t {} bash -c "echo 'fs.inotify.max_user_watches=1048576' >> /etc/sysctl.conf"
+	docker ps --format "{{ .Names }}" | grep -E '$(K8S_NAME)-(worker|control)' | xargs -I {} docker exec -t {} bash -c "echo 'fs.inotify.max_user_instances=512' >> /etc/sysctl.conf"
+	docker ps --format "{{ .Names }}" | grep -E '$(K8S_NAME)-(worker|control)' | xargs -I {} docker exec -t {} bash -c "sysctl -p /etc/sysctl.conf"
 	sleep 2
 	docker inspect $(K8S_NAME)-control-plane -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}'
 	/bin/bash ./helpers/install-cilium.sh --kind

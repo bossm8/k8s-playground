@@ -1,5 +1,5 @@
 hostFirewall:
   enabled: false
-# routingMode: tunnel
-# tunnelProtocol: vxlan
-# ipv4NativeRoutingCIDR: 10.244.0.0/16
+routingMode: tunnel
+tunnelProtocol: vxlan
+ipv4NativeRoutingCIDR: 10.244.0.0/16

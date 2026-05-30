@@ -65,9 +65,9 @@ spec:
         enabled: true
         format: json
 
-    globalArguments:
-      - "--global.checknewversion=false"
-      - "--global.sendanonymoususage=false"
+    global:
+      checkNewVersion: false
+      sendAnonymousUsage: false
 
     ingressRoute:
       dashboard:
@@ -86,11 +86,12 @@ spec:
         port: 8080
         nodePort: 30080
         exposedPort: 30080
-        redirections:
-          entryPoint:
-            to: websecure
-            scheme: https
-            permanent: true
+        http:
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: https
+              permanent: true
         proxyProtocol:
           trustedIPs:
             - ${proxyIP}
@@ -99,7 +100,6 @@ spec:
           trustedIPs:
             - ${proxyIP}
             - 10.244.0.0/16
-      trustedIPs: []
       websecure:
         port: 8443
         nodePort: 30443
@@ -115,8 +115,8 @@ spec:
 
     # https://v1-31.docs.kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-type-nodeport
     service:
-      type: NodePort
       spec:
+        type: NodePort
         externalTrafficPolicy: Local
 
     tlsOptions:

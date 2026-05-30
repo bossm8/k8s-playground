@@ -33,6 +33,9 @@ spec:
     toPorts:
     - ports:
       - port: '443'
+        protocol: TCP
+      rules:
+        http: [{}]
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -46,31 +49,13 @@ spec:
   egress:
   - toEntities:
     - cluster
-  - toCIDR:
-    - ${proxyIP}/32
-    toPorts:
-    - ports:
-      - port: '3000'
-      - port: '6060'
-      - port: '6061'
-      - port: '8000'
-      - port: '8088'
-      - port: '8181'
-      - port: '8880'
-      - port: '9090'
-      - port: '9100'
-      - port: '9252'
-      - port: '9598'
-      - port: '9633'
-  - toCIDR:
-    - ${backupServerIP}/32
-    toPorts:
-    - ports:
-      - port: '9100'
-      - port: '9633'
+    - host
   # ETCD on Talos is not running as pod, thus the endpoint is the node itself
   - toCIDR:
     - ${singleNodeClusterIP}/32
     toPorts:
     - ports:
       - port: '2381'
+        protocol: TCP
+      rules:
+        http: [{}]

@@ -31,7 +31,7 @@ spec:
       interval: 15m
   values:
     commonLabels:
-      k8s.mcathome.ch/allow-kube-api: "true"
+      k8s.mcathome.ch/allow-kube-api: 'true'
     storageClass:
       create: true
       defaultClass: true

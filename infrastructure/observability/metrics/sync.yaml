@@ -190,6 +190,8 @@ spec:
       enabled: false
 
     kube-state-metrics:
+      customLabels:
+        k8s.mcathome.ch/allow-kube-api: 'true'
       prometheus:
         monitor:
           relabelings:
