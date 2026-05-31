@@ -18,6 +18,7 @@ spec:
             k8s.mcathome.ch/cleanup: 'true'
             k8s.mcathome.ch/geoip: 'true'
         spec:
+          restartPolicy: OnFailure
           volumes:
             - name: geoip-mmdb
               persistentVolumeClaim:

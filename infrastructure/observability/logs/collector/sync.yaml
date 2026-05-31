@@ -43,6 +43,7 @@ spec:
 
     podLabels:
       k8s.mcathome.ch/geoip: 'true'
+      k8s.mcathome.ch/allow-kube-api: 'true'
 
     env:
       - name: VECTOR_COLOR
@@ -67,7 +68,6 @@ spec:
       api:
         enabled: true
         address: 127.0.0.1:8686
-        playground: false
 
       enrichment_tables:
         geoip:

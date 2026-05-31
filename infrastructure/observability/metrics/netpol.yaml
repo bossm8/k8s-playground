@@ -34,8 +34,6 @@ spec:
     - ports:
       - port: '443'
         protocol: TCP
-      rules:
-        http: [{}]
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy

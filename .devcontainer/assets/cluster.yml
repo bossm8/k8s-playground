@@ -13,6 +13,14 @@ containerdConfigPatches:
       config_path = "/etc/containerd/certs.d"
 nodes:
 - role: control-plane
+  extraPortMappings:
+  # Traefik NodePorts
+  - containerPort: 30080
+    hostPort: 8000
+    listenAddress: 127.0.0.1
+  - containerPort: 30443
+    hostPort: 8443
+    listenAddress: 127.0.0.1
   extraMounts:
   - hostPath: .devcontainer/assets/admission-config.yaml
     containerPath: /etc/kubernetes/admission/admission-config.yaml
@@ -38,35 +46,8 @@ nodes:
   - hostPath: .devcontainer/assets/registry-mirrors
     containerPath: /etc/containerd/certs.d
     readOnly: true
-  # Traefik NodePorts
-  extraPortMappings:
-  - containerPort: 30080
-    hostPort: 8000
-    listenAddress: 127.0.0.1
-  - containerPort: 30443
-    hostPort: 8443
-    listenAddress: 127.0.0.1
 - role: worker
   extraMounts:
   - hostPath: .devcontainer/assets/registry-mirrors
     containerPath: /etc/containerd/certs.d
     readOnly: true
-  extraPortMappings:
-  - containerPort: 30080
-    hostPort: 8000
-    listenAddress: 127.0.0.1
-  - containerPort: 30443
-    hostPort: 8443
-    listenAddress: 127.0.0.1
-- role: worker
-  extraMounts:
-  - hostPath: .devcontainer/assets/registry-mirrors
-    containerPath: /etc/containerd/certs.d
-    readOnly: true
-  extraPortMappings:
-  - containerPort: 30080
-    hostPort: 8000
-    listenAddress: 127.0.0.1
-  - containerPort: 30443
-    hostPort: 8443
-    listenAddress: 127.0.0.1

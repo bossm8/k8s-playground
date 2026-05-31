@@ -47,14 +47,14 @@ RUN curl -LO --fail https://github.com/cilium/cilium-cli/releases/download/v${CI
 
 # ---
 
-FROM cul AS hubble
+FROM curl AS hubble
 
 ARG HUBBLE_CLI_VERSION
 ARG TARGETARCH
 
-RUN curl -LO --fail https://github.com/cilium/hubble/releases/download/v${HUBBLE_VERSION}/hubble-linux-${TARGETARCH}.tar.gz{,.sha256sum} \
+RUN curl -LO --fail https://github.com/cilium/hubble/releases/download/v${HUBBLE_CLI_VERSION}/hubble-linux-${TARGETARCH}.tar.gz{,.sha256sum} \
     && sha256sum --check hubble-linux-${TARGETARCH}.tar.gz.sha256sum \
-    && tar xzvfC hubbble-linux-${TARGETARCH}.tar.gz /usr/local/bin
+    && tar xzvfC hubble-linux-${TARGETARCH}.tar.gz /usr/local/bin
 
 # ---
 
@@ -99,6 +99,7 @@ RUN kind completion bash > /etc/bash_completion.d/kind \
     && flux completion bash > /etc/bash_completion.d/flux \
     && kubectl completion bash > /etc/bash_completion.d/kubectl \
     && cilium completion bash > /etc/bash_completion.d/cilium \
+    && hubble completion bash > /etc/bash_completion.d/hubble \
     && cmctl completion bash > /etc/bash_completion.d/cmctl \
     && helm completion bash > /etc/bash_completion.d/helm \
     && bao -autocomplete-install \
