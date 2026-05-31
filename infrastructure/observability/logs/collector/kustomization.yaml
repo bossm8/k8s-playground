@@ -4,6 +4,12 @@ kind: Kustomization
 namespace: infra-observability
 
 resources:
-  - sync.yaml
+  - job.yaml
   - netpol.yaml
-  - geoip-config.yaml
+  - secret.yaml
+  - sync.yaml
+  - volume.yaml
+
+images:
+  - name: maxmindinc/geoipupdate
+    newTag: v7.1.1

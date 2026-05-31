@@ -17,21 +17,21 @@ spec:
         protocol: TCP
       rules:
         http: [{}]
-# TODO allow nova
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: allow-vector-geoip-update
+  name: allow-geoip-update
   namespace: infra-observability
 spec:
   endpointSelector:
     matchLabels:
-      k8s:app.kubernetes.io/name: vector
+      k8s.mcathome.ch/geoip: 'true'
   egress:
   - toFQDNs:
+    # https://dev.maxmind.com/geoip/updating-databases/
     - matchName: updates.maxmind.com
-    - matchPattern: mm-prod-geoip-databases.**.cloudflarestorage.com
+    - matchName: mm-prod-geoip-databases.a2649acb697e2c09b632799562c076f2.r2.cloudflarestorage.com
     toPorts:
     - ports:
       - port: '443'

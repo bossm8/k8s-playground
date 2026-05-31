@@ -41,7 +41,8 @@ spec:
           targetLabel: cluster
           replacement: ${clusterName}
 
-    podLabels: null
+    podLabels:
+      k8s.mcathome.ch/geoip: 'true'
 
     env:
       - name: VECTOR_COLOR
@@ -412,7 +413,9 @@ spec:
 
     extraVolumes:
       - name: geoip-mmdb
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: geoip-database
+          readOnly: false
       - name: geoip-tmp
         emptyDir: {}
 
@@ -422,8 +425,8 @@ spec:
         readOnly: true
 
     initContainers:
-      - name: geoip-download-initial
-        image: maxmindinc/geoipupdate:latest
+      - name: geoip-download
+        image: maxmindinc/geoipupdate
         imagePullPolicy: IfNotPresent
         securityContext:
           readOnlyRootFilesystem: true
@@ -443,35 +446,6 @@ spec:
           # Run once and exit
           - name: GEOIPUPDATE_FREQUENCY
             value: '0'
-          - name: GEOIPUPDATE_VERBOSE
-            value: '1'
-        volumeMounts:
-          - name: geoip-mmdb
-            mountPath: /usr/share/GeoIP
-          - name: geoip-tmp
-            mountPath: /tmp
-
-    extraContainers:
-      - name: geoip-download-periodic
-        image: maxmindinc/geoipupdate:latest
-        imagePullPolicy: IfNotPresent
-        securityContext:
-          readOnlyRootFilesystem: true
-          privileged: false
-          allowPrivilegeEscalation: false
-          seccompProfile:
-            type: RuntimeDefault
-          capabilities:
-            drop:
-            - ALL
-        envFrom:
-          - secretRef:
-              name: geoip-account-config
-        env:
-          - name: GEOIPUPDATE_EDITION_IDS
-            value: 'GeoLite2-City GeoLite2-ASN'
-          - name: GEOIPUPDATE_FREQUENCY
-            value: '12'
           - name: GEOIPUPDATE_VERBOSE
             value: '1'
         volumeMounts:
