@@ -9,5 +9,16 @@
       "/(infrastructure|(?:^|/)gotk-components|applications)/.+\\.yaml$/"
     ]
   },
-  "minimumReleaseAge": "14 days"
+  "minimumReleaseAge": "14 days",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["infrastructure/controllers/ingress/crowdsec\\.yaml"],
+      "matchStrings": [
+        "version: (?<currentValue>v[\\d.]+)"
+      ],
+      "depNameTemplate": "maxlerebourg/crowdsec-bouncer-traefik-plugin",
+      "datasourceTemplate": "github-releases"
+    }
+  ]
 }

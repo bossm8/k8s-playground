@@ -1,0 +1,103 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: smartctl-exporter
+  namespace: infra-observability
+spec:
+  groups:
+  - name: SmartctlExporter
+    rules:
+      - alert: SmartDeviceTemperatureWarning
+        expr: '(avg_over_time(smartctl_device_temperature{temperature_type="current"} [5m]) unless on (instance, device) smartctl_device_temperature{temperature_type="drive_trip"}) > 60'
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: >-
+            SMART device temperature warning (instance {{ index $labels "instance" }})
+          description: |
+            Device temperature warning on {{ index $labels "instance" }} for drive {{ index $labels "device" }}.
+            Temparature reached {{ $value }}.
+
+      - alert: SmartDeviceTemperatureCritical
+        expr: '(max_over_time(smartctl_device_temperature{temperature_type="current"} [5m]) unless on (instance, device) smartctl_device_temperature{temperature_type="drive_trip"}) > 70'
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: >-
+            SMART device temperature critical (instance {{ index $labels "instance" }})
+          description: |
+            Device temperature critical on {{ index $labels "instance" }} for drive {{ index $labels "device" }}.
+            Temparature reached {{ $value }}.
+
+      - alert: SmartDeviceTemperatureOverTripValue
+        expr: 'max_over_time(smartctl_device_temperature{temperature_type="current"} [10m]) >= on(device, instance) smartctl_device_temperature{temperature_type="drive_trip"}'
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: >-
+            SMART device temperature over trip value (instance {{ index $labels "instance" }})
+          description: |
+            Device temperature over trip value on {{ index $labels "instance" }} for drive {{ index $labels "device" }}).
+            Temparature reached {{ $value }}.
+
+      - alert: SmartDeviceTemperatureNearingTripValue
+        expr: 'max_over_time(smartctl_device_temperature{temperature_type="current"} [10m]) >= on(device, instance) (smartctl_device_temperature{temperature_type="drive_trip"} * .80)'
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: >-
+            SMART device temperature nearing trip value (instance {{ index $labels "instance" }})
+          description: |
+            Device temperature at 80% of trip value on {{ index $labels "instance" }} for drive {{ index $labels "device" }}).
+            Temperature reached {{ $value }}.
+
+      - alert: SmartStatus
+        expr: 'smartctl_device_smart_status != 1'
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: >-
+            SMART status failure (instance {{ index $labels "instance" }})
+          description: |
+            Device has a SMART status failure on {{ index $labels "instance" }} for drive {{ index $labels "device" }}).
+
+      - alert: SmartCriticalWarning
+        expr: 'smartctl_device_critical_warning > 0'
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: >-
+            SMART critical warning (instance {{ index $labels "instance" }})
+          description: |
+            Disk controller has critical warning on {{ index $labels "instance" }} for drive {{ index $labels "device" }}).
+
+      - alert: SmartMediaErrors
+        expr: 'smartctl_device_media_errors > 0'
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: >-
+            SMART media errors (instance {{ index $labels "instance" }})
+          description: |
+            Disk controller detected media errors on {{ index $labels "instance" }} for drive {{ index $labels "device" }})
+            Got {{ $value }} errors.
+
+      - alert: SmartWearoutIndicator
+        expr: 'smartctl_device_available_spare < smartctl_device_available_spare_threshold'
+        for: 0m
+        labels:
+          severity: critical
+        annotations:
+          summary: >-
+            SMART Wearout Indicator (instance {{ index $labels "instance" }})
+          description: |
+             Device is wearing out on {{ index $labels "instance" }} for drive {{ index $labels "device" }})
+             Available spare: {{ $value }}.
