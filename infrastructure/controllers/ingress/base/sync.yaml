@@ -88,7 +88,7 @@ spec:
       web:
         port: 8080
         nodePort: 30080
-        exposedPort: 30080
+        exposedPort: 8080
         http:
           redirections:
             entryPoint:
@@ -106,7 +106,7 @@ spec:
       websecure:
         port: 8443
         nodePort: 30443
-        exposedPort: 30443
+        exposedPort: 8443
         proxyProtocol:
           trustedIPs:
             - ${proxyIP}
@@ -132,6 +132,10 @@ spec:
           - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
           - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
           - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+
+    tolerations:
+    - effect: NoSchedule
+      operator: Exists
 
     extraObjects:
     - apiVersion: traefik.io/v1alpha1

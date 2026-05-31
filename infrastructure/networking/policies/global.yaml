@@ -13,11 +13,6 @@ spec:
   ingress:
   - fromEntities:
     - host
-    - remote-node
-  - fromEndpoints:
-    - matchLabels:
-        k8s:io.kubernetes.pod.namespace: infra-observability
-        k8s:app.kubernetes.io/name: prometheus
   egress:
   - toEntities:
     - health

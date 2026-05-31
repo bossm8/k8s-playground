@@ -80,3 +80,20 @@ spec:
     - ports:
       - port: '8443'
         protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: allow-prometheus-scrape-on-all-namespaces
+spec:
+  endpointSelector:
+    matchExpressions:
+    - key: io.kubernetes.pod.namespace
+      operator: NotIn
+      values:
+      - kube-system
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: infra-observability
+        k8s:app.kubernetes.io/name: prometheus

@@ -37,6 +37,8 @@ spec:
         enabled: true
 
       deployment:
+        labels:
+          k8s.mcathome.ch/allow-kube-api: 'true'
         securityContext:
           runAsNonRoot: true
           runAsUser: 65534

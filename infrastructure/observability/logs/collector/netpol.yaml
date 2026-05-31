@@ -10,7 +10,7 @@ spec:
       k8s:app.kubernetes.io/name: vector
   ingress:
   - fromEndpoints:
-    - labelSelector:
+    - matchLabels:
         io.kubernetes.pod.namespace: traefik
         k8s:app.kubernetes.io/name: traefik
     toPorts:
