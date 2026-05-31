@@ -46,8 +46,3 @@ nodes:
   - hostPath: .devcontainer/assets/registry-mirrors
     containerPath: /etc/containerd/certs.d
     readOnly: true
-- role: worker
-  extraMounts:
-  - hostPath: .devcontainer/assets/registry-mirrors
-    containerPath: /etc/containerd/certs.d
-    readOnly: true

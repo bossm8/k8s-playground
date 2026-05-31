@@ -10,7 +10,6 @@ spec:
       operator: NotIn
       values:
       - kube-system
-      - cilium-system
   ingress:
   - fromEntities:
     - host
@@ -47,7 +46,6 @@ spec:
       operator: NotIn
       values:
       - kube-system
-      - cilium-system
     - key: k8s.mcathome.ch/allow-kube-api
       operator: Exists
   egress:

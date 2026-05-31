@@ -8,6 +8,7 @@ resources:
   - netpol.yaml
   - rbac.yaml
   - sync.yaml
+  - whoami.yaml
 
 patches:
   - path: crowdsec.yaml

@@ -9,8 +9,10 @@ spec:
     matchLabels:
       k8s:app.kubernetes.io/name: vector
   ingress:
-  - fromCIDR:
-    - ${proxyIP}/32
+  - fromEndpoints:
+    - labelSelector:
+        io.kubernetes.pod.namespace: traefik
+        k8s:app.kubernetes.io/name: traefik
     toPorts:
     - ports:
       - port: '8088'

@@ -3,14 +3,14 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: gitops-reconciler
-  namespace: cilium-system
+  namespace: kube-system
 automountServiceAccountToken: false
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: gitops-reconciler
-  namespace: cilium-system
+  namespace: kube-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -18,4 +18,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: gitops-reconciler
-    namespace: cilium-system
+    namespace: kube-system

@@ -34,13 +34,10 @@ spec:
       name: flux-metrics
     - kind: ConfigMap
       name: grafana-dashboards
-    # # Stored in the external-configs
-    # - kind: ConfigMap
-    #   name: scrape-targets
 
   values:
     commonLabels:
-      k8s.mcathome.ch/allow-kube-api: "true"
+      k8s.mcathome.ch/allow-kube-api: 'true'
 
     global:
       rbac:
@@ -115,15 +112,14 @@ spec:
     grafana:
       enabled: true
       extraLabels:
-        k8s.mcathome.ch/allow-kube-api: "true"
+        k8s.mcathome.ch/allow-kube-api: 'true'
+        k8s.mcathome.ch/allow-traefik-ingress: 'true'
       adminUser: ${grafanaAdminUser}
       adminPassword: ${grafanaAdminPassword}
       initChownData:
         enabled: false
       ingress:
         enabled: true
-        annotations:
-          cert-manager.io/cluster-issuer: letsencrypt
         ingressClassName: traefik
         hosts:
           - ${grafanaHostName}

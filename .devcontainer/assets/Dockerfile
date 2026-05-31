@@ -27,8 +27,8 @@ RUN apt-get update \
 FROM curl AS kind
 
 # Need to redefine already defined args for the stages for them to work
-ARG KIND_VERSION
 ARG TARGETARCH
+ARG KIND_VERSION
 
 RUN curl -LO --fail https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-${TARGETARCH}{,.sha256sum} \
     && sha256sum --check kind-linux-${TARGETARCH}.sha256sum \
@@ -38,8 +38,8 @@ RUN curl -LO --fail https://github.com/kubernetes-sigs/kind/releases/download/v$
 
 FROM curl AS cilium
 
-ARG CILIUM_CLI_VERSION
 ARG TARGETARCH
+ARG CILIUM_CLI_VERSION
 
 RUN curl -LO --fail https://github.com/cilium/cilium-cli/releases/download/v${CILIUM_CLI_VERSION}/cilium-linux-${TARGETARCH}.tar.gz{,.sha256sum} \
     && sha256sum --check cilium-linux-${TARGETARCH}.tar.gz.sha256sum \
@@ -49,8 +49,8 @@ RUN curl -LO --fail https://github.com/cilium/cilium-cli/releases/download/v${CI
 
 FROM curl AS hubble
 
-ARG HUBBLE_CLI_VERSION
 ARG TARGETARCH
+ARG HUBBLE_CLI_VERSION
 
 RUN curl -LO --fail https://github.com/cilium/hubble/releases/download/v${HUBBLE_CLI_VERSION}/hubble-linux-${TARGETARCH}.tar.gz{,.sha256sum} \
     && sha256sum --check hubble-linux-${TARGETARCH}.tar.gz.sha256sum \

@@ -286,3 +286,28 @@ spec:
     kind: GitRepository
     name: flux-system
   timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-controllers-reloader
+  namespace: flux-system
+spec:
+  serviceAccountName: kustomize-controller
+  dependsOn:
+    - name: infra-observability-logs
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+      - kind: ConfigMap
+        name: dev-vars
+  interval: 1m
+  path: ./infrastructure/controllers/reloader
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m

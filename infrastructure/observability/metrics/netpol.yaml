@@ -57,3 +57,26 @@ spec:
         protocol: TCP
       rules:
         http: [{}]
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-alertmanager-alerting
+  namespace: infra-observability
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: alertmanager
+  egress:
+  - toFQDNs:
+    - matchName: discord.com
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP
+  - toFQDNs:
+    - matchName: ${healthcheckDomain}
+    toPorts:
+    - ports:
+      - port: '8443'
+        protocol: TCP

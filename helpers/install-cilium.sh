@@ -8,7 +8,7 @@ function deploy() {
       cilium \
       oci://quay.io/cilium/charts/cilium \
         --version ${INSTALL_VERSION} \
-        --namespace cilium-system \
+        --namespace kube-system \
         --values ${VALUES_PATH}/base/values/install.yml \
         $PROMETHEUS_FLAGS \
         $KIND_ARGS \
