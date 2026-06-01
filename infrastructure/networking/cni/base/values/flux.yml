@@ -47,3 +47,10 @@ operator:
     enabled: true
     annotations:
       grafana_dashboard_folder: Cilium
+# https://docs.cilium.io/en/latest/security/tls-visibility
+tls:
+  readSecretsOnlyFromSecretsNamespace: true
+  secretsNamespace:
+    name: cilium-secrets
+  secretSync:
+    enabled: true

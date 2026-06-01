@@ -1,5 +1,19 @@
 
 grafana:
+  downloadDashboards:
+    env:
+    - name: CURL_CA_BUNDLE
+      value: /etc/secrets/ca.crt
+  extraSecretMounts:
+  - name: mitm-ca
+    secretName: grafana-cilium-mitm
+    mountPath: /etc/secrets
+    readOnly: true
+    items:
+    - key: ca.crt
+      path: ca.crt
+  env:
+    SSL_CERT_FILE: /etc/secrets/ca.crt
   dashboardProviders:
     dashboardProviders.yaml:
       apiVersion: 1

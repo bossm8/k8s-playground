@@ -5,6 +5,7 @@ namespace: infra-observability
 
 resources:
   - job.yaml
+  - netpol.yaml
   - secrets.yaml
 
 configMapGenerator:

@@ -4,10 +4,10 @@ kind: Kustomization
 namespace: infra-observability
 
 resources:
-  - sync.yaml
-  - rbac.yaml
-  - namespace.yaml
+  - alertmanager.yaml
   - netpol.yaml
+  - smartctl-alerts.yaml
+  - sync.yaml
 
 configMapGenerator:
   - name: flux-metrics

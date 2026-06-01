@@ -11,7 +11,7 @@ spec:
   ingress:
   - fromEndpoints:
     - matchLabels:
-        io.kubernetes.pod.namespace: traefik
+        k8s:io.kubernetes.pod.namespace: traefik
         k8s:app.kubernetes.io/name: traefik
     toPorts:
     - ports:
@@ -19,6 +19,21 @@ spec:
         protocol: TCP
       rules:
         http: [{}]
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: geoip-cilium-mitm
+  namespace: infra-observability
+spec:
+  commonName: updates.maxmind.com
+  dnsNames:
+  - updates.maxmind.com
+  - mm-prod-geoip-databases.a2649acb697e2c09b632799562c076f2.r2.cloudflarestorage.com
+  secretName: geoip-cilium-mitm
+  issuerRef:
+    name: cilium-mitm-ca
+    kind: ClusterIssuer
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -38,3 +53,13 @@ spec:
     - ports:
       - port: '443'
         protocol: TCP
+      terminatingTLS:
+        secret:
+          name: geoip-cilium-mitm
+          namespace: infra-observability
+      originatingTLS:
+        secret:
+          name: ca-certificates
+          namespace: cert-manager
+      rules:
+        http: [{}]

@@ -1,0 +1,27 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: jaegertracing
+  namespace: infra-observability
+spec:
+  interval: 1h30m
+  url: https://jaegertracing.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/2
+kind: HelmRelease
+metadata:
+  name: jaeger
+  namespace: infra-observability
+spec:
+  interval: 15m
+  timeout: 5m
+  chart:
+    spec:
+      chart: jaeger
+      version: 4.8.0
+      sourceRef:
+        kind: HelmRepository
+        name: jaegertracing
+      interval: 15m
+  values:

@@ -1,0 +1,98 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: kyverno
+  namespace: kyverno
+spec:
+  interval: 1h30m
+  url: https://kyverno.github.io/kyverno/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kyverno
+  namespace: kyverno
+spec:
+  interval: 15m
+  driftDetection:
+    mode: enabled
+  chart:
+    spec:
+      chart: kyverno
+      version: 3.8.1
+      sourceRef:
+        kind: HelmRepository
+        name: kyverno
+        namespace: kyverno
+      interval: 15m
+  values:
+
+    features:
+      logging:
+        format: json
+      backgroundScan:
+        # https://kyverno.io/docs/installation/customization/#resource-filters
+        # Need to use resource filters, else the specified exluded namespaces
+        # are still included in background scans
+        skipResourceFilters: false
+
+    grafana:
+      enabled: true
+      annotations:
+        grafana_dashboard_folder: Kyverno
+
+    admissionController:
+      serviceMonitor:
+        enabled: true
+      # tracing:
+      #   enabled: true
+      #   address: otel-collector-opentelemetry-collector.infra-observability
+      #   port: 4317
+
+    backgroundController:
+      serviceMonitor:
+        enabled: true
+      # tracing:
+      #   enabled: true
+      #   address: otel-collector-opentelemetry-collector.infra-observability
+      #   port: 4317
+       # Need additional permissions
+       # https://kyverno.io/docs/installation/customization/#customizing-permissions
+       # admission webhook "validate-policy.kyverno.svc" denied the request:
+       # path: spec.rules[0].generate..:
+       # system:serviceaccount:kyverno:kyverno-background-controller requires
+       # permissions get for resource rbac.authorization.k8s.io/v1/RoleBinding
+       # in namespace {{ request.object.metadata.name }}
+      rbac:
+        clusterRole:
+          extraResources:
+            - apiGroups: ["rbac.authorization.k8s.io"]
+              resources: ["rolebindings"]
+              verbs: ["get"]
+
+    cleanupController:
+      serviceMonitor:
+        enabled: true
+      # tracing:
+      #   enabled: true
+      #   address: otel-collector-opentelemetry-collector.infra-observability
+      #   port: 4317
+      rbac:
+        clusterRole:
+          extraResources:
+            # Needed to cleanup 'dead' pods (see policies.yaml#L43)
+            - apiGroups: [""]
+              resources: ["pods"]
+              verbs: ["get", "watch", "list", "delete"]
+            - apiGroups: ["batch"]
+              resources: ["jobs"]
+              verbs: ["get", "watch", "list", "delete"]
+
+    reportsController:
+      serviceMonitor:
+        enabled: true
+      # tracing:
+      #   enabled: true
+      #   address: otel-collector-opentelemetry-collector.infra-observability
+      #   port: 4317

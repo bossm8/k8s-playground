@@ -417,9 +417,14 @@ spec:
       persistentVolumeClaim:
         claimName: geoip-database
         readOnly: false
+    - name: mitm-ca
+      secret:
+        secretName: geoip-cilium-mitm
+        items:
+        - key: ca.crt
+          path: ca.crt
     - name: geoip-tmp
       emptyDir: {}
-
     extraVolumeMounts:
     - name: geoip-mmdb
       mountPath: /var/geoip
@@ -442,6 +447,8 @@ spec:
       - secretRef:
           name: geoip-account-config
       env:
+      - name: SSL_CERT_FILE
+        value: /etc/secrets/ca.crt
       - name: GEOIPUPDATE_EDITION_IDS
         value: 'GeoLite2-City GeoLite2-ASN'
       # Run once and exit
@@ -452,6 +459,9 @@ spec:
       volumeMounts:
       - name: geoip-mmdb
         mountPath: /usr/share/GeoIP
+      - name: mitm-ca
+        mountPath: /etc/secrets
+        readOnly: true
       - name: geoip-tmp
         mountPath: /tmp
 ---

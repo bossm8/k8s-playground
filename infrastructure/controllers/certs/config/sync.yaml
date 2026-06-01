@@ -1,0 +1,54 @@
+# https://cert-manager.io/docs/configuration/selfsigned/#bootstrapping-ca-issuers
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: self-signed
+  namespace: cert-manager
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: mitm-ca
+  namespace: cert-manager
+spec:
+  isCA: true
+  commonName: mitm.k8s.mcathome.ch
+  secretName: mitm-ca
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: self-signed
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: cilium-mitm-ca
+spec:
+  ca:
+    secretName: mitm-ca
+---
+# Trust bundle to use for egress TLS initiation for TLS inspection See
+# docs/cilium.md.
+# Created in cert-manager ns only. Cilium will sync this to cilium-secrets when
+# spec.egress.toPorts.ports.originatingTLS.secret.namespace=cert-manager and
+# spec.egress.toPorts.ports.originatingTLS.secret.name=ca-certificates
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: ca-certificates
+  namespace: cert-manager
+spec:
+  sources:
+  - useDefaultCAs: true
+  target:
+    secret:
+      key: ca.crt
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: cert-manager

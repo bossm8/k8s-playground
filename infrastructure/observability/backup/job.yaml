@@ -16,6 +16,7 @@ spec:
         metadata:
           labels:
             k8s.mcathome.ch/cleanup: 'true'
+            k8s.mcathome.ch/name: grafana-backup
         spec:
           containers:
           - name: grafana-backup

@@ -9,11 +9,28 @@ spec:
   ingress:
   - fromEndpoints:
     - matchLabels:
-        io.kubernetes.pod.namespace: infra-observability
+        k8s:io.kubernetes.pod.namespace: infra-observability
   egress:
   - toEndpoints:
     - matchLabels:
-        io.kubernetes.pod.namespace: infra-observability
+        k8s:io.kubernetes.pod.namespace: infra-observability
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: grafana-cilium-mitm
+  namespace: infra-observability
+spec:
+  commonName: grafana.com
+  dnsNames:
+  - grafana.com
+  - gitlab.com
+  - raw.githubusercontent.com
+  - storage.googleapis.com
+  secretName: grafana-cilium-mitm
+  issuerRef:
+    name: cilium-mitm-ca
+    kind: ClusterIssuer
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -23,7 +40,7 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/name: grafana
+      k8s:app.kubernetes.io/name: grafana
   egress:
   - toFQDNs:
     - matchName: gitlab.com
@@ -34,6 +51,16 @@ spec:
     - ports:
       - port: '443'
         protocol: TCP
+      terminatingTLS:
+        secret:
+          name: grafana-cilium-mitm
+          namespace: infra-observability
+      originatingTLS:
+        secret:
+          name: ca-certificates
+          namespace: cert-manager
+      rules:
+        http: [{}]
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
@@ -43,7 +70,7 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      app.kubernetes.io/name: prometheus
+      k8s:app.kubernetes.io/name: prometheus
   egress:
   - toEntities:
     - cluster

@@ -1,14 +1,4 @@
 ---
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: prometheus-community
-  namespace: infra-observability
-spec:
-  type: oci
-  interval: 1h30m
-  url: oci://ghcr.io/prometheus-community/charts
----
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -28,6 +18,8 @@ spec:
   releaseName: kube-prometheus
   driftDetection:
     mode: enabled
+  install:
+    crds: Skip
 
   valuesFrom:
     - kind: ConfigMap
@@ -36,6 +28,9 @@ spec:
       name: grafana-dashboards
 
   values:
+    crds:
+      enabled: false
+
     commonLabels:
       k8s.mcathome.ch/allow-kube-api: 'true'
 
