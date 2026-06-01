@@ -31,9 +31,12 @@ spec:
     metrics:
       enabled: true
 
+    podLabels:
+      k8s.mcathome.ch/allow-kube-api: 'true'
+
     logging:
       encoding: json
-      logLevel: -1
+      logLevel: 4
 
     target:
       discord:
@@ -43,6 +46,8 @@ spec:
 
     ui:
       enabled: true
+      podLabels:
+        k8s.mcathome.ch/allow-kube-api: 'true'
       logging:
         encoding: json
 
@@ -59,10 +64,14 @@ spec:
     plugin:
       kyverno:
         enabled: true
+        podLabels:
+          k8s.mcathome.ch/allow-kube-api: 'true'
         logging:
           encoding: json
       trivy:
         enabled: true
+        podLabels:
+          k8s.mcathome.ch/allow-kube-api: 'true'
 
     sourceFilters:
       - selector:

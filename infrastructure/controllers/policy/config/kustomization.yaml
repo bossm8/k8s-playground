@@ -4,7 +4,4 @@ kind: Kustomization
 namespace: kyverno
 
 resources:
-  - namespace.yaml
-  - rbac.yaml
-  - kyverno-sync.yaml
-  - reporter-sync.yaml
+  - sync.yaml

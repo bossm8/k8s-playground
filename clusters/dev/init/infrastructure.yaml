@@ -205,7 +205,32 @@ spec:
       - kind: ConfigMap
         name: dev-vars
   interval: 1m
-  path: ./infrastructure/controllers/policy
+  path: ./infrastructure/controllers/policy/release
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-controllers-policy-config
+  namespace: flux-system
+spec:
+  serviceAccountName: kustomize-controller
+  dependsOn:
+    - name: infra-controllers-policy
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+      - kind: ConfigMap
+        name: dev-vars
+  interval: 1m
+  path: ./infrastructure/controllers/policy/config
   prune: false
   sourceRef:
     kind: GitRepository
@@ -221,7 +246,7 @@ spec:
   serviceAccountName: kustomize-controller
   interval: 1m
   dependsOn:
-    - name: infra-controllers-policy
+    - name: infra-controllers-policy-config
   path: ./infrastructure/observability/metrics/release
   postBuild:
     substituteFrom:
@@ -245,7 +270,7 @@ metadata:
 spec:
   serviceAccountName: kustomize-controller
   dependsOn:
-    - name: infra-controllers-policy
+    - name: infra-controllers-policy-config
   postBuild:
     substituteFrom:
       - kind: ConfigMap
@@ -270,7 +295,7 @@ metadata:
 spec:
   serviceAccountName: kustomize-controller
   dependsOn:
-    - name: infra-controllers-policy
+    - name: infra-controllers-policy-config
   postBuild:
     substituteFrom:
       - kind: ConfigMap
@@ -295,7 +320,7 @@ metadata:
 spec:
   serviceAccountName: kustomize-controller
   dependsOn:
-    - name: infra-controllers-policy
+    - name: infra-controllers-policy-config
   postBuild:
     substituteFrom:
       - kind: ConfigMap
@@ -345,7 +370,7 @@ metadata:
 spec:
   serviceAccountName: kustomize-controller
   dependsOn:
-    - name: infra-controllers-policy
+    - name: infra-controllers-policy-config
   postBuild:
     substituteFrom:
       - kind: ConfigMap
@@ -370,7 +395,7 @@ metadata:
 spec:
   serviceAccountName: kustomize-controller
   dependsOn:
-    - name: infra-controllers-policy
+    - name: infra-controllers-policy-config
   postBuild:
     substituteFrom:
       - kind: ConfigMap

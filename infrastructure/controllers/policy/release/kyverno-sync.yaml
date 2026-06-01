@@ -28,6 +28,10 @@ spec:
       interval: 15m
   values:
 
+    crds:
+      migration:
+        enabled: false
+
     features:
       logging:
         format: json
@@ -45,6 +49,8 @@ spec:
     admissionController:
       serviceMonitor:
         enabled: true
+      podLabels:
+        k8s.mcathome.ch/allow-kube-api: 'true'
       # tracing:
       #   enabled: true
       #   address: otel-collector-opentelemetry-collector.infra-observability
@@ -53,6 +59,8 @@ spec:
     backgroundController:
       serviceMonitor:
         enabled: true
+      podLabels:
+        k8s.mcathome.ch/allow-kube-api: 'true'
       # tracing:
       #   enabled: true
       #   address: otel-collector-opentelemetry-collector.infra-observability
@@ -74,6 +82,8 @@ spec:
     cleanupController:
       serviceMonitor:
         enabled: true
+      podLabels:
+        k8s.mcathome.ch/allow-kube-api: 'true'
       # tracing:
       #   enabled: true
       #   address: otel-collector-opentelemetry-collector.infra-observability
@@ -92,6 +102,8 @@ spec:
     reportsController:
       serviceMonitor:
         enabled: true
+      podLabels:
+        k8s.mcathome.ch/allow-kube-api: 'true'
       # tracing:
       #   enabled: true
       #   address: otel-collector-opentelemetry-collector.infra-observability

@@ -12,7 +12,9 @@ spec:
       - kube-system
   ingress:
   - fromEntities:
+    # Allow kubelet health checks
     - host
+    # Allow cilium health checks
     - remote-node
   egress:
   - toEntities:
