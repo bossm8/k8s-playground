@@ -51,20 +51,22 @@ spec:
         enabled: true
       podLabels:
         k8s.mcathome.ch/allow-kube-api: 'true'
-      # tracing:
-      #   enabled: true
-      #   address: otel-collector-opentelemetry-collector.infra-observability
-      #   port: 4317
+        k8s.mcathome.ch/allow-tracing: 'true'
+      tracing:
+        enabled: true
+        address: jaeger.infra-observability
+        port: 4317
 
     backgroundController:
       serviceMonitor:
         enabled: true
       podLabels:
         k8s.mcathome.ch/allow-kube-api: 'true'
-      # tracing:
-      #   enabled: true
-      #   address: otel-collector-opentelemetry-collector.infra-observability
-      #   port: 4317
+        k8s.mcathome.ch/allow-tracing: 'true'
+      tracing:
+        enabled: true
+        address: jaeger.infra-observability
+        port: 4317
        # Need additional permissions
        # https://kyverno.io/docs/installation/customization/#customizing-permissions
        # admission webhook "validate-policy.kyverno.svc" denied the request:
@@ -84,10 +86,11 @@ spec:
         enabled: true
       podLabels:
         k8s.mcathome.ch/allow-kube-api: 'true'
-      # tracing:
-      #   enabled: true
-      #   address: otel-collector-opentelemetry-collector.infra-observability
-      #   port: 4317
+        k8s.mcathome.ch/allow-tracing: 'true'
+      tracing:
+        enabled: true
+        address: jaeger.infra-observability
+        port: 4317
       rbac:
         clusterRole:
           extraResources:
@@ -104,7 +107,8 @@ spec:
         enabled: true
       podLabels:
         k8s.mcathome.ch/allow-kube-api: 'true'
-      # tracing:
-      #   enabled: true
-      #   address: otel-collector-opentelemetry-collector.infra-observability
-      #   port: 4317
+        k8s.mcathome.ch/allow-tracing: 'true'
+      tracing:
+        enabled: true
+        address: jaeger.infra-observability
+        port: 4317

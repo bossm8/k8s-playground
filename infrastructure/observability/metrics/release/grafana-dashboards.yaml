@@ -32,12 +32,12 @@ grafana:
           options:
             path: /var/lib/grafana/dashboards/loki-sb
           disableDeletion: false
-        - name: tempo
+        - name: jaeger
           orgId: 1
-          folder: Tempo
+          folder: Jaeger
           type: file
           options:
-            path: /var/lib/grafana/dashboards/tempo
+            path: /var/lib/grafana/dashboards/jaeger
           disableDeletion: false
         - name: cert-manager
           orgId: 1
@@ -45,13 +45,6 @@ grafana:
           type: file
           options:
             path: /var/lib/grafana/dashboards/cert-manager
-          disableDeletion: false
-        - name: otelcol
-          orgId: 1
-          folder: OpenTelemetry
-          type: file
-          options:
-            path: /var/lib/grafana/dashboards/otelcol
           disableDeletion: false
         - name: flux
           orgId: 1
@@ -98,32 +91,14 @@ grafana:
         url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-logs.json
       loki-recording-rules:
         url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-mixin-recording-rules.json
-    tempo:
-      # https://github.com/grafana/tempo/tree/a8e43302876f49359ccdf3a93b7321db0c028280/operations/tempo-mixin-compiled/dashboards
-      tempo-operational:
-        url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-operational.json
-      tempo-reads:
-        url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-reads.json
-      tempo-resources:
-        url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-resources.json
-      tempo-rollout-progress:
-        url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-rollout-progress.json
-      tempo-tenants:
-        url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-tenants.json
-      tempo-writes:
-        url: https://raw.githubusercontent.com/grafana/tempo/refs/heads/main/operations/tempo-mixin-compiled/dashboards/tempo-writes.json
+    jaeger:
+      # https://github.com/jaegertracing/jaeger/tree/6a4fca884a8775c34f44ed513d43c7d5bfed333f/monitoring/jaeger-mixin
+      jaeger:
+        url: https://raw.githubusercontent.com/jaegertracing/jaeger/refs/heads/main/monitoring/jaeger-mixin/dashboard-for-grafana.json
     cert-manager:
       # https://gitlab.com/uneeq-oss/cert-manager-mixin/-/tree/9a8a0816dbac8a6074a4cc1677535798b4e7c9c4/dashboards
       cert-manager:
-        url: https://gitlab.com/uneeq-oss/cert-manager-mixin/-/raw/master/dashboards/cert-manager.json?ref_type=heads
-    otelcol:
-      data-flow:
-        gnetId: 18309
-        datasource:
-          - name: DS_PROMETHEUS
-            value: Prometheus
-        # revision: 2
-        # https://github.com/grafana/grafana/issues/10786
+        url: https://gitlab.com/uneeq-oss/cert-manager-mixin/-/raw/master/dashboards/cert-manager.json
     flux:
       # https://github.com/fluxcd/flux2-monitoring-example/tree/16e3ff288381f119db35a48cf3e99d9615b6517b/monitoring/configs/dashboards
       cluster:

@@ -1,5 +1,13 @@
 # Cilium Setup Documentation
 
+## NetworkPolicy Labels
+
+The following labels can be set on pods to allow certain traffic:
+
+- `k8s.mcathome.ch/allow-tracing: 'true'`: Allow sending traces from the pod to jaeger via grpc or http
+- `k8s.mcathome.ch/allow-kube-api: 'true'`: Allow kube-api access for the pod
+- `k8s.mcathome.ch/allow-traefik-ingress: 'true'` Allow traefik ingress controller to forward traefik to the pod
+
 ## MitM
 
 Network policies can be configured to break open tls connections for any kind of

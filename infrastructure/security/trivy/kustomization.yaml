@@ -4,5 +4,6 @@ kind: Kustomization
 namespace: infra-observability
 
 resources:
+  - namespace.yaml
   - sync.yaml
-  - netpol.yaml
+  - rbac.yaml

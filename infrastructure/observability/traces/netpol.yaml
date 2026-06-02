@@ -1,0 +1,43 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: allow-send-jaeger-traces
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s.mcathome.ch/allow-tracing: 'true'
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: infra-observability
+        k8s:app.kubernetes.io/name: jaeger
+    toPorts:
+    - ports:
+      - port: '4317'
+    - ports:
+      - port: '4318'
+        protocol: TCP
+      rules:
+        http: [{}]
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: allow-jaeger-receive
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: jaeger
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        k8s.mcathome.ch/allow-tracing: 'true'
+    toPorts:
+    - ports:
+      - port: '4317'
+    - ports:
+      - port: '4318'
+        protocol: TCP
+      rules:
+        http: [{}]
