@@ -12,6 +12,15 @@ dashboards:
   annotations:
     grafana_dashboard_folder: Cilium
 hubble:
+  ui:
+    podLabels:
+      k8s.mcathome.ch/allow-traefik-ingress: 'true'
+    ingress:
+      enabled: true
+      className: traefik
+      hosts:
+      - ${hubbleHostName}
+      tls: []
   metrics:
     enabled:
       - dns

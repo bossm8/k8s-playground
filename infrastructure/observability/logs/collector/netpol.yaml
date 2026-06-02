@@ -20,21 +20,6 @@ spec:
       rules:
         http: [{}]
 ---
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: geoip-cilium-mitm
-  namespace: infra-observability
-spec:
-  commonName: updates.maxmind.com
-  dnsNames:
-  - updates.maxmind.com
-  - mm-prod-geoip-databases.a2649acb697e2c09b632799562c076f2.r2.cloudflarestorage.com
-  secretName: geoip-cilium-mitm
-  issuerRef:
-    name: cilium-mitm-ca
-    kind: ClusterIssuer
----
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -55,8 +40,8 @@ spec:
         protocol: TCP
       terminatingTLS:
         secret:
-          name: geoip-cilium-mitm
-          namespace: infra-observability
+          name: cilium-mitm-cert
+          namespace: cert-manager
       originatingTLS:
         secret:
           name: ca-certificates

@@ -10,8 +10,8 @@ spec:
   egress:
   - toEndpoints:
     - matchLabels:
-        k8s:io.kubernetes.pod.namespace: infra-observability
         k8s:app.kubernetes.io/name: jaeger
+        k8s:io.kubernetes.pod.namespace: infra-observability
     toPorts:
     - ports:
       - port: '4317'
@@ -29,6 +29,7 @@ spec:
   endpointSelector:
     matchLabels:
       k8s:app.kubernetes.io/name: jaeger
+      k8s:io.kubernetes.pod.namespace: infra-observability
   ingress:
   - fromEndpoints:
     - matchLabels:

@@ -38,8 +38,9 @@ spec:
         allowPrivilegeEscalation: false
       ingress:
         enabled: true
+        ingressClassName: traefik
         hosts:
-        - jaeger.mcathome.lan
+        - ${otlpHostName}
         tls: []
 
     storage:

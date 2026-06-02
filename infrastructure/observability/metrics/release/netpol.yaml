@@ -15,23 +15,6 @@ spec:
     - matchLabels:
         k8s:io.kubernetes.pod.namespace: infra-observability
 ---
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: grafana-cilium-mitm
-  namespace: infra-observability
-spec:
-  commonName: grafana.com
-  dnsNames:
-  - grafana.com
-  - gitlab.com
-  - raw.githubusercontent.com
-  - storage.googleapis.com
-  secretName: grafana-cilium-mitm
-  issuerRef:
-    name: cilium-mitm-ca
-    kind: ClusterIssuer
----
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -53,8 +36,8 @@ spec:
         protocol: TCP
       terminatingTLS:
         secret:
-          name: grafana-cilium-mitm
-          namespace: infra-observability
+          name: cilium-mitm-cert
+          namespace: cert-manager
       originatingTLS:
         secret:
           name: ca-certificates

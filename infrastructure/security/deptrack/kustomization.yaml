@@ -1,0 +1,19 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - netpol.yaml
+  - sbom-sync.yaml
+  - secret.yaml
+  - sync.yaml
+  - otel.yaml
+
+transformers:
+  - |-
+    apiVersion: builtin
+    kind: NamespaceTransformer
+    metadata:
+      name: notImportantHere
+      namespace: infra-security
+    unsetOnly: true

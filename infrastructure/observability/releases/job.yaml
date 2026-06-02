@@ -42,10 +42,15 @@ spec:
             volumeMounts:
               - mountPath: /workspace
                 name: workspace
+              - mountPath: /etc/secrets
+                name: mitm-ca
+                readOnly: true
               - mountPath: /scripts
                 name: find-script
                 readOnly: true
             env:
+              - name: SSL_CERT_FILE
+                value: /etc/secrets/ca.crt
               - name: NOVA_VECTOR_JSON_ENDPOINT
                 value: http://vector.infra-observability:8090
             workingDir: /workspace
@@ -60,6 +65,12 @@ spec:
           volumes:
             - name: workspace
               emptyDir: {}
+            - name: mitm-ca
+              secret:
+                secretName: cilium-mitm-trust-bundle
+                items:
+                  - key: ca.crt
+                    path: ca.crt
             - name: find-script
               projected:
                 defaultMode: 0777

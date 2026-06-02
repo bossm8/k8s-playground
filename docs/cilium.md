@@ -1,14 +1,26 @@
 # Cilium Setup Documentation
 
-## NetworkPolicy Labels
+## TODOs
+
+- Use one single wildcard CA for internal MitM
+
+## NetworkPolicy Labels
 
 The following labels can be set on pods to allow certain traffic:
 
 - `k8s.mcathome.ch/allow-tracing: 'true'`: Allow sending traces from the pod to jaeger via grpc or http
-- `k8s.mcathome.ch/allow-kube-api: 'true'`: Allow kube-api access for the pod
-- `k8s.mcathome.ch/allow-traefik-ingress: 'true'` Allow traefik ingress controller to forward traefik to the pod
 
-## MitM
+    [install](../infrastructure/observability/traces/netpol.yaml)
+- `k8s.mcathome.ch/allow-kube-api: 'true'`: Allow kube-api access for the pod
+
+    [install](../infrastructure/networking/policies/global.yaml)
+- `k8s.mcathome.ch/allow-traefik-ingress: 'true'` Allow traefik ingress controller to forward traefik to the pod on all ports
+
+    [install](../infrastructure/controllers/ingress/base/netpol.yaml)
+
+    If only certain ports should be allowed, it's best to omit the annotation and create a custom netpol
+
+## MitM
 
 Network policies can be configured to break open tls connections for any kind of
 pod, if the pod can be configured to trust a custom ca. This is normally
@@ -21,17 +33,26 @@ for finer netpol configuration.
 To enable this we need multiple components:
 
 - [Cilium Installed with TLS visibility](https://docs.cilium.io/en/latest/security/tls-visibility/)
+
     [install](../infrastructure/networking/cni/base/values/flux.yml)
 - [Cert-Manager](https://cert-manager.io/docs)
-    [install](../infrastructure/controllers/certs/release/sync.yaml)
+
+    [install](../infrastructure/controllers/certs/release/cert-manager/sync.yaml)
 - [Trust-Manager](https://cert-manager.io/docs/trust/trust-manager/)
-    [install](../infrastructure/controllers/certs/release/sync.yaml)
-- [Trust Bundle for egress TLS initiation](https://cert-manager.io/docs/trust/trust-manager/#usage)
+
+    [install](../infrastructure/controllers/certs/release/trust-manager/sync.yaml)
+- [Trust Bundle for envoy to internet trust](https://cert-manager.io/docs/trust/trust-manager/#usage)
+
     [install](../infrastructure/controllers/certs/config/sync.yaml)
 - [Cilium CA Certificate](../infrastructure/controllers/certs/config/sync.yaml)
 - [ClusterIssuer using the Cilium CA Certificate](https://cert-manager.io/docs/configuration/selfsigned/#bootstrapping-ca-issuers)
+
     [install](../infrastructure/controllers/certs/config/sync.yaml)
-- Service Certificates issued by Cilium CA Certificate (see below)
+- Global wildcard cert for envoy TLS termination issued with Cilium CA certificate
+- [Trust Bundle for service to envoy TLS trust](https://cert-manager.io/docs/trust/trust-manager/#usage)
+
+    [install](../infrastructure/controllers/certs/config/sync.yaml)
+
 - CiliumNetworkPolicy (see below)
 
 Example Certificate and CNP for TLS visibility, assuming the CA ClusterIssuer
@@ -39,21 +60,7 @@ Example Certificate and CNP for TLS visibility, assuming the CA ClusterIssuer
 
 ```yaml
 ---
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: cilium-mitm
-  namespace: my-namespace
-spec:
-  commonName: foo.bar
-  dnsNames:
-  - foo.bar
-  - bar.foo
-  secretName: cilium-mitm
-  issuerRef:
-    name: cilium-mitm-ca
-    kind: ClusterIssuer
----
+# Globally installed, only once, for originating TLS trust (envoy <-> internet)
 apiVersion: trust.cert-manager.io/v1alpha1
 kind: Bundle
 metadata:
@@ -69,11 +76,44 @@ spec:
       matchLabels:
         kubernetes.io/metadata.name: cert-manager
 ---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cilium-mitm-cert
+  namespace: cert-manager
+spec:
+  commonName: '*'
+  secretName: cilium-mitm-cert
+  issuerRef:
+    name: cilium-mitm-ca
+    kind: ClusterIssuer
+---
+# Syncs the MitM ca truststore to all namespaces for client trust (service <-> envoy)
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: cilium-mitm-trust-bundle
+spec:
+  sources:
+  - useDefaultCAs: false
+  - secret:
+      name: cilium-mitm-cert
+      key: ca.crt
+  target:
+    secret:
+      key: ca.crt
+    additionalFormats:
+      pkcs12:
+        key: cacerts
+---
+# Mount the cilium-mitm-trust-bundle to a location in any pod and point
+# client libraries to use the ca.crt (pem) or cacerts (pkcs12) as trust
+---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: allow-geoip-update
-  namespace: infra-observability
+  name: mitm
+  namespace: my-namespace
 spec:
   endpointSelector:
     matchLabels:
@@ -87,11 +127,13 @@ spec:
       - port: '443'
         protocol: TCP
       terminatingTLS:
+        # Use the wildcard cert created above
+        # Will be synced by cilium to cilium-secrets if not yet there
         secret:
-          name: cilium-mitm
-          namespace: my-namespace
+          name: cilium-mitm-cert
+          namespace: cert-manager
       originatingTLS:
-        # Created by trust-manager with only useDefaultCAs: true
+        # Created by trust-manager with only useDefaultCAs: true (see above)
         secret:
           name: ca-certificates
           namespace: cert-manager

@@ -1,0 +1,45 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-dependency-track-egress
+  namespace: infra-security
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: dependency-track-api-server
+  egress:
+  - toFQDNs:
+    - matchName: crates.io
+    - matchName: epss.cyentia.com
+    - matchName: epss.empiricalsecurity.com
+    - matchName: github.com
+    - matchName: api.github.com
+    - matchName: nvd.nist.gov
+    - matchName: proxy.golang.org
+    - matchName: pypi.org
+    - matchName: registry.npmjs.org
+    - matchName: repository.jboss.org
+    - matchName: packages.atlassian.com
+    - matchName: repo.clojars.org
+    - matchName: maven.google.com
+    - matchName: osv-vulnerabilities.storage.googleapis.com
+    - matchName: dl.google.com
+    - matchPattern: '*.nvd.nist.gov'
+    - matchPattern: 'repo*.maven.org'
+    - matchPattern: 'europe-*-docker.pkg.dev'
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP
+      terminatingTLS:
+        secret:
+          name: cilium-mitm-cert
+          namespace: cert-manager
+      originatingTLS:
+        secret:
+          name: ca-certificates
+          namespace: cert-manager
+      rules:
+        http:
+        - method: GET

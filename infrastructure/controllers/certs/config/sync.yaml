@@ -33,6 +33,18 @@ spec:
   ca:
     secretName: mitm-ca
 ---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cilium-mitm-cert
+  namespace: cert-manager
+spec:
+  commonName: '*'
+  issuerRef:
+    name: cilium-mitm-ca
+    kind: ClusterIssuer
+  secretName: cilium-mitm-cert
+---
 # Trust bundle to use for egress TLS initiation for TLS inspection See
 # docs/cilium.md.
 # Created in cert-manager ns only. Cilium will sync this to cilium-secrets when
@@ -52,3 +64,28 @@ spec:
     namespaceSelector:
       matchLabels:
         kubernetes.io/metadata.name: cert-manager
+---
+# Trust bundle to use for TLS inspection on cilium for egress traffic from
+# services. See docs/cilium.md.
+# Created in cert-manager ns only.
+# trust-manager syncs this to all namespaces as secret named
+# cilium-mitm-trust-bundle, so use in pod mount for trust.
+# Use the wildcard cert in all namespaces networkpolicies like this:
+# spec.egress.toPorts.ports.terminatingTLS.secret.namespace=cert-manager and
+# spec.egress.toPorts.ports.terminatingTLS.secret.name=cilium-mitm-cert
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: cilium-mitm-trust-bundle
+spec:
+  sources:
+  - useDefaultCAs: false
+  - secret:
+      name: cilium-mitm-cert
+      key: ca.crt
+  target:
+    secret:
+      key: ca.crt
+    additionalFormats:
+      pkcs12:
+        key: cacerts

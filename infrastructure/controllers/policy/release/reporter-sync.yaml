@@ -2,7 +2,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: kyverno-policy-reporter
+  name: policy-reporter
   namespace: kyverno
 spec:
   interval: 1h30m
@@ -11,7 +11,7 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: kyverno-policy-reporter
+  name: policy-reporter
   namespace: kyverno
 spec:
   interval: 10m0s
@@ -23,7 +23,7 @@ spec:
       version: 3.7.4
       sourceRef:
         kind: HelmRepository
-        name: kyverno-policy-reporter
+        name: policy-reporter
         namespace: kyverno
       interval: 10m0s
   values:
@@ -46,8 +46,18 @@ spec:
 
     ui:
       enabled: true
+      ingress:
+        enabled: true
+        className: traefik
+        hosts:
+        - host: ${policyReporterHostName}
+          paths:
+          - path: /
+            pathType: ImplementationSpecific
+        tls: []
       podLabels:
         k8s.mcathome.ch/allow-kube-api: 'true'
+        k8s.mcathome.ch/allow-traefik-ingress: 'true'
       logging:
         encoding: json
 

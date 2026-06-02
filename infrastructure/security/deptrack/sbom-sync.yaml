@@ -1,0 +1,40 @@
+# https://github.com/takumakume/sbomreport-to-dependencytrack
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: sbom-to-deptrack
+  namespace: infra-security
+spec:
+  interval: 1h30m
+  url: https://takumakume.github.io/sbomreport-to-dependencytrack/charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: sbom-to-deptrack
+  namespace: infra-security
+spec:
+  interval: 15m
+  timeout: 5m
+  chart:
+    spec:
+      chart: sbomreport-to-dependencytrack
+      sourceRef:
+        kind: HelmRepository
+        name: sbom-to-deptrack
+      interval: 15m
+  values:
+    nameOverride: sbom-to-deptrack
+    config:
+      apiKeySecretName: deptrack-api-key
+      baseUrl: http://dependency-track-api-server.infra-security:8080
+    securityContext:
+      runAsNonRoot: true
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      runAsUser: 10008
+      runAsGroup: 10008
+      capabilities:
+        drop:
+        - ALL

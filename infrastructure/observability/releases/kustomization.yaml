@@ -6,6 +6,7 @@ namespace: infra-observability
 resources:
   - job.yaml
   - rbac.yaml
+  - netpol.yaml
 
 configMapGenerator:
   - name: find-script
@@ -17,7 +18,8 @@ generatorOptions:
     kustomize.toolkit.fluxcd.io/substitute: disabled
 
 labels:
-  - includeSelectors: false
+  - includeSelectors: true
     pairs:
+      app.kubernetes.io/name: nova
       k8s.mcathome.ch/component: release-watcher
       k8s.mcathome.ch/application: nova

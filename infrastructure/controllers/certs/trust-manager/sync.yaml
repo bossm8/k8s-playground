@@ -28,3 +28,4 @@ spec:
       enabled: true
       authorizedSecrets:
       - ca-certificates
+      - cilium-mitm-trust-bundle

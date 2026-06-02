@@ -36,6 +36,9 @@ spec:
       runAsUser: 10002
     podLabels:
       k8s.mcathome.ch/allow-kube-api: 'true'
+    startupapicheck:
+      podLabels:
+        k8s.mcathome.ch/allow-kube-api: 'true'
     cainjector:
       podLabels:
         k8s.mcathome.ch/allow-kube-api: 'true'

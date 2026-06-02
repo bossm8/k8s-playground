@@ -5,4 +5,5 @@ namespace: infra-observability
 
 resources:
   - sync.yaml
+  - otel-sync.yaml
   - netpol.yaml

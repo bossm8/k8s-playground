@@ -1,0 +1,71 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-same-namespace
+  namespace: infra-security
+spec:
+  endpointSelector: {}
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: infra-security
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: infra-security
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-trivy-egress
+  namespace: infra-security
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/managed-by: trivy-operator
+  egress:
+  - toFQDNs:
+    - matchName: cdn.registry.gitlab-static.net
+    - matchName: check.trivy.dev
+    - matchName: gcr.io
+    - matchName: ghcr.io
+    - matchName: gitlab.com
+    - matchName: pkg-containers.githubusercontent.com
+    - matchName: production.cloudfront.docker.com
+    - matchName: quay.io
+    - matchName: reg.kyverno.io
+    - matchName: registry.k8s.io
+    - matchPattern: '*.docker.io'
+    - matchPattern: '*.ghcr.io'
+    - matchPattern: '*.gcr.io'
+    - matchPattern: '*.gitlab.com'
+    - matchPattern: '*.github.com'
+    - matchPattern: '*.quay.io'
+    - matchPattern: 'prod-registry-k8s-io-eu-*-1.s3.dualstack.eu-south-1.amazonaws.com'
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-trivy-operator-egress
+  namespace: infra-security
+spec:
+  endpointSelector:
+    matchExpressions:
+    - key: k8s:app.kubernetes.io/name
+      operator: In
+      values:
+      - trivy-operator
+      - trivy-server
+  egress:
+  - toFQDNs:
+    - matchName: mirror.gcr.io
+    - matchName: discord.com
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP

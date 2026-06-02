@@ -6,7 +6,7 @@ grafana:
       value: /etc/secrets/ca.crt
   extraSecretMounts:
   - name: mitm-ca
-    secretName: grafana-cilium-mitm
+    secretName: cilium-mitm-trust-bundle
     mountPath: /etc/secrets
     readOnly: true
     items:
