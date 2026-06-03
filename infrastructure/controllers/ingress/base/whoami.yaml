@@ -87,14 +87,4 @@ spec:
             name: whoami
             port:
               number: 80
-  - host: ${whoamiExtHostName}
-    http:
-      paths:
-      - pathType: ImplementationSpecific
-        path: "/"
-        backend:
-          service:
-            name: whoami
-            port:
-              number: 80
   tls: []
