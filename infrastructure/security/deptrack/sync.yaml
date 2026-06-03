@@ -51,7 +51,7 @@ spec:
         namespace: infra-security
     frontend:
       # annotations:
-      #   instrumentation.opentelemetry.io/inject-nginx: 'true'
+      #   instrumentation.opentelemetry.io/inject-nginx: 'true'
       extraPodLabels:
         k8s.mcathome.ch/allow-traefik-ingress: 'true'
         k8s.mcathome.ch/allow-tracing: 'true'

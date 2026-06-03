@@ -1,4 +1,25 @@
 ---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cilium-mitm-cert-nova
+  namespace: infra-observability
+spec:
+  commonName: nova.k8s.mcathome.ch
+  dnsNames:
+  - artifacthub.io
+  - ghcr.io
+  - mirror.gcr.io
+  - quay.io
+  - reg.kyverno.io
+  - registry.k8s.io
+  - registry.gitlab.com
+  - '*.docker.io'
+  issuerRef:
+    name: cilium-mitm-ca
+    kind: ClusterIssuer
+  secretName: cilium-mitm-cert-nova
+---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -24,8 +45,8 @@ spec:
         protocol: TCP
       terminatingTLS:
         secret:
-          name: cilium-mitm-cert
-          namespace: cert-manager
+          name: cilium-mitm-cert-nova
+          namespace: infra-observability
       originatingTLS:
         secret:
           name: ca-certificates

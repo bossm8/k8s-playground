@@ -48,4 +48,4 @@ spec:
         spec:
           redirectRegex:
             regex: ^(https?://[^/]*)(/dashboard)?(/)?$
-            replacement: $${1}/dashboard/
+            replacement: https://${traefikPublicHostName}:8443/dashboard/
