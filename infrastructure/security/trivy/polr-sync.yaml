@@ -34,19 +34,28 @@ spec:
     adapters:
       vulnerabilityReports:
         enabled: true
+        timeout: 5
       configAuditReports:
         enabled: true
+        timeout: 5
       cisKubeBenchReports:
         enabled: false
+        timeout: 5
       complianceReports:
         enabled: true
+        timeout: 5
       rbacAssessmentReports:
         enabled: true
+        timeout: 5
       exposedSecretReports:
         enabled: true
+        timeout: 5
       infraAssessmentReports:
         enabled: true
+        timeout: 5
       clusterInfraAssessmentReports:
         enabled: true
+        timeout: 5
       clusterVulnerabilityReports:
         enabled: true
+        timeout: 5
