@@ -81,7 +81,7 @@ spec:
         - websecure
         middlewares:
         - name: traefik-dashboard-redirect
-          namespace: ingress-traefik
+          namespace: traefik
 
     ports:
       traefik:
