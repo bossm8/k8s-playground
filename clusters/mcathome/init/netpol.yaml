@@ -10,69 +10,51 @@ spec:
       k8s:app.kubernetes.io/part-of: flux
   egress:
   - toFQDNs:
-      - matchName: github.com
+    - matchName: github.com
     toPorts:
     - ports:
       - port: '22'
         protocol: TCP
       - port: '443'
         protocol: TCP
+  - toFQDNs:
+    - matchName: quay.io
+    - matchName: ghcr.io
+    - matchPattern: '*.github.io'
+    - matchPattern: '*.githubusercontent.com'
+    - matchPattern: '*.quay.io'
+    toPorts:
+    - ports:
+      - port: '443'
+        protocotl: TCP
+  - toEntities:
+    - kube-apiserver
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: kube-system
+        k8s:k8s-app: kube-dns
+    toPorts:
+    - ports:
+      - port: '53'
+        protocol: UDP
+      - port: '53'
+        protocol: TCP
+      rules:
+        dns:
+        - matchPattern: '*'
 ---
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
 metadata:
-  labels:
-    app.kubernetes.io/instance: flux-system
-    app.kubernetes.io/part-of: flux
-    app.kubernetes.io/version: v2.7.5
-  name: allow-egress
-  namespace: flux-system
+  name: allow-same-namespace
+  namespace: infra-flux-system
 spec:
+  endpointSelector: {}
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: flux-system
   egress:
-  - {}
-  ingress:
-  - from:
-    - podSelector: {}
-  podSelector: {}
-  policyTypes:
-  - Ingress
-  - Egress
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  labels:
-    app.kubernetes.io/instance: flux-system
-    app.kubernetes.io/part-of: flux
-    app.kubernetes.io/version: v2.7.5
-  name: allow-scraping
-  namespace: flux-system
-spec:
-  ingress:
-  - from:
-    - namespaceSelector: {}
-    ports:
-    - port: 8080
-      protocol: TCP
-  podSelector: {}
-  policyTypes:
-  - Ingress
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  labels:
-    app.kubernetes.io/instance: flux-system
-    app.kubernetes.io/part-of: flux
-    app.kubernetes.io/version: v2.7.5
-  name: allow-webhooks
-  namespace: flux-system
-spec:
-  ingress:
-  - from:
-    - namespaceSelector: {}
-  podSelector:
-    matchLabels:
-      app: notification-controller
-  policyTypes:
-  - Ingress
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: flux-system

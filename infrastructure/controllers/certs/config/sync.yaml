@@ -39,7 +39,7 @@ metadata:
   name: cilium-mitm-cert
   namespace: cert-manager
 spec:
-  commonName: '*'
+  commonName: 'mitm.k8s.mcathome.ch'
   issuerRef:
     name: cilium-mitm-ca
     kind: ClusterIssuer

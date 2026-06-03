@@ -1,4 +1,35 @@
 ---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cilium-mitm-cert-deptrack
+  namespace: infra-security
+spec:
+  commonName: deptrack.k8s.mcathome.ch
+  dnsNames:
+  - crates.io
+  - epss.cyentia.com
+  - epss.empiricalsecurity.com
+  - github.com
+  - api.github.com
+  - nvd.nist.gov
+  - proxy.golang.org
+  - pypi.org
+  - registry.npmjs.org
+  - repository.jboss.org
+  - packages.atlassian.com
+  - repo.clojars.org
+  - maven.google.com
+  - osv-vulnerabilities.storage.googleapis.com
+  - dl.google.com
+  - '*.nvd.nist.gov'
+  - '*.maven.org'
+  - '*.pkg.dev'
+  issuerRef:
+    name: cilium-mitm-ca
+    kind: ClusterIssuer
+  secretName: cilium-mitm-cert-deptrack
+---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -34,8 +65,8 @@ spec:
         protocol: TCP
       terminatingTLS:
         secret:
-          name: cilium-mitm-cert
-          namespace: cert-manager
+          name: cilium-mitm-cert-deptrack
+          namespace: infra-security
       originatingTLS:
         secret:
           name: ca-certificates

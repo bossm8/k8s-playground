@@ -20,6 +20,21 @@ spec:
       rules:
         http: [{}]
 ---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cilium-mitm-cert-vector
+  namespace: infra-observability
+spec:
+  commonName: vector.k8s.mcathome.ch
+  dnsNames:
+  - updates.maxmind.com
+  - mm-prod-geoip-databases.a2649acb697e2c09b632799562c076f2.r2.cloudflarestorage.com
+  issuerRef:
+    name: cilium-mitm-ca
+    kind: ClusterIssuer
+  secretName: cilium-mitm-cert-vector
+---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
@@ -40,8 +55,8 @@ spec:
         protocol: TCP
       terminatingTLS:
         secret:
-          name: cilium-mitm-cert
-          namespace: cert-manager
+          name: cilium-mitm-cert-vector
+          namespace: infra-observability
       originatingTLS:
         secret:
           name: ca-certificates

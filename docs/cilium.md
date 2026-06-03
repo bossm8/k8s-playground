@@ -1,9 +1,5 @@
 # Cilium Setup Documentation
 
-## TODOs
-
-- Use one single wildcard CA for internal MitM
-
 ## NetworkPolicy Labels
 
 The following labels can be set on pods to allow certain traffic:
@@ -14,18 +10,16 @@ The following labels can be set on pods to allow certain traffic:
 - `k8s.mcathome.ch/allow-kube-api: 'true'`: Allow kube-api access for the pod
 
     [install](../infrastructure/networking/policies/global.yaml)
-- `k8s.mcathome.ch/allow-traefik-ingress: 'true'` Allow traefik ingress controller to forward traefik to the pod on all ports
+- `k8s.mcathome.ch/allow-traefik-ingress: 'true'` Allow traefik ingress controller to forward traefik to the pod (all ports)
 
     [install](../infrastructure/controllers/ingress/base/netpol.yaml)
-
-    If only certain ports should be allowed, it's best to omit the annotation and create a custom netpol
 
 ## MitM
 
 Network policies can be configured to break open tls connections for any kind of
 pod, if the pod can be configured to trust a custom ca. This is normally
 possible with environment variables such as `SSL_CERT_FILE` (go) or
-`CURL_CA_BUNDLE` for example.
+`CURL_CA_BUNDLE` for example or by overriding the default trust store in containers.
 
 Such a mitm setup allows to inspect all http content in the packets and allows
 for finer netpol configuration.
@@ -53,7 +47,7 @@ To enable this we need multiple components:
 
     [install](../infrastructure/controllers/certs/config/sync.yaml)
 
-- CiliumNetworkPolicy (see below)
+- CiliumNetworkPolicy (see below for an example)
 
 Example Certificate and CNP for TLS visibility, assuming the CA ClusterIssuer
 `cilium-mitm-ca` exists:
@@ -82,7 +76,9 @@ metadata:
   name: cilium-mitm-cert
   namespace: cert-manager
 spec:
-  commonName: '*'
+  commonName: mitm.k8s.mcathome.ch
+  dnsNames:
+  - <All required (wildcard) dns names (when used globally)>
   secretName: cilium-mitm-cert
   issuerRef:
     name: cilium-mitm-ca
@@ -140,3 +136,6 @@ spec:
       rules:
         http: [{}]
 ```
+
+Alternatively (better): use one cert per netpol for the service domains and
+just use the global trust bundle for trust in pods.

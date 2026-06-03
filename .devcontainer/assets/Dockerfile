@@ -82,6 +82,7 @@ RUN apt-get update \
         locales \
         python3 \
         rsync \
+        vim \
     && locale-gen en_US.UTF-8
 
 COPY --from=kubectl /usr/local/bin/kubectl /usr/local/bin/
