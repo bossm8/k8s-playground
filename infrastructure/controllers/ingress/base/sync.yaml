@@ -1,0 +1,161 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  type: oci
+  interval: 1h30m
+  url: oci://ghcr.io/traefik/helm/
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  interval: 10m0s
+  driftDetection:
+    mode: enabled
+  chart:
+    spec:
+      chart: traefik
+      version: 40.2.0
+      sourceRef:
+        kind: HelmRepository
+        name: traefik
+        namespace: traefik
+      interval: 10m0s
+  values:
+
+    deployment:
+      # Mainly because of the kind local development, for single node a
+      # Deployment would suffice
+      kind: DaemonSet
+      podLabels:
+        k8s.mcathome.ch/allow-kube-api: 'true'
+        k8s.mcathome.ch/allow-tracing: 'true'
+
+    ingressClass:
+      enabled: true
+      isDefaultClass: false
+
+    gateway:
+      enabled: false
+
+    metrics:
+      addInternals: true
+      prometheus:
+        service:
+          enabled: true
+        serviceMonitor:
+          enabled: true
+
+    tracing:
+      addInternals: false
+      serviceName: traefik-ingress
+      otlp:
+        enabled: true
+        grpc:
+          enabled: true
+          endpoint: jaeger.infra-observability:4317
+          insecure: true
+
+    logs:
+      general:
+        format: json
+      access:
+        enabled: true
+        format: json
+
+    global:
+      checkNewVersion: false
+      sendAnonymousUsage: false
+
+    ingressRoute:
+      dashboard:
+        enabled: true
+        matchRule: Host(`${traefikHostName}`)
+        entryPoints:
+        - websecure
+        middlewares:
+        - name: traefik-dashboard-redirect
+          namespace: ingress-traefik
+
+    ports:
+      traefik:
+        port: 8000
+      web:
+        port: 8080
+        nodePort: 30080
+        exposedPort: 8080
+        http:
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: https
+              permanent: true
+        proxyProtocol:
+          trustedIPs:
+            - ${proxyIP}
+            - 10.244.0.0/16
+        forwardedHeaders:
+          trustedIPs:
+            - ${proxyIP}
+            - 10.244.0.0/16
+      websecure:
+        port: 8443
+        nodePort: 30443
+        exposedPort: 8443
+        proxyProtocol:
+          trustedIPs:
+            - ${proxyIP}
+            - 10.244.0.0/16
+        forwardedHeaders:
+          trustedIPs:
+            - ${proxyIP}
+            - 10.244.0.0/16
+
+    # https://kubernetes.io/docs/tutorials/services/source-ip/#source-ip-for-services-with-type-nodeport
+    service:
+      spec:
+        type: NodePort
+        externalTrafficPolicy: Local
+
+    tlsOptions:
+      default:
+        minVersion: VersionTLS12
+        cipherSuites:
+          - TLS_CHACHA20_POLY1305_SHA256
+          - TLS_AES_128_GCM_SHA256
+          - TLS_AES_256_GCM_SHA384
+          - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+          - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+          - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+
+    tolerations:
+    - effect: NoSchedule
+      operator: Exists
+
+    extraObjects:
+    - |
+        apiVersion: traefik.io/v1alpha1
+        kind: Middleware
+        metadata:
+          name: int-acl
+          namespace: traefik
+        spec:
+          ipAllowList:
+            sourceRange:
+              - ${proxyIP}/24
+    - |
+        apiVersion: traefik.io/v1alpha1
+        kind: Middleware
+        metadata:
+          name: traefik-dashboard-redirect
+          namespace: traefik
+        spec:
+          redirectRegex:
+            regex: ^(https?://[^/]*)(/dashboard)?(/)?$
+            replacement: $${1}/dashboard/

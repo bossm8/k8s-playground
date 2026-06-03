@@ -9,5 +9,40 @@
       "/(infrastructure|(?:^|/)gotk-components|applications)/.+\\.yaml$/"
     ]
   },
-  "minimumReleaseAge": "14 days"
+  "minimumReleaseAge": "14 days",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/infrastructure/controllers/ingress/crowdsec\\.yaml/"],
+      "matchStrings": [
+        "version: (?<currentValue>v[\\d.]+)"
+      ],
+      "depNameTemplate": "maxlerebourg/crowdsec-bouncer-traefik-plugin",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^config/versions\\.yaml$/"],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[^\\s]+) depName=(?<depName>[^\\s]+)\\n\\w+: (?<currentValue>v[\\d.]+)"
+      ],
+      "versioningTemplate": "semver"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchDatasources": ["github-releases"],
+      "matchPackageNames": ["siderolabs/talos"],
+      "prBodyNotes": [
+        "## Upgrading Talos\n\nFollow the official documentation:\n- [Upgrading Talos](https://docs.siderolabs.com/talos/v1.13/configure-your-talos-cluster/lifecycle-management/upgrading-talos)\n- [Talos Image Factory](https://factory.talos.dev/) — select the new version and your extensions to obtain the image hash\n\n```bash\ntalosctl upgrade --image factory.talos.dev/metal-installer/<hash>:{{newVersion}}\n```\n\nAfter the upgrade, update `talosVersion` in `config/versions.yaml` to `{{newVersion}}`."
+      ]
+    },
+    {
+      "matchDatasources": ["github-releases"],
+      "matchPackageNames": ["kubernetes/kubernetes"],
+      "prBodyNotes": [
+        "## Upgrading Kubernetes\n\nCheck official versions on [kubernetes.io/releases](https://kubernetes.io/releases/).\nUpgrade to the latest patch of each minor release **sequentially** — skipping minor versions is unsupported.\n\n```bash\ntalosctl upgrade-k8s --to {{newVersion}}\n```\n\nAfter the upgrade, update `kubernetesVersion` in `config/versions.yaml` to `{{newVersion}}`."
+      ]
+    }
+  ]
 }

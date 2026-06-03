@@ -1,0 +1,68 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: geoip-download
+spec:
+  schedule: "0 0 * * *"
+  concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      activeDeadlineSeconds: 300
+      template:
+        metadata:
+          labels:
+            k8s.mcathome.ch/cleanup: 'true'
+            k8s.mcathome.ch/geoip: 'true'
+        spec:
+          restartPolicy: OnFailure
+          volumes:
+            - name: geoip-mmdb
+              persistentVolumeClaim:
+                claimName: geoip-database
+                readOnly: false
+            - name: mitm-ca
+              secret:
+                secretName: geoip-cilium-mitm
+                items:
+                - key: ca.crt
+                  path: ca.crt
+            - name: geoip-tmp
+              emptyDir: {}
+          containers:
+            - name: geoip-download-initial
+              image: maxmindinc/geoipupdate
+              imagePullPolicy: IfNotPresent
+              securityContext:
+                readOnlyRootFilesystem: true
+                privileged: false
+                allowPrivilegeEscalation: false
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                  - ALL
+              envFrom:
+                - secretRef:
+                    name: geoip-account-config
+              env:
+                - name: SSL_CERT_FILE
+                  value: /etc/secrets/ca.crt
+                - name: GEOIPUPDATE_EDITION_IDS
+                  value: 'GeoLite2-City GeoLite2-ASN'
+                # Run once and exit
+                - name: GEOIPUPDATE_FREQUENCY
+                  value: '0'
+                - name: GEOIPUPDATE_VERBOSE
+                  value: '1'
+              volumeMounts:
+                - name: geoip-mmdb
+                  mountPath: /usr/share/GeoIP
+                - name: mitm-ca
+                  mountPath: /etc/secrets
+                  readOnly: true
+                - name: geoip-tmp
+                  mountPath: /tmp

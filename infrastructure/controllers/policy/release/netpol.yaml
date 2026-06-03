@@ -1,0 +1,54 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-same-namespace
+  namespace: infra-observability
+spec:
+  endpointSelector: {}
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: kyverno
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: kyverno
+---
+# Can't use tls termination; template does not allow initcontainer config
+# https://artifacthub.io/packages/helm/policy-reporter/policy-reporter?modal=template&template=plugins/trivy/deployment.yaml
+# TIP: use helmrelease.spec.postRenderers
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-policy-reporter-trivy-db-download
+  namespace: kyverno
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: policy-reporter-trivy-plugin
+  egress:
+  - toFQDNs:
+    - matchName: mirror.gcr.io
+    - matchName: api.github.com
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-policy-reporter-discord
+  namespace: kyverno
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: policy-reporter
+  egress:
+  - toFQDNs:
+    - matchName: discord.com
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP

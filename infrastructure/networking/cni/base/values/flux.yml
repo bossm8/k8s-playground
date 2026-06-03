@@ -1,0 +1,65 @@
+# Defaults are for single node Talos cluster
+k8sServiceHost: ${ciliumK8sServiceHost:-localhost}
+k8sServicePort: ${ciliumK8sServicePort:-7445}
+prometheus:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+serviceMonitor:
+  enabled: true
+dashboards:
+  enabled: true
+  annotations:
+    grafana_dashboard_folder: Cilium
+hubble:
+  ui:
+    podLabels:
+      k8s.mcathome.ch/allow-traefik-ingress: 'true'
+    ingress:
+      enabled: true
+      className: traefik
+      hosts:
+      - ${hubbleHostName}
+      tls: []
+  metrics:
+    enabled:
+      - dns
+      - drop
+      - flow
+      - httpV2:examplars=true,labelsContext=source_ip,source_namespace,source_workload,destination_ip,destination_namespace,destination_workload,traffic_direction
+      - icmp
+      - port-distribution
+      - tcp
+    enableOpenMetrics: true
+    serviceMonitor:
+      enabled: true
+    dashboards:
+      enabled: true
+      annotations:
+        grafana_dashboard_folder: Cilium
+  relay:
+    prometheus:
+      enabled: true
+      serviceMontiro:
+        enabled: true
+envoy:
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+operator:
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  dashboards:
+    enabled: true
+    annotations:
+      grafana_dashboard_folder: Cilium
+# https://docs.cilium.io/en/latest/security/tls-visibility
+tls:
+  readSecretsOnlyFromSecretsNamespace: true
+  secretsNamespace:
+    name: cilium-secrets
+  secretSync:
+    enabled: true

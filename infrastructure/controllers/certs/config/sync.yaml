@@ -1,0 +1,91 @@
+# https://cert-manager.io/docs/configuration/selfsigned/#bootstrapping-ca-issuers
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: self-signed
+  namespace: cert-manager
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: mitm-ca
+  namespace: cert-manager
+spec:
+  isCA: true
+  commonName: mitm.k8s.mcathome.ch
+  secretName: mitm-ca
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: self-signed
+    kind: Issuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: cilium-mitm-ca
+spec:
+  ca:
+    secretName: mitm-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cilium-mitm-cert
+  namespace: cert-manager
+spec:
+  commonName: 'mitm.k8s.mcathome.ch'
+  issuerRef:
+    name: cilium-mitm-ca
+    kind: ClusterIssuer
+  secretName: cilium-mitm-cert
+---
+# Trust bundle to use for egress TLS initiation for TLS inspection See
+# docs/cilium.md.
+# Created in cert-manager ns only. Cilium will sync this to cilium-secrets when
+# spec.egress.toPorts.ports.originatingTLS.secret.namespace=cert-manager and
+# spec.egress.toPorts.ports.originatingTLS.secret.name=ca-certificates
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: ca-certificates
+  namespace: cert-manager
+spec:
+  sources:
+  - useDefaultCAs: true
+  target:
+    secret:
+      key: ca.crt
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: cert-manager
+---
+# Trust bundle to use for TLS inspection on cilium for egress traffic from
+# services. See docs/cilium.md.
+# Created in cert-manager ns only.
+# trust-manager syncs this to all namespaces as secret named
+# cilium-mitm-trust-bundle, so use in pod mount for trust.
+# Use the wildcard cert in all namespaces networkpolicies like this:
+# spec.egress.toPorts.ports.terminatingTLS.secret.namespace=cert-manager and
+# spec.egress.toPorts.ports.terminatingTLS.secret.name=cilium-mitm-cert
+apiVersion: trust.cert-manager.io/v1alpha1
+kind: Bundle
+metadata:
+  name: cilium-mitm-trust-bundle
+spec:
+  sources:
+  - useDefaultCAs: false
+  - secret:
+      name: cilium-mitm-cert
+      key: ca.crt
+  target:
+    secret:
+      key: ca.crt
+    additionalFormats:
+      pkcs12:
+        key: cacerts

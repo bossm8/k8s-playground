@@ -1,0 +1,62 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: dependency-track
+  namespace: infra-security
+spec:
+  interval: 1h30m
+  url: https://dependencytrack.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: dependency-track
+  namespace: infra-security
+spec:
+  interval: 15m
+  timeout: 5m
+  driftDetection:
+    mode: enabled
+  chart:
+    spec:
+      chart: dependency-track
+      version: 1.0.0
+      sourceRef:
+        kind: HelmRepository
+        name: dependency-track
+        namespace: infra-security
+      interval: 15m
+  values:
+    apiServer:
+      annotations:
+        instrumentation.opentelemetry.io/inject-java: 'true'
+      extraPodLabels:
+        k8s.mcathome.ch/allow-traefik-ingress: 'true'
+        k8s.mcathome.ch/allow-tracing: 'true'
+      persistentVolume:
+        enabled: true
+        size: 5Gi
+      additionalVolumes:
+      - name: mitm-ca
+        secret:
+          secretName: cilium-mitm-trust-bundle
+      additionalVolumeMounts:
+      # https://docs.dependencytrack.org/getting-started/internal-ca/
+      - name: mitm-ca
+        mountPath: /opt/java/openjdk/lib/security
+        readOnly: true
+      serviceMonitor:
+        enabled: true
+        namespace: infra-security
+    frontend:
+      annotations:
+        instrumentation.opentelemetry.io/inject-nginx: 'true'
+      extraPodLabels:
+        k8s.mcathome.ch/allow-traefik-ingress: 'true'
+        k8s.mcathome.ch/allow-tracing: 'true'
+    ingress:
+      enabled: true
+      hostname: ${deptrackHostName}
+      ingressClassName: traefik
+      tls: []

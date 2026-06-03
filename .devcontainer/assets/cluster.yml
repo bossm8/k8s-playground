@@ -1,9 +1,48 @@
+---
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
-nodes:
-  - role: control-plane
-  - role: worker
-  - role: worker
 networking:
+  ipFamily: ipv4
   disableDefaultCNI: true
   kubeProxyMode: none
+  podSubnet: 10.10.0.0/16
+  serviceSubnet: 10.96.0.0/16
+containerdConfigPatches:
+- |
+    [plugins."io.containerd.cri.v1.images".registry]
+      config_path = "/etc/containerd/certs.d"
+nodes:
+- role: control-plane
+  extraPortMappings:
+  # Traefik NodePorts
+  - containerPort: 30080
+    hostPort: 80
+    listenAddress: 127.0.0.1
+  - containerPort: 30443
+    hostPort: 443
+    listenAddress: 127.0.0.1
+  extraMounts:
+  - hostPath: .devcontainer/assets/admission-config.yaml
+    containerPath: /etc/kubernetes/admission/admission-config.yaml
+    readOnly: true
+  - hostPath: .devcontainer/assets/registry-mirrors
+    containerPath: /etc/containerd/certs.d
+    readOnly: true
+  kubeadmConfigPatches:
+  # AdmissionController
+  - |
+      kind: ClusterConfiguration
+      apiServer:
+        extraArgs:
+          admission-control-config-file: /etc/kubernetes/admission/admission-config.yaml
+          extraVolumes:
+        extraVolumes:
+          - name: k8s-admission
+            hostPath: /etc/kubernetes/admission
+            mountPath: /etc/kubernetes/admission
+            readonly: true
+- role: worker
+  extraMounts:
+  - hostPath: .devcontainer/assets/registry-mirrors
+    containerPath: /etc/containerd/certs.d
+    readOnly: true

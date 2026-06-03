@@ -1,0 +1,20 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: traefik
+
+resources:
+  - ../base
+
+patchesJson6902:
+  - target:
+      group: cilium.io
+      version: v2
+      kind: CiliumNetworkPolicy
+      name: allow-traefik-egress-and-ingress
+    patch: |
+      - op: add
+        path: /spec/ingress/-
+        value:
+          fromEntities:
+          - world

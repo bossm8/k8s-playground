@@ -1,10 +1,11 @@
-ARG K8S_VERSION=1.35.4
-ARG FLUX_VERSION=2.7.5
+ARG K8S_VERSION=1.36.1
+ARG FLUX_VERSION=2.8.8
 ARG BAO_VERSION=2.5.2
 ARG KIND_VERSION=0.31.0
-ARG DOCKER_VERSION=20.10
-ARG HELM_VERSION=3.20
+ARG DOCKER_VERSION=29.5
+ARG HELM_VERSION=4.2
 ARG CILIUM_CLI_VERSION=0.19.0
+ARG HUBBLE_CLI_VERSION=1.19.3
 ARG CERTMANAGER_CLI_VERSION=1.12.17
 
 # Hack stages since 'COPY --from' cannot expand env
@@ -19,30 +20,41 @@ FROM docker:${DOCKER_VERSION} AS docker
 FROM ubuntu:latest AS curl
 
 RUN apt-get update \
-    && apt-get install -y curl
+    && apt-get install -y curl vim
 
 # ---
 
 FROM curl AS kind
 
 # Need to redefine already defined args for the stages for them to work
-ARG KIND_VERSION
 ARG TARGETARCH
+ARG KIND_VERSION
 
 RUN curl -LO --fail https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-${TARGETARCH}{,.sha256sum} \
-    && sha256sum --check kind-linux-arm64.sha256sum \
+    && sha256sum --check kind-linux-${TARGETARCH}.sha256sum \
     && install -o root -g root -m 0755 kind-linux-${TARGETARCH} /usr/local/bin/kind
 
 # ---
 
 FROM curl AS cilium
 
-ARG CILIUM_CLI_VERSION
 ARG TARGETARCH
+ARG CILIUM_CLI_VERSION
 
 RUN curl -LO --fail https://github.com/cilium/cilium-cli/releases/download/v${CILIUM_CLI_VERSION}/cilium-linux-${TARGETARCH}.tar.gz{,.sha256sum} \
     && sha256sum --check cilium-linux-${TARGETARCH}.tar.gz.sha256sum \
     && tar xzvfC cilium-linux-${TARGETARCH}.tar.gz /usr/local/bin
+
+# ---
+
+FROM curl AS hubble
+
+ARG TARGETARCH
+ARG HUBBLE_CLI_VERSION
+
+RUN curl -LO --fail https://github.com/cilium/hubble/releases/download/v${HUBBLE_CLI_VERSION}/hubble-linux-${TARGETARCH}.tar.gz{,.sha256sum} \
+    && sha256sum --check hubble-linux-${TARGETARCH}.tar.gz.sha256sum \
+    && tar xzvfC hubble-linux-${TARGETARCH}.tar.gz /usr/local/bin
 
 # ---
 
@@ -67,11 +79,15 @@ RUN apt-get update \
         git \
         inotify-tools \
         make \
+        locales \
         python3 \
-        rsync
+        rsync \
+        vim \
+    && locale-gen en_US.UTF-8
 
 COPY --from=kubectl /usr/local/bin/kubectl /usr/local/bin/
 COPY --from=cilium /usr/local/bin/cilium /usr/local/bin/
+COPY --from=hubble /usr/local/bin/hubble /usr/local/bin/
 COPY --from=docker /usr/local/bin/docker /usr/local/bin/
 COPY --from=cmctl /usr/local/bin/cmctl /usr/local/bin/
 COPY --from=kind /usr/local/bin/kind /usr/local/bin/
@@ -84,6 +100,7 @@ RUN kind completion bash > /etc/bash_completion.d/kind \
     && flux completion bash > /etc/bash_completion.d/flux \
     && kubectl completion bash > /etc/bash_completion.d/kubectl \
     && cilium completion bash > /etc/bash_completion.d/cilium \
+    && hubble completion bash > /etc/bash_completion.d/hubble \
     && cmctl completion bash > /etc/bash_completion.d/cmctl \
     && helm completion bash > /etc/bash_completion.d/helm \
     && bao -autocomplete-install \

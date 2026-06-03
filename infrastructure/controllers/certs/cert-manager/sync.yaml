@@ -1,0 +1,47 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: jetstack
+  namespace: cert-manager
+spec:
+  type: oci
+  interval: 1h30m
+  url: oci://quay.io/jetstack/charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+spec:
+  interval: 15m
+  timeout: 5m
+  chart:
+    spec:
+      chart: cert-manager
+      version: v1.20.2
+      sourceRef:
+        kind: HelmRepository
+        name: jetstack
+      interval: 15m
+  values:
+    crds:
+      enabled: true
+    prometheus:
+      enabled: true
+      servicemonitor:
+        enabled: true
+    securityContext:
+      runAsUser: 10002
+    podLabels:
+      k8s.mcathome.ch/allow-kube-api: 'true'
+    startupapicheck:
+      podLabels:
+        k8s.mcathome.ch/allow-kube-api: 'true'
+    cainjector:
+      podLabels:
+        k8s.mcathome.ch/allow-kube-api: 'true'
+    webhook:
+      podLabels:
+        k8s.mcathome.ch/allow-kube-api: 'true'

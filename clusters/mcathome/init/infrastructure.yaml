@@ -2,13 +2,33 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infra-storage
+  name: cluster-variables
   namespace: flux-system
 spec:
-  interval: 10m0s
+  interval: 10m
+  serviceAccountName: kustomize-controller
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
+  path: ./variables
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: external-configs
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-networking-policies
+  namespace: flux-system
+spec:
+  serviceAccountName: kustomize-controller
+  interval: 10m
   dependsOn:
-    - name: cluster-configs
-  path: ./infrastructure/storage
+    - name: cluster-variables
+  path: ./infrastructure/networking/policies
   postBuild:
     substituteFrom:
       - kind: ConfigMap
@@ -17,7 +37,258 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  timeout: 5m0s
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-storage
+  namespace: flux-system
+spec:
+  serviceAccountName: kustomize-controller
+  interval: 10m
+  dependsOn:
+    - name: cluster-variables
+  path: ./infrastructure/controllers/storage
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-observability-crds
+  namespace: flux-system
+spec:
+  serviceAccountName: kustomize-controller
+  interval: 10m
+  dependsOn:
+    - name: cluster-variables
+  path: ./infrastructure/observability/metrics/crds
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cluster-configs
+  namespace: flux-system
+spec:
+  interval: 10m
+  serviceAccountName: kustomize-controller
+  dependsOn:
+    - name: infra-observability-crds
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+  path: ./configs
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: external-configs
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-security-trivy
+  namespace: flux-system
+spec:
+  serviceAccountName: kustomize-controller
+  dependsOn:
+    - name: infra-observability-traces
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+  interval: 10m
+  path: ./infrastructure/security/trivy
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-security-deptrack
+  namespace: flux-system
+spec:
+  serviceAccountName: kustomize-controller
+  dependsOn:
+    - name: infra-security-trivy
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+  interval: 10m
+  path: ./infrastructure/security/deptrack
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-controllers-certs-cm
+  namespace: flux-system
+spec:
+  serviceAccountName: kustomize-controller
+  dependsOn:
+    - name: infra-observability-crds
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+  interval: 10m
+  path: ./infrastructure/controllers/certs/cert-manager
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-controllers-certs-tm
+  namespace: flux-system
+spec:
+  serviceAccountName: kustomize-controller
+  dependsOn:
+    - name: infra-controllers-certs-cm
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+  interval: 10m
+  path: ./infrastructure/controllers/certs/trust-manager
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-controllers-certs-config
+  namespace: flux-system
+spec:
+  serviceAccountName: kustomize-controller
+  dependsOn:
+    - name: infra-controllers-certs-tm
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+  interval: 10m
+  path: ./infrastructure/controllers/certs/config
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-networking-cni
+  namespace: flux-system
+spec:
+  serviceAccountName: kustomize-controller
+  dependsOn:
+    - name: infra-controllers-certs-config
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+  interval: 10m
+  path: ./infrastructure/networking/cni/base
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-controllers-policy
+  namespace: flux-system
+spec:
+  serviceAccountName: kustomize-controller
+  dependsOn:
+    - name: infra-networking-cni
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+  interval: 10m
+  path: ./infrastructure/controllers/policy/release
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-controllers-policy-config
+  namespace: flux-system
+spec:
+  serviceAccountName: kustomize-controller
+  dependsOn:
+    - name: infra-controllers-policy
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+  interval: 10m
+  path: ./infrastructure/controllers/policy/config
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -25,10 +296,11 @@ metadata:
   name: infra-observability-metrics
   namespace: flux-system
 spec:
-  interval: 10m0s
+  serviceAccountName: kustomize-controller
+  interval: 10m
   dependsOn:
-    - name: infra-storage
-  path: ./infrastructure/observability/metrics
+    - name: infra-networking-cni
+  path: ./infrastructure/observability/metrics/release
   postBuild:
     substituteFrom:
       - kind: ConfigMap
@@ -39,117 +311,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  timeout: 5m0s
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: infra-controllers
-  namespace: flux-system
-spec:
-  dependsOn:
-    - name: infra-observability-metrics
-  interval: 10m0s
-  path: ./infrastructure/controllers
-  postBuild:
-    substituteFrom:
-      - kind: ConfigMap
-        name: cluster-vars
-      - kind: Secret
-        name: cluster-secrets
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  timeout: 5m0s
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: infra-security
-  namespace: flux-system
-spec:
-  dependsOn:
-    - name: infra-observability-metrics
-  interval: 10m0s
-  path: ./infrastructure/security
-  postBuild:
-    substituteFrom:
-      - kind: ConfigMap
-        name: cluster-vars
-      - kind: Secret
-        name: cluster-secrets
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  timeout: 5m0s
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: infra-configs
-  namespace: flux-system
-spec:
-  dependsOn:
-    - name: infra-controllers
-  interval: 10m0s
-  path: ./infrastructure/configs
-  postBuild:
-    substituteFrom:
-      - kind: ConfigMap
-        name: cluster-vars
-      - kind: Secret
-        name: cluster-secrets
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  timeout: 5m0s
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: infra-observability-logs
-  namespace: flux-system
-spec:
-  interval: 10m0s
-  dependsOn:
-    - name: infra-configs
-  path: ./infrastructure/observability/logs
-  postBuild:
-    substituteFrom:
-      - kind: ConfigMap
-        name: cluster-vars
-      - kind: Secret
-        name: cluster-secrets
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  timeout: 5m0s
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: infra-observability-probes
-  namespace: flux-system
-spec:
-  interval: 10m0s
-  dependsOn:
-    - name: infra-observability-logs
-  path: ./infrastructure/observability/probes
-  postBuild:
-    substituteFrom:
-      - kind: ConfigMap
-        name: cluster-vars
-      - kind: Secret
-        name: cluster-secrets
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  timeout: 5m0s
+  timeout: 5m
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -157,9 +319,10 @@ metadata:
   name: infra-observability-traces
   namespace: flux-system
 spec:
-  interval: 10m0s
+  serviceAccountName: kustomize-controller
+  interval: 10m
   dependsOn:
-    - name: infra-observability-logs
+    - name: infra-networking-cni
   path: ./infrastructure/observability/traces
   postBuild:
     substituteFrom:
@@ -171,114 +334,142 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  timeout: 5m0s
+  timeout: 5m
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infra-policy-controllers
+  name: infra-observability-probes
   namespace: flux-system
 spec:
-  interval: 10m0s
+  serviceAccountName: kustomize-controller
   dependsOn:
-    - name: infra-observability-traces
-  path: ./infrastructure/policy/controllers
+    - name: infra-observability-metrics
   postBuild:
     substituteFrom:
       - kind: ConfigMap
         name: cluster-vars
       - kind: Secret
         name: cluster-secrets
-  prune: true
+  interval: 10m
+  path: ./infrastructure/observability/probes
+  prune: false
   sourceRef:
     kind: GitRepository
     name: flux-system
-  timeout: 5m0s
+  timeout: 5m
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infra-policy-configs
+  name: infra-observability-logs
   namespace: flux-system
 spec:
-  interval: 10m0s
+  serviceAccountName: kustomize-controller
   dependsOn:
-    - name: infra-policy-controllers
-  path: ./infrastructure/policy/configs
+    - name: infra-networking-cni
   postBuild:
     substituteFrom:
       - kind: ConfigMap
         name: cluster-vars
       - kind: Secret
         name: cluster-secrets
-  prune: true
+  interval: 10m
+  path: ./infrastructure/observability/logs
+  prune: false
   sourceRef:
     kind: GitRepository
     name: flux-system
-  timeout: 5m0s
+  timeout: 5m
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infra-playground
+  name: infra-observability-releases
   namespace: flux-system
 spec:
+  serviceAccountName: kustomize-controller
   dependsOn:
-    - name: infra-policy-configs
-  interval: 10m0s
-  path: ./infrastructure/playground
+    - name: infra-networking-cni
   postBuild:
     substituteFrom:
       - kind: ConfigMap
         name: cluster-vars
       - kind: Secret
         name: cluster-secrets
-  prune: true
+  interval: 10m
+  path: ./infrastructure/observability/releases
+  prune: false
   sourceRef:
     kind: GitRepository
     name: flux-system
-  timeout: 5m0s
+  timeout: 5m
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infra-backup
+  name: infra-observability-backup
   namespace: flux-system
 spec:
+  serviceAccountName: kustomize-controller
   dependsOn:
-    - name: infra-policy-configs
-  interval: 10m0s
-  path: ./infrastructure/backup
+    - name: infra-observability-metrics
   postBuild:
     substituteFrom:
       - kind: ConfigMap
         name: cluster-vars
       - kind: Secret
         name: cluster-secrets
-  prune: true
+  interval: 10m
+  path: ./infrastructure/observability/backup
+  prune: false
   sourceRef:
     kind: GitRepository
     name: flux-system
-  timeout: 5m0s
+  timeout: 5m
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infra-updates
+  name: infra-controllers-ingress
   namespace: flux-system
 spec:
+  serviceAccountName: kustomize-controller
   dependsOn:
-    - name: infra-policy-configs
-  interval: 10m0s
-  path: ./infrastructure/updates/
+    - name: infra-networking-cni
   postBuild:
     substituteFrom:
       - kind: ConfigMap
         name: cluster-vars
       - kind: Secret
         name: cluster-secrets
-  prune: true
+  interval: 10m
+  path: ./infrastructure/controllers/ingress/base
+  prune: false
   sourceRef:
     kind: GitRepository
     name: flux-system
-  timeout: 5m0s
+  timeout: 5m
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infra-controllers-reloader
+  namespace: flux-system
+spec:
+  serviceAccountName: kustomize-controller
+  dependsOn:
+    - name: infra-networking-cni
+  postBuild:
+    substituteFrom:
+      - kind: ConfigMap
+        name: cluster-vars
+      - kind: Secret
+        name: cluster-secrets
+  interval: 10m
+  path: ./infrastructure/controllers/reloader
+  prune: false
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  timeout: 5m

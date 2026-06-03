@@ -70,6 +70,8 @@ Then the Cilium CNI can be installed
 
 Note: After prometheus is bootstrapped in the cluster, the script can be rerun
 with `--with-prometheus` to deploy serviceMonitors and Grafana dashboards
+Note: The step above can be skipped, flux will pick up cilium reconciliation as
+defined in [infrastructure/networking](../infrastructure/networking/cni/sync.yaml)
 
 [source](https://www.talos.dev/v1.9/kubernetes-guides/network/deploying-cilium/)
 

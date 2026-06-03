@@ -1,0 +1,17 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-grafana-dashboard-backup
+  namespace: infra-observability
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:k8s.mcathome.ch/name: grafana-backup
+  egress:
+  - toFQDNs:
+    - matchName: github.com
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP

@@ -1,0 +1,34 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-nova-find
+  namespace: infra-observability
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: nova
+  egress:
+  - toFQDNs:
+    - matchName: artifacthub.io
+    - matchName: ghcr.io
+    - matchName: mirror.gcr.io
+    - matchName: quay.io
+    - matchName: reg.kyverno.io
+    - matchName: registry.k8s.io
+    - matchName: registry.gitlab.com
+    - matchPattern: '*.docker.io'
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP
+      terminatingTLS:
+        secret:
+          name: cilium-mitm-cert
+          namespace: cert-manager
+      originatingTLS:
+        secret:
+          name: ca-certificates
+          namespace: cert-manager
+      rules:
+        http: [{}]

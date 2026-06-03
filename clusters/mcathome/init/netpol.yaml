@@ -1,0 +1,60 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-flux-reconcile
+  namespace: flux-system
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/part-of: flux
+  egress:
+  - toFQDNs:
+    - matchName: github.com
+    toPorts:
+    - ports:
+      - port: '22'
+        protocol: TCP
+      - port: '443'
+        protocol: TCP
+  - toFQDNs:
+    - matchName: quay.io
+    - matchName: ghcr.io
+    - matchPattern: '*.github.io'
+    - matchPattern: '*.githubusercontent.com'
+    - matchPattern: '*.quay.io'
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP
+  - toEntities:
+    - kube-apiserver
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: kube-system
+        k8s:k8s-app: kube-dns
+    toPorts:
+    - ports:
+      - port: '53'
+        protocol: UDP
+      - port: '53'
+        protocol: TCP
+      rules:
+        dns:
+        - matchPattern: '*'
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-same-namespace
+  namespace: infra-flux-system
+spec:
+  endpointSelector: {}
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: flux-system
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: flux-system

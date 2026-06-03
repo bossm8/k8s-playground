@@ -1,0 +1,126 @@
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-same-namespace
+  namespace: infra-observability
+spec:
+  endpointSelector: {}
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: infra-observability
+  egress:
+  - toEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: infra-observability
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cilium-mitm-cert-grafana
+  namespace: infra-observability
+spec:
+  commonName: grafana.k8s.mcathome.ch
+  dnsNames:
+  - gitlab.com
+  - grafana.com
+  - raw.githubusercontent.com
+  - storage.googleapis.com
+  issuerRef:
+    name: cilium-mitm-ca
+    kind: ClusterIssuer
+  secretName: cilium-mitm-cert-grafana
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-grafana-dashboard-download
+  namespace: infra-observability
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: grafana
+  egress:
+  - toFQDNs:
+    - matchName: gitlab.com
+    - matchName: grafana.com
+    - matchName: raw.githubusercontent.com
+    - matchName: storage.googleapis.com
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP
+      terminatingTLS:
+        secret:
+          name: cilium-mitm-cert-grafana
+          namespace: infra-observability
+      originatingTLS:
+        secret:
+          name: ca-certificates
+          namespace: cert-manager
+      rules:
+        http: [{}]
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-prometheus-scrape
+  namespace: infra-observability
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: prometheus
+  egress:
+  - toEntities:
+    - cluster
+    - host
+  # ETCD on Talos is not running as pod, thus the endpoint is the node itself
+  - toCIDR:
+    - ${singleNodeClusterIP}/32
+    toPorts:
+    - ports:
+      - port: '2381'
+        protocol: TCP
+      rules:
+        http: [{}]
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-alertmanager-alerting
+  namespace: infra-observability
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: alertmanager
+  egress:
+  - toFQDNs:
+    - matchName: discord.com
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP
+  - toFQDNs:
+    - matchName: ${healthcheckDomain}
+    toPorts:
+    - ports:
+      - port: '8443'
+        protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: allow-prometheus-scrape-on-all-namespaces
+spec:
+  endpointSelector:
+    matchExpressions:
+    - key: io.kubernetes.pod.namespace
+      operator: NotIn
+      values:
+      - kube-system
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: infra-observability
+        k8s:app.kubernetes.io/name: prometheus

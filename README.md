@@ -1,7 +1,8 @@
 # Home Lab K8s Cluster on Talos Linux
 
-This repo contains some deployment configurations and helpers for my Kubernetes
+This repo contains deployment configurations and helpers for my Kubernetes
 playground. It is a single node cluster running on [Talos Linux](https://talos.dev)
+
 Manifests in this repository are deployed with [FluxCD](https://fluxcd.io).
 
 ## Installed Tools
@@ -20,17 +21,20 @@ Manifests in this repository are deployed with [FluxCD](https://fluxcd.io).
 - [Prometheus](https://prometheus.io)
   ([kube-prometheus-stack](https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack))
 - [Vector](https://vector.dev)
-- [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/)
+- [Jaeger](https://jaegertracing.io)
+- [OpenTelemetry](https://opentelemetry.io/docs/)
 - [Loki](https://grafana.com/oss/loki)
-- [Tempo](https://grafana.com/oss/tempo)
 - [Grafana](https://grafana.com/oss/grafana)
 - [Nova](https://nova.docs.fairwinds.com)
 
 ### Ingress Controllers
 
 - [Traefik](https://traefik.io/traefik)
-- [Ingress-Nginx](https://kubernetes.github.io/ingress-nginx/)
+
+## Trust
+
 - [Cert-Manager](https://cert-manager.io)
+- [Trust-Manager](https://cert-manager.io/docs/trust)
 
 ### Policy Enforcement
 
@@ -39,13 +43,8 @@ Manifests in this repository are deployed with [FluxCD](https://fluxcd.io).
 ### Security
 
 - [Trivy Operator](https://aquasecurity.github.io/trivy-operator/latest/)
-- [Falco](https://falco.org/)
+- [Dependency-Track](https://https://dependencytrack.org/)
 
-## Additional Functionalities
+---
 
-- Tenant Playground Namespaces
-
-## Local Development
-
-The cluster can be run completely locally with devcontainers (and enough resources).
-For more information check out [the Medium post](https://medium.com/@bossm8/running-fluxcd-locally-gitops-for-kubernetes-on-your-laptop-7842b89d67b7).
+More detailed documentation can be found under [docs](./docs/)

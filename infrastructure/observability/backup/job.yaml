@@ -1,0 +1,76 @@
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: grafana-dashboard-backup
+spec:
+  schedule: "0 * * * *"
+  concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 3
+      activeDeadlineSeconds: 300
+      template:
+        metadata:
+          labels:
+            k8s.mcathome.ch/cleanup: 'true'
+            k8s.mcathome.ch/name: grafana-backup
+        spec:
+          containers:
+          - name: grafana-backup
+            image: registry.gitlab.com/gitlab-ci-utils/curl-jq:latest
+            imagePullPolicy: IfNotPresent
+            command:
+              - /bin/sh
+              - /scripts/backup.sh
+            securityContext:
+              runAsUser: 10001
+              runAsGroup: 10001
+              runAsNonRoot: true
+              readOnlyRootFilesystem: true
+              privileged: false
+              allowPrivilegeEscalation: false
+              seccompProfile:
+                type: RuntimeDefault
+              capabilities:
+                drop:
+                - ALL
+            volumeMounts:
+              - mountPath: /workspace
+                name: workspace
+              - mountPath: /scripts
+                name: backup-script
+                readOnly: true
+            workingDir: /workspace
+            env:
+              - name: BACKUP_DASHBOARD_TAG
+                value: backup
+              - name: BACKUP_GRAFANA_URL
+                value: http://kube-prometheus-stack-grafana.infra-observability:80
+              - name: BACKUP_GIT_REPO
+                value: ${grafanaDashboardBackupGitRepo}
+            envFrom:
+              - secretRef:
+                  name: grafana-backup-service-account
+              - secretRef:
+                  name: grafana-backup-git-access-token
+            resources:
+              requests:
+                cpu: '0.2'
+                memory: '64Mi'
+              limits:
+                cpu: '0.5'
+                memory: '128Mi'
+          restartPolicy: OnFailure
+          automountServiceAccountToken: false
+          volumes:
+            - name: workspace
+              emptyDir: {}
+            - name: backup-script
+              projected:
+                defaultMode: 0777
+                sources:
+                - configMap:
+                    name: backup-script
