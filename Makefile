@@ -2,7 +2,7 @@ K8S_NAME        := k8s-playground
 COLIMA_PROFILE  := ${K8S_NAME}
 COLIMA_HOME     := $(HOME)/.colima/$(COLIMA_PROFILE)
 
-.PHONY: setup-colima create-local-cluster save-local-cluster-kubeconfig destroy-local-cluster
+.PHONY: setup-colima create-local-cluster save-local-cluster-kubeconfig destroy-local-cluster flux-dependency-graph
 
 setup-colima:
 	mkdir -p $(COLIMA_HOME) || true
@@ -42,3 +42,10 @@ save-local-cluster-kubeconfig:
 
 destroy-local-cluster:
 	kind delete cluster --name $(K8S_NAME)
+
+.venv:
+	python3 -m venv .venv
+	.venv/bin/pip3 install -r helpers/requirements.txt
+
+flux-dependency-graph: .venv
+	.venv/bin/python3 helpers/flux-dep-graph.py
