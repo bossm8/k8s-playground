@@ -79,9 +79,6 @@ spec:
         matchRule: Host(`${traefikHostName}`)
         entryPoints:
         - websecure
-        middlewares:
-        - name: traefik-dashboard-redirect
-          namespace: traefik
 
     ports:
       traefik:
