@@ -47,5 +47,5 @@ spec:
           namespace: traefik
         spec:
           redirectRegex:
-            regex: ^(https?://[^/]*)(/dashboard)?(/)?$
+            regex: ^(https?://[^/]*)(/dashboard/?)?$
             replacement: https://${traefikPublicHostName}:8443/dashboard/
