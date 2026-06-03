@@ -128,6 +128,9 @@ spec:
             grafana_dashboard_folder: Kubernetes
           provider:
             foldersFromFilesStructure: true
+      grafana.ini:
+        server:
+          root_url: "https://%(domain)s/"
       persistence:
         enabled: true
         size: 5Gi
