@@ -26,7 +26,7 @@ spec:
     toPorts:
     - ports:
       - port: '443'
-        protocotl: TCP
+        protocol: TCP
   - toEntities:
     - kube-apiserver
   - toEndpoints:
