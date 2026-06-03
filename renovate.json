@@ -10,10 +10,11 @@
     ]
   },
   "minimumReleaseAge": "14 days",
+  "ignorePaths": ["helpers/**"],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/infrastructure/controllers/ingress/crowdsec\\.yaml/"],
+      "managerFilePatterns": ["/infrastructure/controllers/ingress/base/crowdsec\\.yaml/"],
       "matchStrings": [
         "version: (?<currentValue>v[\\d.]+)"
       ],
