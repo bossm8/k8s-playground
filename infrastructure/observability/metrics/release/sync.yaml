@@ -130,7 +130,10 @@ spec:
             foldersFromFilesStructure: true
       grafana.ini:
         server:
-          root_url: "https://%(domain)s/"
+          domain: ${grafanaPublicHostName}
+          root_url: "https://%(domain)s:8443/"
+        security:
+          csrf_trusted_origins: "${grafanaPublicHostName}"
       persistence:
         enabled: true
         size: 5Gi
