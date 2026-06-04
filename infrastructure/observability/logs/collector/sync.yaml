@@ -137,6 +137,10 @@ spec:
             }
             del(.host)
 
+            if !exists(.node) {
+              .node = 'unknown'
+            }
+
         kubernetes_logs:
           type: remap
           inputs:
