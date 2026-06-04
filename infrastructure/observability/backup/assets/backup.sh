@@ -8,10 +8,10 @@ slugify() {
 echo "level=info msg=\"starting backup of dashboards tagged with '${BACKUP_DASHBOARD_TAG}'\""
 
 test -d grafana-backup && rm -rf grafana-backup
-git clone --quiet https://oauth2:${BACKUP_GIT_TOKEN}@${BACKUP_GIT_REPO} grafana-backup
+git clone https://oauth2:${BACKUP_GIT_TOKEN}@${BACKUP_GIT_REPO} grafana-backup
 
 curl \
-  --silent --request GET \
+  --request GET \
   --header "Authorization: Bearer ${BACKUP_GRAFANA_TOKEN}" \
   --header "Accept: application/json" \
   --output dashboards.json \
