@@ -12,6 +12,8 @@ git clone https://oauth2:${BACKUP_GIT_TOKEN}@${BACKUP_GIT_REPO} grafana-backup
 
 curl \
   --request GET \
+  --quiet \
+  --fail-with-body \
   --header "Authorization: Bearer ${BACKUP_GRAFANA_TOKEN}" \
   --header "Accept: application/json" \
   --output dashboards.json \
@@ -35,7 +37,9 @@ jq -c '.[]' dashboards.json | while read -r item; do
   echo "level=info msg=\"getting dashboard '$title' ($uid)\""
 
   curl \
-    --silent --request GET \
+    --request GET \
+    --quiet \
+    --fail-with-body \
     --header "Authorization: Bearer ${BACKUP_GRAFANA_TOKEN}" \
     --header "Accept: application/json" \
     --output $title.json \
