@@ -68,6 +68,9 @@ spec:
       prometheusSpec:
         externalLabels:
           cluster: ${clusterName}
+        podMetadata:
+          labels:
+            k8s.mcathome.ch/allow-tracing: 'true'
         storageSpec:
           volumeClaimTemplate:
             spec:
@@ -76,6 +79,10 @@ spec:
               resources:
                 requests:
                   storage: 15Gi
+        tracingConfig:
+          clientType: grpc
+          endpoint: jaeger.infra-observability:4317
+          insecure: true
         retention: 14d
         retentionSize: 14.5GiB
         logFormat: json
@@ -90,7 +97,15 @@ spec:
         scrapeConfigSelectorNilUsesHelmValues: false
 
     alertmanager:
+      config:
+        tracing:
+          client_type: grpc
+          endpoint: jaeger.infra-observability:4317
+          insecure: true
       alertmanagerSpec:
+        podMetadata:
+          labels:
+            k8s.mcathome.ch/allow-tracing: 'true'
         alertmanagerConfigSelector:
           matchLabels:
             alertmanager: ${clusterName}
