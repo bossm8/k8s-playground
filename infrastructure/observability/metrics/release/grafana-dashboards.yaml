@@ -133,13 +133,13 @@ grafana:
         gnetId: 1860
         datasource: Prometheus
         revision: 36
-      smartctl-exporter:
-        gnetId: 22381
-        datasource:
-        - name: DS_PROMETHEUS
-          value: Prometheus
-        - name: DS_VICTORIAMETRICS
-          value: Prometheus
+      # smartctl-exporter:
+      #   gnetId: 22381
+      #   datasource:
+      #   - name: DS_PROMETHEUS
+      #     value: Prometheus
+      #   - name: DS_VICTORIAMETRICS
+      #     value: Prometheus
       # mdadm:
       #   gnetId: 20989
       #   datasource:
