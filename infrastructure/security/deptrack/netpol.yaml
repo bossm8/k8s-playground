@@ -16,6 +16,7 @@ spec:
   - proxy.golang.org
   - pypi.org
   - registry.npmjs.org
+  - rubygems.org
   - repository.jboss.org
   - packages.atlassian.com
   - repo.clojars.org
@@ -50,6 +51,7 @@ spec:
     - matchName: proxy.golang.org
     - matchName: pypi.org
     - matchName: registry.npmjs.org
+    - matchName: rubygems.org
     - matchName: repository.jboss.org
     - matchName: packages.atlassian.com
     - matchName: repo.clojars.org
