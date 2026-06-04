@@ -97,11 +97,6 @@ spec:
         scrapeConfigSelectorNilUsesHelmValues: false
 
     alertmanager:
-      config:
-        tracing_config:
-          client_type: grpc
-          endpoint: jaeger.infra-observability:4317
-          insecure: true
       alertmanagerSpec:
         podMetadata:
           labels:
