@@ -60,6 +60,13 @@ grafana:
           options:
             path: /var/lib/grafana/dashboards/security
           disableDeletion: false
+        - name: vector
+          orgId: 1
+          folder: Vector
+          type: file
+          options:
+            path: /var/lib/grafana/dashboards/vector
+          disableDeletion: false
         - name: hardware
           orgId: 1
           folder: Hardware
@@ -91,6 +98,11 @@ grafana:
         url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-logs.json
       loki-recording-rules:
         url: https://raw.githubusercontent.com/bossm8/loki/refs/heads/feat/loki-single-binary-dashboards/production/loki-mixin-compiled-sb/dashboards/loki-mixin-recording-rules.json
+    vector:
+      vector:
+        gnetId: 21954
+        datasource: Prometheus
+        revision: 1
     jaeger:
       # https://github.com/jaegertracing/jaeger/tree/6a4fca884a8775c34f44ed513d43c7d5bfed333f/monitoring/jaeger-mixin
       jaeger:
@@ -121,7 +133,11 @@ grafana:
         revision: 36
       smartctl-exporter:
         gnetId: 22381
-        datasource: Prometheus
+        datasource:
+          - name: DS_PROMETHEUS
+            value: Prometheus
+          - name: DS_VICTORIAMETRICS
+            value: Prometheus
       mdadm:
         gnetId: 20989
         datasource:
