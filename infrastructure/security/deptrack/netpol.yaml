@@ -19,6 +19,7 @@ spec:
   - rubygems.org
   - repository.jboss.org
   - packages.atlassian.com
+  - repo.packagist.org
   - repo.clojars.org
   - maven.google.com
   - osv-vulnerabilities.storage.googleapis.com
@@ -55,6 +56,7 @@ spec:
     - matchName: repository.jboss.org
     - matchName: packages.atlassian.com
     - matchName: repo.clojars.org
+    - matchName: repo.packagist.org
     - matchName: maven.google.com
     - matchName: osv-vulnerabilities.storage.googleapis.com
     - matchName: dl.google.com
