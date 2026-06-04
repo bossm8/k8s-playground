@@ -48,7 +48,7 @@ spec:
               - name: BACKUP_DASHBOARD_TAG
                 value: backup
               - name: BACKUP_GRAFANA_URL
-                value: http://kube-prometheus-stack-grafana.infra-observability:80
+                value: http://kube-prometheus-grafana.infra-observability:80
               - name: BACKUP_GIT_REPO
                 value: ${grafanaDashboardBackupGitRepo}
             envFrom:
