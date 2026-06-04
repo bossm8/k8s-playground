@@ -138,7 +138,7 @@ spec:
             del(.host)
 
             if !exists(.node) {
-              .node = 'unknown'
+              .node = "unknown"
             }
 
         kubernetes_logs:
