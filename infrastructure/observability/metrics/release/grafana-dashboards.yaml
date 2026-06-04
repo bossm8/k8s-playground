@@ -101,7 +101,9 @@ grafana:
     vector:
       vector:
         gnetId: 21954
-        datasource: Prometheus
+        datasource:
+        - name: DS_PROMETHEUS
+          value: Prometheus
         revision: 1
     jaeger:
       # https://github.com/jaegertracing/jaeger/tree/6a4fca884a8775c34f44ed513d43c7d5bfed333f/monitoring/jaeger-mixin
@@ -134,12 +136,12 @@ grafana:
       smartctl-exporter:
         gnetId: 22381
         datasource:
-          - name: DS_PROMETHEUS
-            value: Prometheus
-          - name: DS_VICTORIAMETRICS
-            value: Prometheus
-      mdadm:
-        gnetId: 20989
-        datasource:
-          - name: DS_PROMETHEUS
-            value: Prometheus
+        - name: DS_PROMETHEUS
+          value: Prometheus
+        - name: DS_VICTORIAMETRICS
+          value: Prometheus
+      # mdadm:
+      #   gnetId: 20989
+      #   datasource:
+      #     - name: DS_PROMETHEUS
+      #       value: Prometheus
