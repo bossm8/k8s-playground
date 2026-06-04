@@ -16,6 +16,8 @@ metadata:
 spec:
   interval: 15m
   timeout: 5m
+  driftDetection:
+    mode: enabled
   chart:
     spec:
       chart: opentelemetry-operator
