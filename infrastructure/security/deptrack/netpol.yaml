@@ -15,6 +15,7 @@ spec:
   - nvd.nist.gov
   - proxy.golang.org
   - pypi.org
+  - api.nuget.org
   - registry.npmjs.org
   - rubygems.org
   - repository.jboss.org
@@ -43,6 +44,7 @@ spec:
       k8s:app.kubernetes.io/name: dependency-track-api-server
   egress:
   - toFQDNs:
+    - matchName: api.nuget.org
     - matchName: crates.io
     - matchName: epss.cyentia.com
     - matchName: epss.empiricalsecurity.com
