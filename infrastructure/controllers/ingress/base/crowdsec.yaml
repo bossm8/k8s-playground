@@ -16,6 +16,7 @@ spec:
         kind: Middleware
         metadata:
           name: crowdsec
+          namespace: traefik
         spec:
           plugin:
             crowdsec-bouncer:

@@ -105,6 +105,9 @@ spec:
         port: 8443
         nodePort: 30443
         exposedPort: 8443
+        http:
+          middlewares:
+          - crowdsec@kubernetescrd
         proxyProtocol:
           trustedIPs:
             - ${proxyIP}
