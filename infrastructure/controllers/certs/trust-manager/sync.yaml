@@ -12,7 +12,7 @@ spec:
   url: oci://quay.io/jetstack/charts/trust-manager
   ref:
     tag: "v0.22.1"
-    digets: "sha256:893e8438a0013dcc027a1e5a8237f4062d37738e700c4ec2795b29eb2288dc49"
+    digest: "sha256:893e8438a0013dcc027a1e5a8237f4062d37738e700c4ec2795b29eb2288dc49"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
