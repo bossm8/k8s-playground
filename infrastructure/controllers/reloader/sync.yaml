@@ -11,7 +11,7 @@ spec:
     operation: copy
   url: oci://ghcr.io/stakater/charts/reloader
   ref:
-    tag: "2.2.12"
+    tag: "2.2.12@sha256:1efe694acf4ada31404232a1889126ddc92789bddca3054f74f3b2e8ded1116a"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease

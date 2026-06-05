@@ -11,7 +11,7 @@ spec:
     operation: copy
   url: oci://ghcr.io/vectordotdev/helm-charts/vector
   ref:
-    tag: "0.56.0"
+    tag: "0.56.0@sha256:c01997ec83f359fee41be60d7abd711d526c609478fd02dbaa964d87d415b976"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -434,7 +434,7 @@ spec:
 
     initContainers:
     - name: geoip-download
-      image: maxmindinc/geoipupdate
+      image: maxmindinc/geoipupdate@sha256:faecdca22579730ab0b7dea5aa9af350bb3c93cb9d39845c173639ead30346d2
       imagePullPolicy: IfNotPresent
       securityContext:
         readOnlyRootFilesystem: true
