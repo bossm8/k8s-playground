@@ -1,4 +1,18 @@
 ---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: trust-manager
+  namespace: cert-manager
+spec:
+  interval: 1h30m
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
+  url: oci://quay.io/jetstack/charts/trust-manager
+  ref:
+    tag: "v0.22.1"
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -9,14 +23,9 @@ spec:
   timeout: 5m
   driftDetection:
     mode: enabled
-  chart:
-    spec:
-      chart: trust-manager
-      version: v0.22.1
-      sourceRef:
-        kind: HelmRepository
-        name: jetstack
-      interval: 15m
+  chartRef:
+    kind: OCIRepository
+    name: trust-manager
   values:
     app:
       podLabels:

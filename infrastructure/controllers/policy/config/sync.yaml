@@ -1,4 +1,18 @@
 ---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: kyverno-policies
+  namespace: kyverno
+spec:
+  interval: 1h30m
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
+  url: oci://ghcr.io/kyverno/charts/kyverno-policies
+  ref:
+    tag: "3.8.0"
+---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -8,15 +22,9 @@ spec:
   interval: 10m0s
   driftDetection:
     mode: enabled
-  chart:
-    spec:
-      chart: kyverno-policies
-      version: 3.8.0
-      sourceRef:
-        kind: HelmRepository
-        name: kyverno
-        namespace: kyverno
-      interval: 10m0s
+  chartRef:
+    kind: OCIRepository
+    name: kyverno-policies
   values:
     validationFailureAction: Audit
     policyType: ValidatingPolicy

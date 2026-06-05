@@ -1,12 +1,17 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
+kind: OCIRepository
 metadata:
-  name: open-telemetry
+  name: otel-operator
   namespace: infra-observability
 spec:
   interval: 1h30m
-  url: https://open-telemetry.github.io/opentelemetry-helm-charts
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
+  url: oci://ghcr.io/open-telemetry/opentelemetry-helm-charts/opentelemetry-operator
+  ref:
+    tag: "0.114.1"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -18,14 +23,9 @@ spec:
   timeout: 5m
   driftDetection:
     mode: enabled
-  chart:
-    spec:
-      chart: opentelemetry-operator
-      version: 0.114.1
-      sourceRef:
-        kind: HelmRepository
-        name: open-telemetry
-      interval: 15m
+  chartRef:
+    kind: OCIRepository
+    name: otel-operator
   values:
     admissionWebhooks:
       certManager:

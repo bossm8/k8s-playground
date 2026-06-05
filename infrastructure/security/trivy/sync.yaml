@@ -1,13 +1,17 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
+kind: OCIRepository
 metadata:
-  name: aqua-security
+  name: trivy-operator
   namespace: infra-security
 spec:
-  type: oci
   interval: 1h30m
-  url: oci://ghcr.io/aquasecurity/helm-charts/
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
+  url: oci://ghcr.io/aquasecurity/helm-charts/trivy-operator
+  ref:
+    tag: "0.32.1"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -17,14 +21,9 @@ metadata:
 spec:
   interval: 15m
   timeout: 5m
-  chart:
-    spec:
-      chart: trivy-operator
-      version: 0.32.1
-      sourceRef:
-        kind: HelmRepository
-        name: aqua-security
-      interval: 15m
+  chartRef:
+    kind: OCIRepository
+    name: trivy-operator
   values:
     # https://aquasecurity.github.io/trivy-operator/v0.21.0/docs/vulnerability-scanning/trivy/
     targetWorkloads: ""
