@@ -107,8 +107,8 @@ spec:
         exposedPort: 8443
         http:
           middlewares:
-          - crowdsec@kubernetescrd
-          - int-acl@kubernetescrd
+          - traefik-crowdsec@kubernetescrd
+          - traefik-int-acl@kubernetescrd
         proxyProtocol:
           trustedIPs:
             - ${proxyIP}
