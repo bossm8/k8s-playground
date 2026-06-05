@@ -33,9 +33,11 @@
   "packageRules": [
     {
       "matchDatasources": ["helm"],
-      "pinDigest": {
-        "enabled": true
-      }
+      "pinDigests": true
+    },
+    {
+      "matchDatasources": ["docker"],
+      "pinDigests": true
     },
     {
       "matchDatasources": ["github-releases"],

@@ -1,12 +1,17 @@
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
+kind: OCIRepository
 metadata:
   name: kyverno
   namespace: kyverno
 spec:
   interval: 1h30m
-  url: https://kyverno.github.io/kyverno/
+  layerSelector:
+    mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
+    operation: copy
+  url: oci://ghcr.io/kyverno/charts/kyverno
+  ref:
+    tag: "3.8.1"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -17,15 +22,9 @@ spec:
   interval: 15m
   driftDetection:
     mode: enabled
-  chart:
-    spec:
-      chart: kyverno
-      version: 3.8.1
-      sourceRef:
-        kind: HelmRepository
-        name: kyverno
-        namespace: kyverno
-      interval: 15m
+  chartRef:
+    kind: OCIRepository
+    name: kyverno
   values:
 
     crds:
