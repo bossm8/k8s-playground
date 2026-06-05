@@ -53,6 +53,7 @@ spec:
     tracing:
       addInternals: false
       serviceName: traefik-ingress
+      sampleRate: 0.25
       otlp:
         enabled: true
         grpc:
