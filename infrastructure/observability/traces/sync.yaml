@@ -29,6 +29,13 @@ spec:
   values:
 
     jaeger:
+      resources:
+        requests:
+          cpu: '1'
+          memory: 800Mi
+        limits:
+          cpu: '1'
+          memory: 1.5Gi
       podLabels:
         k8s.mcathome.ch/allow-traefik-ingress: 'true'
       podSecurityContext:

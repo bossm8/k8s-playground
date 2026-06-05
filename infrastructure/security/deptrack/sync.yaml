@@ -29,8 +29,8 @@ spec:
       interval: 15m
   values:
     apiServer:
-      annotations:
-        instrumentation.opentelemetry.io/inject-java: 'true'
+      # annotations:
+      #   instrumentation.opentelemetry.io/inject-java: 'true'
       extraPodLabels:
         k8s.mcathome.ch/allow-traefik-ingress: 'true'
         k8s.mcathome.ch/allow-tracing: 'true'
