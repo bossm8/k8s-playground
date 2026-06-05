@@ -20,12 +20,9 @@ spec:
         app.kubernetes.io/name: whoami
         k8s.mcathome.ch/allow-traefik-ingress: 'true'
         instrumentation.opentelemetry.io/inject-go: 'true'
-        instrumentation.opentelemetry.io/otel-go-auto-target-exe: /whoami
+        instrumentation.opentelemetry.io/otel-go-auto-target-exe: '/whoami'
     spec:
       securityContext:
-        runAsUser: 10001
-        runAsGroup: 10001
-        runAsNonRoot: true
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -36,6 +33,9 @@ spec:
           args:
             - --port=8080
           securityContext:
+            runAsUser: 10001
+            runAsGroup: 10001
+            runAsNonRoot: true
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
