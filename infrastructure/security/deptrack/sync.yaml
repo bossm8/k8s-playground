@@ -37,6 +37,9 @@ spec:
       persistentVolume:
         enabled: true
         size: 5Gi
+      extraEnv:
+      - name: ALPINE_WORKER_THREADS
+        value: "2"
       resources:
         requests:
           cpu: "2"
