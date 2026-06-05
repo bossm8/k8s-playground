@@ -470,7 +470,7 @@ metadata:
 spec:
   serviceAccountName: kustomize-controller
   dependsOn:
-    - name: infra-networking-cni
+    - name: infra-observability-traces
   postBuild:
     substituteFrom:
       - kind: ConfigMap
