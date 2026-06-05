@@ -169,9 +169,7 @@ spec:
             path: /spec/template/spec/volumes/-
             value:
               name: jaeger-data
-              persistentVolumeClaim:
-                claimName: jaeger-data
-                readOnly: false
+              emptyDir: {}
           - op: add
             path: /spec/template/spec/containers/0/volumeMounts/-
             value:
@@ -185,18 +183,6 @@ spec:
           - op: replace
             path: /spec/rules/0/http/paths/0/backend/service/port/number
             value: 4318
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: jaeger-data
-spec:
-  resources:
-    requests:
-      storage: 1Gi
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteOnce
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor

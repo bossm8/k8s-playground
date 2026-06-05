@@ -40,6 +40,10 @@
       "pinDigests": true
     },
     {
+      "matchFileNames": [".devcontainer/**"],
+      "pinDigests": false
+    },
+    {
       "matchDatasources": ["github-releases"],
       "matchPackageNames": ["siderolabs/talos"],
       "prBodyNotes": [
