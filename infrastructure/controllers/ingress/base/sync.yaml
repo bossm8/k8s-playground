@@ -11,7 +11,7 @@ spec:
     operation: copy
   url: oci://ghcr.io/traefik/helm/traefik
   ref:
-    tag: "40.2.0"
+    tag: "40.2.0@sha256:582cafe24846a332e7c7fcb9a5f9ba2cb906aa17a7cf431e1cdaa6c0ac986397"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
