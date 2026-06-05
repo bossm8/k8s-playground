@@ -39,3 +39,4 @@ spec:
         k8s.mcathome.ch/allow-kube-api: 'true'
       extraArgs:
       - --enable-nginx-instrumentation
+      - --enable-go-instrumentation
