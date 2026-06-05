@@ -37,6 +37,13 @@ spec:
       persistentVolume:
         enabled: true
         size: 5Gi
+      resources:
+        requests:
+          cpu: "2"
+          memory: 5Gi
+        limits:
+          cpu: "2.5"
+          memory: 5Gi
       additionalVolumes:
       - name: mitm-ca
         secret:
