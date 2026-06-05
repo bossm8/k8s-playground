@@ -1,7 +1,7 @@
 # Flux Kustomization Dependency Graph
 
 Visualises the `spec.dependsOn` relationships between Flux Kustomization resources
-by parsing the YAML files in `clusters/` statically — no cluster connection needed.
+by parsing the YAML files in `clusters/` statically - no cluster connection needed.
 
 ## Prerequisites
 
