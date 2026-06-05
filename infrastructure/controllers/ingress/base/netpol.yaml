@@ -71,7 +71,7 @@ apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
   name: allow-whoami-from-int
-  namespace: traefik
+  namespace: traefik-whoami
 spec:
   endpointSelector:
     matchLabels:

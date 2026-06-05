@@ -3,7 +3,7 @@ apiVersion: opentelemetry.io/v1alpha1
 kind: Instrumentation
 metadata:
   name: whoami-auto-instrumentation
-  namespace: traefik
+  namespace: traefik-whoami
 spec:
   exporter:
     endpoint: http://jaeger.infra-observability:4318
