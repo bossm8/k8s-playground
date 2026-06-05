@@ -7,9 +7,6 @@ metadata:
 spec:
   exporter:
     endpoint: http://jaeger.infra-observability:4318
-  env:
-  - name: OTEL_GO_AUTO_TARGET_EXE
-    value: /whoami
   propagators:
     - tracecontext
     - baggage
