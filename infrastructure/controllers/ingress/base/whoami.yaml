@@ -20,7 +20,6 @@ spec:
         app.kubernetes.io/name: whoami
         k8s.mcathome.ch/allow-traefik-ingress: 'true'
         instrumentation.opentelemetry.io/inject-go: 'true'
-        instrumentation.opentelemetry.io/otel-go-auto-target-exe: ${quote}/whoami${quote}
     spec:
       securityContext:
         seccompProfile:
