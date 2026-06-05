@@ -11,4 +11,4 @@ resources:
   - whoami.yaml
 
 patches:
-  - path: crowdsec.yaml
+  - path: middlewares.yaml
