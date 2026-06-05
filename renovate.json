@@ -32,6 +32,12 @@
   ],
   "packageRules": [
     {
+      "matchDatasources": ["helm"],
+      "pinDigest": {
+        "enabled": true
+      }
+    },
+    {
       "matchDatasources": ["github-releases"],
       "matchPackageNames": ["siderolabs/talos"],
       "prBodyNotes": [

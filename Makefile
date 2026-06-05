@@ -2,7 +2,7 @@ K8S_NAME        := k8s-playground
 COLIMA_PROFILE  := ${K8S_NAME}
 COLIMA_HOME     := $(HOME)/.colima/$(COLIMA_PROFILE)
 
-.PHONY: setup-colima create-local-cluster save-local-cluster-kubeconfig destroy-local-cluster flux-dependency-graph
+.PHONY: setup-colima create-local-cluster save-local-cluster-kubeconfig destroy-local-cluster flux-dependency-graph check-renovate
 
 setup-colima:
 	mkdir -p $(COLIMA_HOME) || true
@@ -49,3 +49,6 @@ destroy-local-cluster:
 
 flux-dependency-graph: .venv
 	.venv/bin/python3 helpers/flux-dep-graph.py
+
+check-renovate:
+	docker run --rm -v "$$(pwd)/renovate.json:/usr/src/app/renovate.json" --entrypoint renovate-config-validator renovate/renovate
