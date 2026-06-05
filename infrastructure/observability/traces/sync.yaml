@@ -101,8 +101,7 @@ spec:
                   keys: /badger/data
                   values: /badger/data
                 ttl:
-                  # 7 Days
-                  spans: 168h
+                  spans: 12h
       receivers:
         otlp:
           protocols:
