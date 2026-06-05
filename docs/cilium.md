@@ -102,7 +102,7 @@ spec:
       pkcs12:
         key: cacerts
 ---
-# Mount the cilium-mitm-trust-bundle to a location in any pod and point
+# Mount the cilium-mitm-trust-bundle to a location in any pod and point
 # client libraries to use the ca.crt (pem) or cacerts (pkcs12) as trust
 ---
 apiVersion: cilium.io/v2

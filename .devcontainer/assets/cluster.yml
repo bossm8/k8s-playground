@@ -29,7 +29,7 @@ nodes:
     containerPath: /etc/containerd/certs.d
     readOnly: true
   kubeadmConfigPatches:
-  # AdmissionController
+  # AdmissionController
   - |
       kind: ClusterConfiguration
       apiServer:
