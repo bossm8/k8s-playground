@@ -37,11 +37,12 @@ spec:
     - matchName: reg.kyverno.io
     - matchName: registry.k8s.io
     - matchPattern: '*.docker.io'
-    - matchPattern: '*.ghcr.io'
     - matchPattern: '*.gcr.io'
-    - matchPattern: '*.gitlab.com'
+    - matchPattern: '*.ghcr.io'
     - matchPattern: '*.github.com'
+    - matchPattern: '*.gitlab.com'
     - matchPattern: '*.quay.io'
+    - matchPattern: 'europe-*-docker.pkg.dev'
     - matchPattern: 'prod-registry-k8s-io-eu-*-1.s3.dualstack.eu-south-1.amazonaws.com'
     toPorts:
     - ports:
