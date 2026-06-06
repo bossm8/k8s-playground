@@ -10,6 +10,7 @@ Manifests in this repository are deployed with [FluxCD](https://fluxcd.io).
 ### Core
 
 - [Cilium CNI](https://cilium.io)
+- [Metrics Server](https://github.com/kubernetes-sigs/metrics-server)
 - [Local Path Provisioner](https://github.com/rancher/local-path-provisioner)
 
 ### GitOps
