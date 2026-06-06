@@ -32,8 +32,8 @@ spec:
       projectName: '[[.sbomReport.operatorObject.report.artifact.repository]]'
       projectVersion: '[[.sbomReport.operatorObject.report.artifact.tag]]'
       sbomDeleteAction: deactivate
-      dtrackClientTimeout: 10
-      sbomUploadTimeoutSec: 30
+      dtrackClientTimeout: 30
+      sbomUploadTimeoutSec: 120
       sbomUploadCheckIntervalSec: 300
     resources:
       requests:
