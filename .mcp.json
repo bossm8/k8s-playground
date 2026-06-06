@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "kubernetes": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-v", "./mcp-kubeconfig:/home/.kube/config:ro",
+        "ghcr.io/containers/kubernetes-mcp-server:latest",
+        "--kubeconfig=/home/.kube/config"
+      ]
+    },
+    "grafana": {
+      "command": "docker",
+      "args": [
+        "run", "-i", "--rm",
+        "-e", "GRAFANA_URL",
+        "-e", "GRAFANA_SERVICE_ACCOUNT_TOKEN",
+        "grafana/mcp-grafana", "-t", "stdio",
+        "--tls-skip-verify"
+      ]
+    }
+  }
+}

@@ -52,3 +52,6 @@ flux-dependency-graph: .venv
 
 check-renovate:
 	docker run --rm -v "$$(pwd)/renovate.json:/usr/src/app/renovate.json" --entrypoint renovate-config-validator renovate/renovate
+
+create-mcp-sa:
+	/bin/bash helpers/create-ro-kubeconfig.sh mcp 2h

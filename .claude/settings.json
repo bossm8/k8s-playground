@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__kubernetes__*",
+      "mcp__grafana__*"
+    ]
+  }
+}

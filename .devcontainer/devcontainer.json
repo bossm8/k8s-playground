@@ -23,7 +23,8 @@
         "ms-python.python",
         "redhat.vscode-yaml",
         "kubescape.kubescape",
-        "AquaSecurityOfficial.trivy-vulnerability-scanner"
+        "AquaSecurityOfficial.trivy-vulnerability-scanner",
+        "Anthropic.claude-code"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "bash",
