@@ -39,7 +39,7 @@ spec:
         size: 5Gi
       extraEnv:
       - name: ALPINE_WORKER_THREADS
-        value: "1"
+        value: "4"
       - name: JAVA_OPTIONS
         value: "-Xmx5g -Xms5g -XX:MaxRAMPercentage=65.0 -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompactObjectHeaders -XX:MaxGCPauseMillis=250"
       resources:

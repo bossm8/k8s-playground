@@ -274,3 +274,4 @@ data:
           httpHeaderName1: x-api-key
         secureJsonData:
           httpHeaderValue1: ${crowdsecApiKey}
+          tlsCACert: $__file{/etc/secrets/ca.crt}
