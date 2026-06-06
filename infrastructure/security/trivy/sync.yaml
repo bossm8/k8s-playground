@@ -38,6 +38,7 @@ spec:
 
       # Or use postee: https://aquasecurity.github.io/postee/
       webhookBroadcastURL: http://sbom-to-deptrack.infra-security:8080
+      webhookBroadcastTimeout: 600s
       webhookSendDeletedReports: true
 
       sbomGenerationEnabled: true
