@@ -39,15 +39,15 @@ spec:
         size: 5Gi
       extraEnv:
       - name: ALPINE_WORKER_THREADS
-        value: "2"
+        value: "1"
       - name: JAVA_OPTS
         value: "-Xmx5g -Xms5g -XX:MaxRAMPercentaage=50.0"
       resources:
         requests:
-          cpu: "2"
+          cpu: "1"
           memory: 5Gi
         limits:
-          cpu: "2.5"
+          cpu: "1.5"
           memory: 5Gi
       additionalVolumes:
       - name: mitm-ca
