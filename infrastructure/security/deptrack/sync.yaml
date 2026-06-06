@@ -40,8 +40,8 @@ spec:
       extraEnv:
       - name: ALPINE_WORKER_THREADS
         value: "1"
-      - name: JAVA_OPTS
-        value: "-Xmx5g -Xms5g -XX:MaxRAMPercentaage=50.0"
+      - name: JAVA_OPTIONS
+        value: "-Xmx5g -Xms5g -XX:MaxRAMPercentage=65.0 -XX:+UseG1GC -XX:+UseStringDeduplication -XX:+UseCompactObjectHeaders -XX:MaxGCPauseMillis=250"
       resources:
         requests:
           cpu: "1"
