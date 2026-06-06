@@ -8,13 +8,15 @@ They will be allowed to create and manage namespaces prefixed with their usernam
 To create a new user, use the helper script `create-user.sh`:
 
 ```bash
-/bin/bash helpers/create-user.sh <username> <talos-controlplane.yaml>
+/bin/bash helpers/create-user.sh <username>
 ```
 
 This will create a new kubeconfig in the current working directory with a user
 which has basic namespace creation permissions.
 
 ## Tenancy Enforcement
+
+#TODO: currently not implemented anymore
 
 When the user creates a new namespace, the namespace will be assigned tenancy
 label `k8s.mcathome.ch/tenant: <username>`. This label is used to create a default

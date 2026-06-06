@@ -29,6 +29,19 @@ spec:
     config:
       apiKeySecretName: deptrack-api-key
       baseUrl: http://dependency-track-api-server.infra-security:8080
+      projectName: '[[.sbomReport.__operatorObject__.report.artifact.repository]]'
+      projectVersion: '[[.sbomReport.__operatorObject__.report.artifact.tag]]'
+      sbomDeleteAction: deactivate
+      dtrackClientTimeout: 10
+      sbomUploadTimeoutSec: 30
+      sbomUploadCheckIntervalSec: 300
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 150m
+        memory: 256Mi
     securityContext:
       runAsNonRoot: true
       readOnlyRootFilesystem: true

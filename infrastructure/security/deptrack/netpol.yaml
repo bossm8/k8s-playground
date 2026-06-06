@@ -7,26 +7,31 @@ metadata:
 spec:
   commonName: deptrack.k8s.mcathome.ch
   dnsNames:
+  # From /admin/repositories/
+  - api.github.com
+  - api.nuget.org
+  - channels.nixos.org
   - crates.io
+  - dl.google.com
   - epss.cyentia.com
   - epss.empiricalsecurity.com
+  - fastapi.metacpan.org
   - github.com
-  - api.github.com
+  - hackage.haskell.org
+  - hex.pm
+  - maven.google.com
   - nvd.nist.gov
+  - osv-vulnerabilities.storage.googleapis.com
+  - packages.atlassian.com
   - proxy.golang.org
   - pypi.org
-  - api.nuget.org
   - registry.npmjs.org
-  - rubygems.org
-  - repository.jboss.org
-  - packages.atlassian.com
-  - repo.packagist.org
   - repo.clojars.org
-  - maven.google.com
-  - osv-vulnerabilities.storage.googleapis.com
-  - dl.google.com
+  - repo.packagist.org
+  - repo1.maven.org
+  - repository.jboss.org
+  - rubygems.org
   - '*.nvd.nist.gov'
-  - '*.maven.org'
   - '*.pkg.dev'
   issuerRef:
     name: cilium-mitm-ca
@@ -44,26 +49,30 @@ spec:
       k8s:app.kubernetes.io/name: dependency-track-api-server
   egress:
   - toFQDNs:
+    - matchName: api.github.com
     - matchName: api.nuget.org
+    - matchName: channels.nixos.org
     - matchName: crates.io
+    - matchName: dl.google.com
     - matchName: epss.cyentia.com
     - matchName: epss.empiricalsecurity.com
+    - matchName: fastapi.metacpan.org
     - matchName: github.com
-    - matchName: api.github.com
+    - matchName: hackage.haskell.org
+    - matchName: hex.pm
+    - matchName: maven.google.com
     - matchName: nvd.nist.gov
+    - matchName: osv-vulnerabilities.storage.googleapis.com
+    - matchName: packages.atlassian.com
     - matchName: proxy.golang.org
     - matchName: pypi.org
     - matchName: registry.npmjs.org
-    - matchName: rubygems.org
-    - matchName: repository.jboss.org
-    - matchName: packages.atlassian.com
     - matchName: repo.clojars.org
     - matchName: repo.packagist.org
-    - matchName: maven.google.com
-    - matchName: osv-vulnerabilities.storage.googleapis.com
-    - matchName: dl.google.com
+    - matchName: repo1.maven.org
+    - matchName: repository.jboss.org
+    - matchName: rubygems.org
     - matchPattern: '*.nvd.nist.gov'
-    - matchPattern: 'repo*.maven.org'
     - matchPattern: 'europe-*-docker.pkg.dev'
     toPorts:
     - ports:

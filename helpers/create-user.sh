@@ -4,25 +4,15 @@
 # permissions in the cluster
 
 USER=$1
-TALOS_MC=$2
 
 function usage() {
-  echo "Usage: /bin/bash create-user.sh <username> <talos-controlplane-config>"
+  echo "Usage: /bin/bash create-user.sh <username>"
+  echo "  username:     name for the user to create (chars: a-z and -)"
 }
 
 if test -z "$USER" || ! [[ "$USER" =~ ^[a-z]+$ ]]; then
   echo "Error: Valid username argument is required (allowed chars: a-z)"
   usage && exit 1
-fi
-
-if test -z "$TALOS_MC" || ! test -f "$TALOS_MC"; then
-  echo "Error: Talos controlplane machineconfig path is required"
-  usage && exit 1
-fi
-
-if ! which yq; then
-  echo "Error: yq is required to use this script"
-  exit 1
 fi
 
 if ! which kubectl; then
@@ -77,11 +67,13 @@ EOF
 
 export KUBECONFIG=./"$USER"-kubeconfig
 
-CLUSTERNAME="$(cat $TALOS_MC | yq -r '.cluster.clusterName')"
+CLUSTERNAME=$(kubectl config view --minify -o jsonpath='{.clusters[0].name}')
+SERVER=$(kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}')
+CA_DATA=$(kubectl config view --minify --raw -o jsonpath='{.clusters[0].cluster.certificate-authority-data}')
 
 kubectl config set-cluster "$CLUSTERNAME" \
-  --server=$(cat $TALOS_MC | yq -r '.cluster.controlPlane.endpoint') \
-  --certificate-authority=<(echo "$CA_CRT") \
+  --server="$SERVER" \
+  --certificate-authority=<(echo "$CA_DATA" | base64 -d) \
   --embed-certs=true
 kubectl config set-credentials "$USER" \
   --client-certificate="$USER".crt \
