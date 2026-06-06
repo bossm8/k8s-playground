@@ -34,7 +34,7 @@ spec:
       sbomDeleteAction: deactivate
       dtrackClientTimeout: 30
       sbomUploadTimeoutSec: 300
-      sbomUploadCheckIntervalSec: 300
+      sbomUploadCheckIntervalSec: 30
     resources:
       requests:
         cpu: 100m
