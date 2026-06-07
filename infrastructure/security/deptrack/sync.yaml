@@ -47,7 +47,7 @@ spec:
           cpu: "1"
           memory: 5Gi
         limits:
-          cpu: "1.5"
+          cpu: "4"
           memory: 5Gi
       additionalVolumes:
       - name: mitm-ca
