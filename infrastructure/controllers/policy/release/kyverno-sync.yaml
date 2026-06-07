@@ -56,6 +56,14 @@ spec:
         enabled: true
         address: jaeger.infra-observability
         port: 4317
+      container:
+        resources:
+          requests:
+            cpu: 50m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
 
     backgroundController:
       serviceMonitor:
@@ -67,6 +75,13 @@ spec:
         enabled: true
         address: jaeger.infra-observability
         port: 4317
+      resources:
+        requests:
+          cpu: 20m
+          memory: 128Mi
+        limits:
+          cpu: 100m
+          memory: 256Mi
        # Need additional permissions
        # https://kyverno.io/docs/installation/customization/#customizing-permissions
        # admission webhook "validate-policy.kyverno.svc" denied the request:
@@ -91,6 +106,13 @@ spec:
         enabled: true
         address: jaeger.infra-observability
         port: 4317
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 320Mi
       rbac:
         clusterRole:
           extraResources:
@@ -112,3 +134,10 @@ spec:
         enabled: true
         address: jaeger.infra-observability
         port: 4317
+      resources:
+        requests:
+          cpu: 20m
+          memory: 128Mi
+        limits:
+          cpu: 1000m
+          memory: 512Mi

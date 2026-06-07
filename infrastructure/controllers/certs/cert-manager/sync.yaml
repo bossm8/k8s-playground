@@ -36,14 +36,35 @@ spec:
         enabled: true
     securityContext:
       runAsUser: 10002
+    resources:
+      requests:
+        cpu: 10m
+        memory: 96Mi
+      limits:
+        cpu: 50m
+        memory: 256Mi
     podLabels:
       k8s.mcathome.ch/allow-kube-api: 'true'
     startupapicheck:
       podLabels:
         k8s.mcathome.ch/allow-kube-api: 'true'
     cainjector:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 128Mi
+        limits:
+          cpu: 50m
+          memory: 320Mi
       podLabels:
         k8s.mcathome.ch/allow-kube-api: 'true'
     webhook:
+      resources:
+        requests:
+          cpu: 5m
+          memory: 32Mi
+        limits:
+          cpu: 25m
+          memory: 192Mi
       podLabels:
         k8s.mcathome.ch/allow-kube-api: 'true'

@@ -26,14 +26,44 @@ cgroup:
 hostFirewall:
   enabled: true
 hubble:
-  ui:
-    enabled: true
   relay:
     enabled: true
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 256Mi
+  ui:
+    enabled: true
+    backend:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          cpu: 300m
+          memory: 512Mi
+    frontend:
+      resources:
+        requests:
+          cpu: 5m
+          memory: 16Mi
+        limits:
+          cpu: 25m
+          memory: 64Mi
   tls:
     auto:
       method: cronJob
 envoy:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
   log:
     format: null
     format_json:
@@ -43,5 +73,20 @@ envoy:
       level: '%l'
       logger: '%n'
       message: '%j'
+resources:
+  requests:
+    cpu: 200m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1.5Gi
+
 operator:
   replicas: 1
+  resources:
+    requests:
+      cpu: 25m
+      memory: 128Mi
+    limits:
+      cpu: 100m
+      memory: 512Mi

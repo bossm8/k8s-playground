@@ -60,6 +60,14 @@ spec:
             description: |
               Blackbox exporter failed to probe {{ index $labels "instance" }}
 
+    resources:
+      requests:
+        cpu: 5m
+        memory: 32Mi
+      limits:
+        cpu: 25m
+        memory: 128Mi
+
     serviceMonitor:
       enabled: true
       defaults:

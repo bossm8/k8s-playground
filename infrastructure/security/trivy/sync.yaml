@@ -29,6 +29,14 @@ spec:
     # https://aquasecurity.github.io/trivy-operator/v0.21.0/docs/vulnerability-scanning/trivy/
     targetWorkloads: ""
 
+    resources:
+      requests:
+        cpu: 50m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+
     operator:
       builtInTrivyServer: true
       podLabels:
@@ -51,6 +59,14 @@ spec:
       mode: Standalone
       podLabels:
         k8s.mcathome.ch/allow-traefik-ingress: 'true'
+      server:
+        resources:
+          requests:
+            cpu: 25m
+            memory: 64Mi
+          limits:
+            cpu: 300m
+            memory: 512Mi
 
     trivyOperator:
       scanJobCompressLogs: false

@@ -77,6 +77,13 @@ spec:
 
     singleBinary:
       replicas: 1
+      resources:
+        requests:
+          cpu: 100m
+          memory: 512Mi
+        limits:
+          cpu: 500m
+          memory: 1.5Gi
       persistence:
         enabled: true
         size: 20Gi
@@ -86,6 +93,24 @@ spec:
         enabled: false
       serviceMonitor:
         enabled: true
+
+    chunksCache:
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 50m
+          memory: 512Mi
+
+    resultsCache:
+      resources:
+        requests:
+          cpu: 5m
+          memory: 16Mi
+        limits:
+          cpu: 25m
+          memory: 128Mi
 
     gateway:
       enabled: false

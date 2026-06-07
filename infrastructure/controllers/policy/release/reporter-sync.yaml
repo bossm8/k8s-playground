@@ -28,6 +28,14 @@ spec:
     name: policy-reporter
   values:
 
+    resources:
+      requests:
+        cpu: 25m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 384Mi
+
     metrics:
       enabled: true
 
@@ -46,6 +54,13 @@ spec:
 
     ui:
       enabled: true
+      resources:
+        requests:
+          cpu: 5m
+          memory: 32Mi
+        limits:
+          cpu: 25m
+          memory: 128Mi
       ingress:
         enabled: true
         className: traefik
@@ -74,12 +89,26 @@ spec:
     plugin:
       kyverno:
         enabled: true
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            cpu: 25m
+            memory: 196Mi
         podLabels:
           k8s.mcathome.ch/allow-kube-api: 'true'
         logging:
           encoding: json
       trivy:
         enabled: true
+        resources:
+          requests:
+            cpu: 5m
+            memory: 64Mi
+          limits:
+            cpu: 25m
+            memory: 128Mi
         podLabels:
           k8s.mcathome.ch/allow-kube-api: 'true'
 

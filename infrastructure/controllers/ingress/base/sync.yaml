@@ -135,6 +135,14 @@ spec:
           - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
           - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 
+    resources:
+      requests:
+        cpu: 50m
+        memory: 200Mi
+      limits:
+        cpu: 200m
+        memory: 500Mi
+
     tolerations:
     - effect: NoSchedule
       operator: Exists

@@ -30,6 +30,13 @@ spec:
         namespace: infra-storage
       interval: 15m
   values:
+    resources:
+      requests:
+        cpu: 5m
+        memory: 32Mi
+      limits:
+        cpu: 25m
+        memory: 128Mi
     commonLabels:
       k8s.mcathome.ch/allow-kube-api: 'true'
     storageClass:
