@@ -106,3 +106,4 @@ spec:
       rules:
         http:
         - method: GET
+        - method: HEAD
