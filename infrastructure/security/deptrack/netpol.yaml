@@ -50,6 +50,23 @@ spec:
   egress:
   - toFQDNs:
     - matchName: api.github.com
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP
+      terminatingTLS:
+        secret:
+          name: cilium-mitm-cert-deptrack
+          namespace: infra-security
+      originatingTLS:
+        secret:
+          name: ca-certificates
+          namespace: cert-manager
+      rules:
+        http:
+        - method: POST
+  - toFQDNs:
+    - matchName: api.github.com
     - matchName: api.nuget.org
     - matchName: channels.nixos.org
     - matchName: crates.io
