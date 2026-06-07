@@ -31,7 +31,7 @@ spec:
       baseUrl: http://dependency-track-api-server.infra-security:8080
       projectName: '[[.sbomReport.operatorObject.report.artifact.repository]]'
       projectVersion: '[[.sbomReport.operatorObject.report.artifact.tag]]'
-      sbomDeleteAction: deactivate
+      sbomDeleteAction: delete
       dtrackClientTimeout: 30
       sbomUploadTimeoutSec: 300
       sbomUploadCheckIntervalSec: 15
