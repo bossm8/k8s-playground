@@ -29,13 +29,6 @@ spec:
     name: trust-manager
   values:
     app:
-      resources:
-        requests:
-          cpu: 10m
-          memory: 64Mi
-        limits:
-          cpu: 50m
-          memory: 256Mi
       podLabels:
         k8s.mcathome.ch/allow-kube-api: 'true'
       metrics:
@@ -48,3 +41,19 @@ spec:
       authorizedSecrets:
       - ca-certificates
       - cilium-mitm-trust-bundle
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        cpu: 50m
+        memory: 256Mi
+    defaultPackage:
+      enabled: true
+      resources:
+        requests:
+          cpu: 10m
+          memory: 64Mi
+        limits:
+          cpu: 50m
+          memory: 128Mi

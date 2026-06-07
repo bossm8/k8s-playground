@@ -55,8 +55,22 @@ spec:
         windows: false
       disabled:
         TargetDown: true
+        etcdHighFsyncDurations: true
 
     additionalPrometheusRulesMap:
+      etcd-fsync-threshold:
+        groups:
+          - name: etcd
+            rules:
+              - alert: etcdHighFsyncDurations
+                annotations:
+                  description: 'etcd cluster "{{ $labels.job }}": 99th percentile fsync durations are {{ $value }}s on etcd instance {{ $labels.instance }}.'
+                  runbook_url: https://runbooks.prometheus-operator.dev/runbooks/etcd/etcdhighfsyncdurations
+                  summary: 'etcd cluster "{{ $labels.job }}": 99th percentile fsync durations are too high.'
+                expr: histogram_quantile(0.99, rate(etcd_disk_wal_fsync_duration_seconds_bucket{job=~".*etcd.*"}[5m])) > 2
+                for: 10m
+                labels:
+                  severity: warning
       target-down:
         groups:
           - name: general.rules
