@@ -32,7 +32,7 @@ Manifests in this repository are deployed with [FluxCD](https://fluxcd.io).
 
 - [Traefik](https://traefik.io/traefik)
 
-## Trust
+### Trust
 
 - [Cert-Manager](https://cert-manager.io)
 - [Trust-Manager](https://cert-manager.io/docs/trust)
