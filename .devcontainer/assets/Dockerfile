@@ -30,7 +30,7 @@ FROM curl AS kind
 ARG TARGETARCH
 ARG KIND_VERSION
 
-RUN curl -LO --fail https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-${TARGETARCH}{,.sha256sum} \
+RUN curl --silent --show-error --fail --location --remote-name-all https://github.com/kubernetes-sigs/kind/releases/download/v${KIND_VERSION}/kind-linux-${TARGETARCH}{,.sha256sum} \
     && sha256sum --check kind-linux-${TARGETARCH}.sha256sum \
     && install -o root -g root -m 0755 kind-linux-${TARGETARCH} /usr/local/bin/kind
 
@@ -41,7 +41,7 @@ FROM curl AS cilium
 ARG TARGETARCH
 ARG CILIUM_CLI_VERSION
 
-RUN curl -LO --fail https://github.com/cilium/cilium-cli/releases/download/v${CILIUM_CLI_VERSION}/cilium-linux-${TARGETARCH}.tar.gz{,.sha256sum} \
+RUN curl --silent --show-error --fail --location --remote-name-all https://github.com/cilium/cilium-cli/releases/download/v${CILIUM_CLI_VERSION}/cilium-linux-${TARGETARCH}.tar.gz{,.sha256sum} \
     && sha256sum --check cilium-linux-${TARGETARCH}.tar.gz.sha256sum \
     && tar xzvfC cilium-linux-${TARGETARCH}.tar.gz /usr/local/bin
 
@@ -52,7 +52,7 @@ FROM curl AS hubble
 ARG TARGETARCH
 ARG HUBBLE_CLI_VERSION
 
-RUN curl -LO --fail https://github.com/cilium/hubble/releases/download/v${HUBBLE_CLI_VERSION}/hubble-linux-${TARGETARCH}.tar.gz{,.sha256sum} \
+RUN curl --silent --show-error --fail --location --remote-name-all https://github.com/cilium/hubble/releases/download/v${HUBBLE_CLI_VERSION}/hubble-linux-${TARGETARCH}.tar.gz{,.sha256sum} \
     && sha256sum --check hubble-linux-${TARGETARCH}.tar.gz.sha256sum \
     && tar xzvfC hubble-linux-${TARGETARCH}.tar.gz /usr/local/bin
 
@@ -63,7 +63,7 @@ FROM curl AS cmctl
 ARG TARGETARCH
 ARG CERTMANAGER_CLI_VERSION
 
-RUN curl -LO --fail https://github.com/cert-manager/cert-manager/releases/download/v${CERTMANAGER_CLI_VERSION}/cmctl-linux-${TARGETARCH}.tar.gz \
+RUN curl --silent --show-error --fail --location --remote-name-all https://github.com/cert-manager/cert-manager/releases/download/v${CERTMANAGER_CLI_VERSION}/cmctl-linux-${TARGETARCH}.tar.gz \
     && tar xzf cmctl-linux-${TARGETARCH}.tar.gz \
     && mv cmctl /usr/local/bin
 
