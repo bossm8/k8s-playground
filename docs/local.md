@@ -6,8 +6,8 @@ The cluster can be run completely local with
 [the Medium post](https://medium.com/@bossm8/running-fluxcd-locally-gitops-for-kubernetes-on-your-laptop-7842b89d67b7).
 
 There may be networking issues when using colima/rancher desktop on Apple
-silicon, which both use lima under the hood, I often saw errors like 'dial tcp
-<IP>:443 i/o timeout' to already resolved IPs (no DNS issue).
+silicon, which both use lima under the hood, I often saw errors like
+`'dial tcp <IP>:443 i/o timeout'` to already resolved IPs (no DNS issue).
 
 Local Stack:
 
@@ -21,6 +21,7 @@ Local Stack:
   - Flux installed in the cluster, referencing the manifests pushed on change in the IDE
 
 Other local assets:
+
 - [Colima configuration](./.devcontainer/assets/colima.yaml) which I tried to make everything running despite networking issues.
   This can be installed under `~/.colima/<profile>/colima.yaml` and then started using `colima start --profile <profile`.
   Commands are also available as make target `setup-colima`

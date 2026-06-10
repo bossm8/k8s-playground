@@ -48,4 +48,8 @@ Manifests in this repository are deployed with [FluxCD](https://fluxcd.io).
 
 ---
 
+## Architecture
+
+![Arch](./.devcontainer/arch.drawio.png)
+
 More detailed documentation can be found under [docs](./docs/)
