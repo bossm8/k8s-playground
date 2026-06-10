@@ -51,6 +51,7 @@ Manifests in this repository are deployed with [FluxCD](https://fluxcd.io).
 ## Development Architecture
 
 ![Arch](./.devcontainer/arch.drawio.png)
+[medium.com/@bossm/running-fluxcd-locally](https://medium.com/@bossm8/running-fluxcd-locally-gitops-for-kubernetes-on-your-laptop-7842b89d67b7)
 
 ---
 
