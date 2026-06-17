@@ -88,6 +88,7 @@ RUN apt-get update \
     && locale-gen en_US.UTF-8
 
 COPY --from=kube-bench /usr/local/bin/kube-bench /usr/local/bin
+COPY --from=kube-bench /opt/kube-bench/cfg /opt/kube-bench/cfg
 COPY --from=kubectl /usr/local/bin/kubectl /usr/local/bin/
 COPY --from=cilium /usr/local/bin/cilium /usr/local/bin/
 COPY --from=hubble /usr/local/bin/hubble /usr/local/bin/
