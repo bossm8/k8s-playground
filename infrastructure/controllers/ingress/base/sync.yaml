@@ -40,8 +40,19 @@ spec:
       enabled: true
       isDefaultClass: false
 
+    gatewayClass:
+      enabled: true
+
     gateway:
       enabled: false
+
+    providers:
+      kubernetesCRD:
+        enabled: true
+      kubernetesIngress:
+        enabled: true
+      kubernetesGateway:
+        enabled: true
 
     metrics:
       addInternals: true

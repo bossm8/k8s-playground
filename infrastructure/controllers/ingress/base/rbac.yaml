@@ -32,6 +32,9 @@ rules:
 - apiGroups: [traefik.io]
   resources: ['*']
   verbs: [get, list, watch, create, update, patch]
+- apiGroups: [gateway.networking.k8s.io]
+  resources: ['*']
+  verbs: [get, list, watch, create, update, patch]
 # Needed to allow creating the RBAC permissions defined in the chart.
 # The reconciler needs the same permissions for it to be able to provide them
 # to others.
