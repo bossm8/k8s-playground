@@ -1,0 +1,48 @@
+{
+  "name": "K8s Playground",
+
+  "dockerComposeFile": "${localWorkspaceFolder}/.devcontainer/docker-compose.yml",
+
+  "service": "git-auto-commit",
+  "workspaceFolder": "${localWorkspaceFolder}",
+
+  // Need this for kind running in colima, if not specified, make create-local-cluster
+  // will fail to start the kind cluster, since the path is in config.yml is interpreted
+  // from /workspace/k8s-playground which does not exist in colima where the container
+  // is actually started.
+  "mounts": [
+    "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind"
+  ],
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "eamodio.gitlens",
+        "weaveworks.vscode-gitops-tools",
+        "ms-kubernetes-tools.vscode-kubernetes-tools",
+        "ms-python.python",
+        "redhat.vscode-yaml",
+        "kubescape.kubescape",
+        "AquaSecurityOfficial.trivy-vulnerability-scanner",
+        "Anthropic.claude-code"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash"
+           }
+        },
+	      "vs-kubernetes": {
+		      "vs-kubernetes.kubeconfig": "/root/.kube/config",
+		      "vs-kubernetes.knownKubeconfigs": [
+            "/root/.kube/config",
+            "/root/.kube/ks8-playground-config"
+          ]
+	      }
+      }
+    }
+  },
+
+  "postAttachCommand": "make save-local-cluster-kubeconfig 2>&1 >/dev/null || make create-local-cluster"
+}

@@ -7,6 +7,7 @@ ARG HELM_VERSION=4.2
 ARG CILIUM_CLI_VERSION=0.19.0
 ARG HUBBLE_CLI_VERSION=1.19.3
 ARG CERTMANAGER_CLI_VERSION=1.12.17
+ARG KUBE_BENCH_VERSION=0.15.6
 
 # Hack stages since 'COPY --from' cannot expand env
 FROM alpine/kubectl:${K8S_VERSION} AS kubectl
@@ -14,6 +15,7 @@ FROM fluxcd/flux-cli:v${FLUX_VERSION} AS flux
 FROM openbao/openbao:${BAO_VERSION} AS bao
 FROM alpine/helm:${HELM_VERSION} AS helm
 FROM docker:${DOCKER_VERSION} AS docker
+FROM aquasec/kube-bench:v${KUBE_BENCH_VERSION} as kube-bench
 
 # ---
 
@@ -85,6 +87,7 @@ RUN apt-get update \
         vim \
     && locale-gen en_US.UTF-8
 
+COPY --from=kube-bench /usr/local/bin/kube-bench /usr/local/bin
 COPY --from=kubectl /usr/local/bin/kubectl /usr/local/bin/
 COPY --from=cilium /usr/local/bin/cilium /usr/local/bin/
 COPY --from=hubble /usr/local/bin/hubble /usr/local/bin/
@@ -98,6 +101,7 @@ COPY --from=bao /bin/bao /usr/local/bin/
 # Add bash completion scripts
 RUN kind completion bash > /etc/bash_completion.d/kind \
     && flux completion bash > /etc/bash_completion.d/flux \
+    && kube-bench completion bash > /etc/bash_completion.d/kubebench \
     && kubectl completion bash > /etc/bash_completion.d/kubectl \
     && cilium completion bash > /etc/bash_completion.d/cilium \
     && hubble completion bash > /etc/bash_completion.d/hubble \

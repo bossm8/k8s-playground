@@ -1,7 +1,7 @@
 {
-  "name": "K8s Playground",
+  "name": "K8s Tools Only",
 
-  "dockerComposeFile": "docker-compose.yml",
+  "dockerComposeFile": "${localWorkspaceFolder}/.devcontainer/docker-compose.yml",
 
   "service": "git-auto-commit",
   "workspaceFolder": "${localWorkspaceFolder}",
@@ -11,7 +11,8 @@
   // from /workspace/k8s-playground which does not exist in colima where the container
   // is actually started.
   "mounts": [
-    "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind"
+    "source=${localWorkspaceFolder},target=${localWorkspaceFolder},type=bind",
+    "source=${env:HOME}/.kube/config,target=/root/.kube/config,type=bind,readonly=true"
   ],
 
   "customizations": {
@@ -42,7 +43,5 @@
 	      }
       }
     }
-  },
-
-  "postAttachCommand": "make save-local-cluster-kubeconfig 2>&1 >/dev/null || make create-local-cluster"
+  }
 }
