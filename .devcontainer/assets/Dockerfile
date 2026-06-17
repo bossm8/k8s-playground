@@ -8,6 +8,7 @@ ARG CILIUM_CLI_VERSION=0.19.0
 ARG HUBBLE_CLI_VERSION=1.19.3
 ARG CERTMANAGER_CLI_VERSION=1.12.17
 ARG KUBE_BENCH_VERSION=0.15.6
+ARG KUBESCAPE_VERSION=4.0.9
 
 # Hack stages since 'COPY --from' cannot expand env
 FROM alpine/kubectl:${K8S_VERSION} AS kubectl
@@ -71,7 +72,19 @@ RUN curl --silent --show-error --fail --location --remote-name-all https://githu
 
 # ---
 
-FROM ubuntu:latest
+FROM curl AS kubescape
+
+ARG TARGETARCH
+ARG KUBESCAPE_VERSION
+
+RUN curl --silent --show-error --fail --location --remote-name-all https://github.com/kubescape/kubescape/releases/download/v${KUBESCAPE_VERSION}/{kubescape_${KUBESCAPE_VERSION}_linux_${TARGETARCH}.tar.gz,checksums.sha256} \
+    && sha256sum --check --ignore-missing checksums.sha256 \
+    && tar xzf kubescape_${KUBESCAPE_VERSION}_linux_${TARGETARCH}.tar.gz \
+    && mv kubescape /usr/local/bin
+
+# ---
+
+FROM curl
 
 RUN apt-get update \
     && apt-get upgrade -y \
@@ -87,8 +100,9 @@ RUN apt-get update \
         vim \
     && locale-gen en_US.UTF-8
 
-COPY --from=kube-bench /usr/local/bin/kube-bench /usr/local/bin
+COPY --from=kube-bench /usr/local/bin/kube-bench /usr/local/bin/
 COPY --from=kube-bench /opt/kube-bench/cfg /opt/kube-bench/cfg
+COPY --from=kubescape /usr/local/bin/kubescape /usr/local/bin/
 COPY --from=kubectl /usr/local/bin/kubectl /usr/local/bin/
 COPY --from=cilium /usr/local/bin/cilium /usr/local/bin/
 COPY --from=hubble /usr/local/bin/hubble /usr/local/bin/
@@ -101,12 +115,13 @@ COPY --from=bao /bin/bao /usr/local/bin/
 
 # Add bash completion scripts
 RUN kind completion bash > /etc/bash_completion.d/kind \
-    && flux completion bash > /etc/bash_completion.d/flux \
     && kube-bench completion bash > /etc/bash_completion.d/kubebench \
+    && kubescape completion bash > /etc/bash_completion.d/kubescape \
     && kubectl completion bash > /etc/bash_completion.d/kubectl \
     && cilium completion bash > /etc/bash_completion.d/cilium \
     && hubble completion bash > /etc/bash_completion.d/hubble \
     && cmctl completion bash > /etc/bash_completion.d/cmctl \
+    && flux completion bash > /etc/bash_completion.d/flux \
     && helm completion bash > /etc/bash_completion.d/helm \
     && bao -autocomplete-install \
     && curl --fail -o /etc/bash_completion.d/docker -L \
