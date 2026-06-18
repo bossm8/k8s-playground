@@ -8,3 +8,10 @@ resources:
   - netpol.yaml
   - rbac.yaml
   - sync.yaml
+
+secretGenerator:
+  - name: cosign-pubkey
+    options:
+      disableNameSuffixHash: true
+    files:
+      - cosign.pub=./assets/cert-manager-pubkey-2021-09-20.pem

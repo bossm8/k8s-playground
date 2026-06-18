@@ -20,6 +20,7 @@ spec:
   - toFQDNs:
     - matchName: quay.io
     - matchName: ghcr.io
+    - matchName: tuf-repo-cdn.sigstore.dev
     - matchPattern: '*.github.io'
     - matchPattern: '*.githubusercontent.com'
     - matchPattern: '*.quay.io'

@@ -4,7 +4,7 @@ kind: Kustomization
 namespace: kube-system
 
 resources:
-  - rbac.yaml
+  # RBAC defined in infrastructure/core for the kube-system ns
   - sync.yaml
 
 configMapGenerator:

@@ -1,0 +1,48 @@
+---
+apiVersion: policies.kyverno.io/v1
+kind: ImageValidatingPolicy
+metadata:
+  name: cert-manager-images
+  annotations:
+    policies.kyverno.io/title: Verify Cert-Manager Container Images
+    policies.kyverno.io/category: Cluster Integrity
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/severity: info
+    policies.kyverno.io/description: >-
+      This policy verifies cert-manager container images before they are
+      applied to the cluster.
+      https://cert-manager.io/docs/installation/code-signing/?utm_source=chatgpt.com#container-images--cosign
+spec:
+  validationActions:
+    - Audit
+  failurePolicy: Fail
+  variables:
+    - name: certManagerCosignPubKey
+      expression: >-
+        resource.Get("v1", "secrets", "cert-manager", "cosign-pubkey")
+  matchConstraints:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: cert-manager
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: [v1]
+        resources: [pods]
+        operations: [CREATE, UPDATE]
+  matchImageReferences:
+    - glob: 'quay.io/jetstack/cert-manager-*:*'
+  attestors:
+    - name: certManager
+      cosign:
+        key:
+          expression: >-
+            string(base64.decode(variables.certManagerCosignPubKey.data["cosign.pub"]))
+          hashAlgorithm: sha512
+        # https://cert-manager.io/v1.18-docs/installation/code-signing/?utm_source=chatgpt.com#why---insecure-ignore-tlog
+        ctlog:
+          url: https://rekor.sigstore.dev
+          insecureIgnoreTlog: true
+  validations:
+    - expression: >-
+        images.containers.map(image, verifyImageSignatures(image, [attestors.certManager])).all(result, result > 0)
+      message: "cert-manager image is not signed by the expected key"

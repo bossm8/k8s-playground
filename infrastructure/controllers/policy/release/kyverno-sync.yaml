@@ -56,6 +56,14 @@ spec:
         enabled: true
         address: jaeger.infra-observability
         port: 4317
+      rbac:
+        clusterRole:
+          extraResources:
+            # To allow ivpol resources to read namespaced cosign public keys
+            - apiGroups: [""]
+              resources: ["secrets"]
+              verbs: ["get"]
+              resourceNames: ["cosign-pubkey"]
 
     backgroundController:
       serviceMonitor:
@@ -80,6 +88,11 @@ spec:
             - apiGroups: ["rbac.authorization.k8s.io"]
               resources: ["rolebindings"]
               verbs: ["get"]
+            # To allow ivpol resources to read namespaced cosign public keys
+            - apiGroups: [""]
+              resources: ["secrets"]
+              verbs: ["get"]
+              resourceNames: ["cosign-pubkey"]
 
     cleanupController:
       serviceMonitor:
@@ -112,3 +125,11 @@ spec:
         enabled: true
         address: jaeger.infra-observability
         port: 4317
+      rbac:
+        clusterRole:
+          extraResources:
+            # To allow ivpol resources to read namespaced cosign public keys
+            - apiGroups: [""]
+              resources: ["secrets"]
+              verbs: ["get"]
+              resourceNames: ["cosign-pubkey"]

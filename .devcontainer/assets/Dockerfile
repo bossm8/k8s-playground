@@ -9,6 +9,7 @@ ARG HUBBLE_CLI_VERSION=1.19.3
 ARG CERTMANAGER_CLI_VERSION=1.12.17
 ARG KUBE_BENCH_VERSION=0.15.6
 ARG KUBESCAPE_VERSION=4.0.9
+ARG COSIGN_VERSION=3.1.1
 
 # Hack stages since 'COPY --from' cannot expand env
 FROM alpine/kubectl:${K8S_VERSION} AS kubectl
@@ -17,6 +18,7 @@ FROM openbao/openbao:${BAO_VERSION} AS bao
 FROM alpine/helm:${HELM_VERSION} AS helm
 FROM docker:${DOCKER_VERSION} AS docker
 FROM aquasec/kube-bench:v${KUBE_BENCH_VERSION} as kube-bench
+FROM ghcr.io/sigstore/cosign/cosign:v${COSIGN_VERSION} as cosign
 
 # ---
 
@@ -110,6 +112,7 @@ COPY --from=docker /usr/local/bin/docker /usr/local/bin/
 COPY --from=cmctl /usr/local/bin/cmctl /usr/local/bin/
 COPY --from=kind /usr/local/bin/kind /usr/local/bin/
 COPY --from=flux /usr/local/bin/flux /usr/local/bin/
+COPY --from=cosign /ko-app/cosign /usr/local/bin/
 COPY --from=helm /usr/bin/helm /usr/local/bin/
 COPY --from=bao /bin/bao /usr/local/bin/
 
@@ -119,6 +122,7 @@ RUN kind completion bash > /etc/bash_completion.d/kind \
     && kubescape completion bash > /etc/bash_completion.d/kubescape \
     && kubectl completion bash > /etc/bash_completion.d/kubectl \
     && cilium completion bash > /etc/bash_completion.d/cilium \
+    && cosign completion bash > /etc/bash_completion.d/cosign \
     && hubble completion bash > /etc/bash_completion.d/hubble \
     && cmctl completion bash > /etc/bash_completion.d/cmctl \
     && flux completion bash > /etc/bash_completion.d/flux \

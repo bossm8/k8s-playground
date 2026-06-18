@@ -13,6 +13,11 @@ spec:
   ref:
     tag: "1.19.4"
     digest: "sha256:2ae196af6b06d14ee680ef66553ba0419da4595b12786942a2655997ac0527db"
+  verify:
+    provider: cosign
+    matchOIDCIdentity:
+      - issuer: "^https://token.actions.githubusercontent.com$"
+        subject: "https://github.com/cilium/cilium/.*"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease

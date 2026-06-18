@@ -52,3 +52,27 @@ spec:
     - ports:
       - port: '443'
         protocol: TCP
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-kyverno-verify-image-signatures
+  namespace: kyverno
+spec:
+  endpointSelector:
+    matchExpressions:
+      - key: k8s:app.kubernetes.io/name
+        operator: In
+        values:
+        - kyverno-admission-controller
+        - kyverno-reports-controller
+  egress:
+  - toFQDNs:
+    - matchName: quay.io
+    - matchName: tuf-repo-cdn.sigstore.dev
+    - matchName: rekor.sigstore.dev
+    - matchPattern: '*.quay.io'
+    toPorts:
+    - ports:
+      - port: '443'
+        protocol: TCP
