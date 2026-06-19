@@ -173,7 +173,7 @@ spec:
         name: cluster-secrets
   interval: 10m
   path: ./infrastructure/controllers/certs/config
-  prune: false
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -242,7 +242,7 @@ spec:
         name: cluster-secrets
   interval: 10m
   path: ./infrastructure/controllers/policy/config
-  prune: false
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
