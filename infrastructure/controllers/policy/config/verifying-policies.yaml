@@ -13,6 +13,9 @@ metadata:
       applied to the cluster.
       https://cert-manager.io/docs/installation/code-signing/?utm_source=chatgpt.com#container-images--cosign
 spec:
+  evaluation:
+    background:
+      enabled: false
   validationActions:
     - Audit
   failurePolicy: Fail
@@ -64,6 +67,9 @@ metadata:
       applied to the cluster.
       https://docs.cilium.io/en/latest/configuration/verify-image-signatures
 spec:
+  evaluation:
+    background:
+      enabled: false
   validationActions:
     - Audit
   failurePolicy: Fail
