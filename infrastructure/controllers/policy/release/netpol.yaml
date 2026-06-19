@@ -31,6 +31,7 @@ spec:
   - toFQDNs:
     - matchName: mirror.gcr.io
     - matchName: api.github.com
+    - matchName: cveawg.mitre.org
     toPorts:
     - ports:
       - port: '443'
