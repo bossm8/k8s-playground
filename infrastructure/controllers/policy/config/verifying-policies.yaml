@@ -2,7 +2,7 @@
 apiVersion: policies.kyverno.io/v1
 kind: ImageValidatingPolicy
 metadata:
-  name: cert-manager-images
+  name: verify-cert-manager-images
   annotations:
     policies.kyverno.io/title: Verify Cert-Manager Container Images
     policies.kyverno.io/category: Cluster Integrity
@@ -44,5 +44,55 @@ spec:
           insecureIgnoreTlog: true
   validations:
     - expression: >-
-        images.containers.map(image, verifyImageSignatures(image, [attestors.certManager])).all(result, result > 0)
-      message: "cert-manager image is not signed by the expected key"
+        images.containers
+          .map(image, verifyImageSignatures(image, [attestors.certManager]))
+          .all(result, result > 0)
+      message: |
+        cert-manager image signature verification failed
+---
+apiVersion: policies.kyverno.io/v1
+kind: ImageValidatingPolicy
+metadata:
+  name: verify-cilium-images
+  annotations:
+    policies.kyverno.io/title: Verify Cilium Container Images
+    policies.kyverno.io/category: Cluster Integrity
+    policies.kyverno.io/subject: Pod
+    policies.kyverno.io/severity: info
+    policies.kyverno.io/description: >-
+      This policy verifies cilium container images before they are
+      applied to the cluster.
+      https://docs.cilium.io/en/latest/configuration/verify-image-signatures
+spec:
+  validationActions:
+    - Audit
+  failurePolicy: Fail
+
+  matchConstraints:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: kube-system
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: [v1]
+        resources: [pods]
+        operations: [CREATE, UPDATE]
+
+  matchImageReferences:
+    - glob: 'quay.io/cilium/*:*'
+
+  attestors:
+    - name: cilium
+      cosign:
+        keyless:
+          identities:
+            - issuer: https://token.actions.githubusercontent.com
+              subjectRegExp: '^https://github\\.com/cilium/cilium/\\.github/workflows/build-images-releases\\.yaml@refs/tags/v[0-9]+\\.[0-9]+\\.[0-9]+$'
+
+  validations:
+    - expression: >-
+        images.containers
+          .map(image, verifyImageSignatures(image, [attestors.cilium]))
+          .all(result, result > 0)
+      message: |
+        Cilium image signature verification failed
