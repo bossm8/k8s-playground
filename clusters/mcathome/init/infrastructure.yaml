@@ -104,7 +104,7 @@ spec:
         name: cluster-secrets
   interval: 10m
   path: ./infrastructure/security/deptrack
-  prune: false
+  prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
