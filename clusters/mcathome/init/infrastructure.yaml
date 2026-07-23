@@ -86,29 +86,29 @@ spec:
     kind: GitRepository
     name: flux-system
   timeout: 5m
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: infra-security-deptrack
-  namespace: flux-system
-spec:
-  serviceAccountName: kustomize-controller
-  dependsOn:
-    - name: infra-security-trivy
-  postBuild:
-    substituteFrom:
-      - kind: ConfigMap
-        name: cluster-vars
-      - kind: Secret
-        name: cluster-secrets
-  interval: 10m
-  path: ./infrastructure/security/deptrack
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  timeout: 5m
+# ---
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: infra-security-deptrack
+#   namespace: flux-system
+# spec:
+#   serviceAccountName: kustomize-controller
+#   dependsOn:
+#     - name: infra-security-trivy
+#   postBuild:
+#     substituteFrom:
+#       - kind: ConfigMap
+#         name: cluster-vars
+#       - kind: Secret
+#         name: cluster-secrets
+#   interval: 10m
+#   path: ./infrastructure/security/deptrack
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   timeout: 5m
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
