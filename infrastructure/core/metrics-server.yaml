@@ -23,7 +23,7 @@ spec:
         kind: HelmRepository
         name: metrics-server
       interval: 15m
-      version: 3.13.1
+      version: 3.14.0
   values:
     args:
       - --kubelet-insecure-tls
