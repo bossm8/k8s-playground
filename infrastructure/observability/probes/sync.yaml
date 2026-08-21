@@ -11,8 +11,8 @@ spec:
     operation: copy
   url: oci://ghcr.io/prometheus-community/charts/prometheus-blackbox-exporter
   ref:
-    tag: "11.11.0"
-    digest: "sha256:47e3c299bd82db9a02f30223859919fa4a3bea13ed6c556d4828e76d09251658"
+    tag: "11.17.2"
+    digest: "sha256:e79a38923ad8dc167cae22b94c3ea0a251eb82e9034e6745dd6f534cd46b00e9"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
