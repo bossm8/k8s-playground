@@ -11,8 +11,8 @@ spec:
     operation: copy
   url: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
   ref:
-    tag: "86.2.0"
-    digest: "sha256:2182a9de8cd44d7a7ac98aa04743de4335766376cc896b9a6e099c61e81fd2d3"
+    tag: "86.3.2"
+    digest: "sha256:69d76d2961d0e14bdb1791e18207ed5766573b7ab7d9430b5ef20c09b630790a"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
