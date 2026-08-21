@@ -11,8 +11,8 @@ spec:
     operation: copy
   url: oci://ghcr.io/kyverno/charts/kyverno-policies
   ref:
-    tag: "3.8.0"
-    digest: "sha256:ed03cb0f35421e5d47fbc4045da17915911601c145310ac0cb47a68178ad97f9"
+    tag: "3.9.0"
+    digest: "sha256:90579610a9d91664ffac8d6467841d12e697e40df6690221687b952b146c766a"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
