@@ -414,6 +414,7 @@ spec:
             pod: '{{ "{{ pod }}" }}'
             container: '{{ "{{ container }}" }}'
           remove_label_fields: true
+          dangerously_allow_unconfined_template_resolution: true
 
     extraVolumes:
     - name: geoip-mmdb
