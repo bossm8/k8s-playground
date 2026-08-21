@@ -11,8 +11,8 @@ spec:
     operation: copy
   url: oci://ghcr.io/prometheus-community/charts/prometheus-operator-crds
   ref:
-    tag: "29.0.0"
-    digest: "sha256:36bab74f99bb3c3a1ab7003b8ab8651592fab7563067294336d2706e2dba137f"
+    tag: "31.0.1"
+    digest: "sha256:45a18cd10ce5c57cbcdd90e4eddfa9a6f653684a8d74cf6b2925f682c8a023e5"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
