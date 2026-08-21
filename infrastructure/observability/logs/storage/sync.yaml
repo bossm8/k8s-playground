@@ -11,8 +11,8 @@ spec:
     operation: copy
   url: oci://ghcr.io/grafana-community/helm-charts/loki
   ref:
-    tag: "17.1.7"
-    digest: "sha256:ee818f22a0227707f56a8f67e9c8c718436bc3074bfb1b2a969d366c22d87101"
+    tag: "18.11.0"
+    digest: "sha256:9739e0d6f9adbade3a471c43cdb35e6db636e22497fc12e771071c1a5f6ff245"
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
