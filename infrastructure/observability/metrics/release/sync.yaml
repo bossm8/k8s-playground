@@ -177,7 +177,7 @@ spec:
       grafana.ini:
         server:
           domain: ${grafanaPublicHostName}
-          root_url: "https://%(domain)s:8443/"
+          root_url: "https://%(domain)s/"
         security:
           csrf_trusted_origins: "${grafanaPublicHostName}"
       persistence:

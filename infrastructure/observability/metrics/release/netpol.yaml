@@ -107,7 +107,7 @@ spec:
     - matchName: ${healthcheckDomain}
     toPorts:
     - ports:
-      - port: '8443'
+      - port: '443'
         protocol: TCP
 ---
 apiVersion: cilium.io/v2
