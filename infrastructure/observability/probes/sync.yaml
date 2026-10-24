@@ -44,6 +44,13 @@ spec:
             method: GET
             valid_status_codes: [401, 404]
             follow_redirects: true
+        http_400:
+          prober: http
+          timeout: 30s
+          http:
+            method: GET
+            valid_status_codes: [400]
+            follow_redirects: true
 
     prometheusRule:
       enabled: true
